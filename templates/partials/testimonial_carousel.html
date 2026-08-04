@@ -1,0 +1,30 @@
+{% comment %}
+Reusable single-stacked-quote testimonial carousel, studeylearn-style
+byline (initial avatar + name + context line). Expects `reviews` in
+context. Renders nothing if `reviews` is empty — never fill this with
+placeholder/fake testimonials, only real approved reviews.
+{% endcomment %}
+{% if reviews %}
+<div class="glass-panel testimonial">
+  {% for review in reviews %}
+    <div class="testimonial-slide" data-index="{{ forloop.counter0 }}" {% if not forloop.first %}style="display:none;"{% endif %}>
+      <div class="stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+      <blockquote>"{{ review.body|truncatewords:32 }}"</blockquote>
+      <div class="testimonial-byline">
+        <span class="avatar-circle">{{ review.reviewer.get_full_name|default:review.reviewer.username|first|upper }}</span>
+        <span class="who">
+          <span class="name">{{ review.reviewer.get_full_name|default:review.reviewer.username }}</span>
+          {% if review.display_context %}<span class="context">{{ review.display_context }}</span>{% endif %}
+        </span>
+      </div>
+    </div>
+  {% endfor %}
+  {% if reviews|length > 1 %}
+    <div class="testimonial-nav">
+      {% for review in reviews %}
+        <button type="button" data-goto="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-label="Show testimonial {{ forloop.counter }}"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endif %}

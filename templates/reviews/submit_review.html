@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Leave a review · Code Secure Academy{% endblock %}
+{% block content %}
+<section>
+  <div class="container" style="max-width:520px;">
+    <div class="glass-panel card">
+      <h1>Leave a review</h1>
+      <p>For {{ purchase }}</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Submit review</button>
+      </form>
+      <p class="helptext" style="margin-top:1rem;">Your review goes into a queue and appears on the site once approved.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

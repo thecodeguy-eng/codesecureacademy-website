@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Cookie Policy · Code Secure Academy{% endblock %}
+{% block content %}
+<section>
+  <div class="container">
+    <div class="glass-panel legal-doc">
+      <span class="eyebrow">Legal</span>
+      <h1>Cookie Policy</h1>
+      <p class="updated">Last updated: {% now "F j, Y" %}</p>
+
+      <p>Cookies are small files stored in your browser. Here's what we use them for,
+      and how to change your choice at any time.</p>
+
+      <h2>Strictly necessary (always on)</h2>
+      <p>These keep the site functioning and can't be switched off: staying logged in,
+      remembering your cart/checkout state, and protecting forms against CSRF attacks.
+      Without these, login and payment simply wouldn't work.</p>
+
+      <h2>Preferences</h2>
+      <p>One small cookie/local-storage entry remembers the cookie choice you make below,
+      so we don't ask you every visit.</p>
+
+      <h2>Analytics (off by default)</h2>
+      <p>Reserved for future use (e.g. Google Analytics) to understand how the site is
+      used. Nothing in this category is active yet. If we turn it on later, it will
+      stay off for you until you opt in.</p>
+
+      <h2>Marketing (off by default)</h2>
+      <p>Reserved for future use (e.g. retargeting/ad pixels). Nothing in this category
+      is active yet, and it will stay off until you opt in.</p>
+
+      <h2>Managing your choice</h2>
+      <p>Use the cookie banner on your first visit, or click "Manage cookie preferences"
+      in the footer any time to accept, reject, or change your choice.</p>
+      <p><button type="button" class="btn btn-ghost btn-sm" onclick="window.csaConsent && window.csaConsent.openPreferences()">Manage cookie preferences</button></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

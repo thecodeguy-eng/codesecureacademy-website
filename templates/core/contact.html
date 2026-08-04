@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Contact · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="padding-bottom:1rem;">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:640px;">
+    <span class="eyebrow">Get in touch</span>
+    <h1>Talk to <span class="text-gradient">us</span></h1>
+    <p class="lead">Questions about a track, a payment, or the marketplace? Reach out however's easiest.</p>
+  </div>
+</section>
+<section style="padding-top:0;">
+  <div class="container grid grid-3" style="max-width:900px;">
+    <a href="mailto:hello@codesecureacademy.com" class="glass-panel interactive card" style="display:block;text-align:center;">
+      <h3>Email</h3>
+      <p>hello@codesecureacademy.com</p>
+    </a>
+    <a href="https://wa.me/{{ WHATSAPP_CONTACT_NUMBER }}" target="_blank" rel="noopener" class="glass-panel interactive card" style="display:block;text-align:center;">
+      <h3>WhatsApp</h3>
+      <p>Chat with us directly</p>
+    </a>
+    <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" class="glass-panel interactive card" style="display:block;text-align:center;">
+      <h3>Instagram</h3>
+      <p>Follow for updates</p>
+    </a>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:640px;text-align:center;">
+    <h2>Before you reach out</h2>
+    <p>Most questions about payment, cohort dates, or the WhatsApp group are already
+    answered on our <a href="{% url 'faq' %}">FAQ page</a>. If yours isn't there, any of
+    the three channels above works.</p>
+  </div>
+</section>
+{% endblock %}

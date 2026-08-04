@@ -1,0 +1,9 @@
+Hi {{ enrollment.student.first_name|default:enrollment.student.username }},
+
+You're officially enrolled in {{ enrollment.cohort.track.name }} at Code Secure Academy. Cohort starts {{ enrollment.cohort.start_date }}.
+
+Join your cohort's WhatsApp group here:
+{{ invite_link }}
+
+See you there!
+Code Secure Academy

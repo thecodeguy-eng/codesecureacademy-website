@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Transaction not found · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:520px;">
+    <div class="glass-panel card" style="text-align:center;">
+      <h1>We couldn't find that transaction</h1>
+      <p>If you were charged, contact us with your payment reference and we'll sort it out.</p>
+      <a href="{% url 'home' %}" class="btn btn-primary">Back home</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

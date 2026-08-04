@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none" aria-hidden="true">
+  <g stroke="#5b9dff" stroke-width="1.4" stroke-linecap="round" opacity="0.55">
+    <line x1="80" y1="120" x2="220" y2="60" />
+    <line x1="220" y1="60" x2="340" y2="180" />
+    <line x1="340" y1="180" x2="180" y2="280" />
+    <line x1="180" y1="280" x2="80" y2="120" />
+    <line x1="340" y1="180" x2="420" y2="90" />
+    <line x1="420" y1="90" x2="520" y2="220" />
+    <line x1="520" y1="220" x2="600" y2="140" />
+    <line x1="600" y1="140" x2="680" y2="280" />
+    <line x1="520" y1="220" x2="380" y2="340" />
+    <line x1="380" y1="340" x2="240" y2="400" />
+    <line x1="240" y1="400" x2="180" y2="280" />
+    <line x1="520" y1="380" x2="380" y2="340" />
+    <line x1="520" y1="380" x2="700" y2="420" />
+    <line x1="700" y1="420" x2="680" y2="280" />
+    <line x1="100" y1="380" x2="240" y2="400" />
+    <line x1="100" y1="380" x2="60" y2="240" />
+    <line x1="60" y1="240" x2="80" y2="120" />
+  </g>
+  <g fill="#8fbcff">
+    <circle cx="80" cy="120" r="3.5" opacity="0.6" />
+    <circle cx="220" cy="60" r="3" opacity="0.5" />
+    <circle cx="340" cy="180" r="5" opacity="0.85" />
+    <circle cx="180" cy="280" r="3.5" opacity="0.6" />
+    <circle cx="420" cy="90" r="3" opacity="0.5" />
+    <circle cx="520" cy="220" r="5.5" opacity="0.9" />
+    <circle cx="600" cy="140" r="3.5" opacity="0.6" />
+    <circle cx="680" cy="280" r="4" opacity="0.65" />
+    <circle cx="380" cy="340" r="4.5" opacity="0.75" />
+    <circle cx="240" cy="400" r="3" opacity="0.5" />
+    <circle cx="520" cy="380" r="4" opacity="0.65" />
+    <circle cx="700" cy="420" r="3" opacity="0.5" />
+    <circle cx="100" cy="380" r="3" opacity="0.5" />
+    <circle cx="60" cy="240" r="3" opacity="0.5" />
+  </g>
+</svg>

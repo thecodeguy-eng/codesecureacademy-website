@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Sell on CSA Marketplace{% endblock %}
+{% block content %}
+<section class="hero" style="padding-bottom:1rem;">
+  <div class="container" style="max-width:560px;">
+    <h1>Sell on CSA Marketplace</h1>
+    <p>Digital products, tech services, or CSA merch only. Applications are reviewed before you can list anything. Once approved, sales split automatically: 90% to you, 10% to CSA, paid out via Paystack.</p>
+  </div>
+</section>
+<section style="padding-top:0;">
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Submit application</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

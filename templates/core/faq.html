@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}FAQ · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:720px;">
+    <h1>Frequently asked questions</h1>
+  </div>
+</section>
+<section>
+  <div class="container" style="max-width:720px;">
+    {% for item in faqs %}
+      <details class="glass-panel faq-item" style="margin-bottom:1rem;">
+        <summary>{{ item.question }}</summary>
+        <p>{{ item.answer }}</p>
+      </details>
+    {% empty %}
+      <p>No FAQs added yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

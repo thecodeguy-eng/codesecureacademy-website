@@ -1,0 +1,56 @@
+{% load static %}
+<div class="cookie-banner glass-panel" id="cookie-banner">
+  <p>We use essential cookies to run this site. Analytics only run if you say yes.
+  <a href="{% url 'cookie_policy' %}">Learn more</a></p>
+  <div class="cookie-actions">
+    <button type="button" class="btn btn-primary btn-sm" id="cookie-accept-all">Accept all</button>
+    <button type="button" class="btn btn-ghost btn-sm" id="cookie-reject-all">Reject</button>
+    <button type="button" class="btn btn-ghost btn-sm" id="cookie-manage">Manage</button>
+  </div>
+</div>
+
+<div class="cookie-modal-backdrop" id="cookie-modal-backdrop">
+  <div class="glass-panel cookie-modal">
+    <h3>Cookie preferences</h3>
+    <p style="font-size:0.85rem;">Choose what you're comfortable with. You can change this any time from the footer.</p>
+
+    <div class="cookie-pref-row">
+      <div>
+        <h4>Strictly necessary</h4>
+        <p>Required for login, checkout, and security. Always on.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" checked disabled>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cookie-pref-row">
+      <div>
+        <h4>Analytics</h4>
+        <p>Helps us understand how the site is used. Off unless you opt in.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="consent-analytics">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cookie-pref-row">
+      <div>
+        <h4>Marketing</h4>
+        <p>Reserved for future use (e.g. retargeting). Off unless you opt in.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="consent-marketing">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="cookie-actions" style="margin-top:1rem;">
+      <button type="button" class="btn btn-primary" id="cookie-save-preferences">Save preferences</button>
+      <button type="button" class="btn btn-ghost" id="cookie-modal-close">Cancel</button>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/cookie-consent.js' %}"></script>

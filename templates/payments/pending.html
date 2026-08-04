@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Payment processing · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:520px;">
+    <div class="glass-panel card" style="text-align:center;">
+      <h1>Payment processing</h1>
+      <p>We're confirming your payment, reference {{ transaction.reference }}. This can take a moment for bank transfers.</p>
+      <a href="{% url 'dashboard' %}" class="btn btn-primary">Go to your dashboard</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

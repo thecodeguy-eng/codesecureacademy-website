@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Terms of Service · Code Secure Academy{% endblock %}
+{% block content %}
+<section>
+  <div class="container">
+    <div class="glass-panel legal-doc">
+      <span class="eyebrow">Legal</span>
+      <h1>Terms of Service</h1>
+      <p class="updated">Last updated: {% now "F j, Y" %}</p>
+
+      <div class="disclaimer">
+        <strong>Template notice:</strong> this is a starting-point draft, not legal advice.
+        The refund window in Section 4 and the marketplace terms in Section 5 are
+        placeholders. Confirm the real policy internally and have this reviewed by a
+        Nigerian lawyer before launch.
+      </div>
+
+      <h2>1. Acceptance of terms</h2>
+      <p>By creating an account or making a payment on Code Secure Academy ("CSA", "we",
+      "us"), you agree to these Terms of Service and our
+      <a href="{% url 'privacy_policy' %}">Privacy Policy</a>.</p>
+
+      <h2>2. Accounts</h2>
+      <p>You're responsible for keeping your login credentials secure and for all
+      activity under your account. Tell us immediately if you suspect unauthorized
+      access.</p>
+
+      <h2>3. Cohort enrollment</h2>
+      <p>Enrolling in a track reserves your seat for that specific cohort's dates and
+      price, shown at checkout. Prices are in Nigerian Naira (₦) and processed via
+      Paystack. A seat is temporarily held while your payment is confirming and is
+      released if payment fails or is not completed. This does not affect a payment
+      that goes through, including slower bank transfers still being confirmed.</p>
+
+      <h2>4. Refunds</h2>
+      <p><em>[Placeholder: confirm CSA's actual refund policy before launch.]</em>
+      Refund requests made at least 7 days before a cohort's start date are eligible for
+      a full refund. No refunds are available once a cohort has started, except where
+      required by law.</p>
+
+      <h2>5. Marketplace</h2>
+      <p>CSA Marketplace connects independent sellers (students or outside sellers,
+      approved by CSA) with buyers. CSA is a platform facilitator, not the seller.
+      Each listing is the responsibility of the seller who created it. CSA takes a 10%
+      commission on marketplace sales, automatically split at checkout via Paystack.
+      Fulfillment of a marketplace order (delivering a digital product, performing a
+      service, shipping merch) is between the buyer and seller; contact us if a seller
+      doesn't fulfil an order and we'll assist where we reasonably can, but CSA is not
+      liable for a seller's conduct or the quality of what they sell.</p>
+
+      <h2>6. WhatsApp groups</h2>
+      <p>Cohort WhatsApp groups are for cohort-related communication. Be respectful:
+      harassment, spam, or sharing group content outside the group without consent can
+      get you removed from the group and the cohort without a refund.</p>
+
+      <h2>7. Reviews</h2>
+      <p>You may leave one review per completed purchase. Reviews are moderated before
+      publishing and must be honest and relevant. We can reject or remove reviews that
+      are abusive, fake, or off-topic.</p>
+
+      <h2>8. Intellectual property</h2>
+      <p>Course materials remain the property of CSA (or the relevant instructor) and are
+      licensed to you for personal, non-commercial use. Don't redistribute, resell, or
+      publicly republish course materials without permission.</p>
+
+      <h2>9. Prohibited conduct</h2>
+      <ul>
+        <li>Sharing your account or course access with people who haven't paid</li>
+        <li>Harassment, hate speech, or abusive behaviour toward staff, instructors, or
+        other students</li>
+        <li>Attempting to circumvent payment, security, or moderation systems</li>
+      </ul>
+
+      <h2>10. Termination</h2>
+      <p>We may suspend or terminate accounts that violate these terms, at our
+      discretion, without refund where the violation involves fraud or abuse.</p>
+
+      <h2>11. Limitation of liability</h2>
+      <p>The platform is provided "as is". We don't guarantee specific outcomes (e.g. job
+      placement) from completing a track. To the extent permitted by law, CSA's total
+      liability to you is limited to the amount you paid us in the 12 months before the
+      claim.</p>
+
+      <h2>12. Governing law</h2>
+      <p>These terms are governed by the laws of the Federal Republic of Nigeria.</p>
+
+      <h2>13. Changes</h2>
+      <p>We may update these terms as the platform evolves. Continued use after a change
+      means you accept the updated terms.</p>
+
+      <h2>14. Contact</h2>
+      <p><a href="mailto:hello@codesecureacademy.com">hello@codesecureacademy.com</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

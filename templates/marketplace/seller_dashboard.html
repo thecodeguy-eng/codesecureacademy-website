@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Seller dashboard · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <h1>{{ seller.business_name }}</h1>
+    {% if seller.status == "approved" %}
+      <span class="badge badge-open">Approved</span>
+    {% elif seller.status == "pending" %}
+      <span class="badge">Pending review</span>
+    {% else %}
+      <span class="badge badge-full">Rejected</span>
+    {% endif %}
+  </div>
+</section>
+<section style="padding-top:0;">
+  <div class="container">
+    {% if seller.status == "approved" %}
+      <a href="{% url 'marketplace:create_listing' %}" class="btn btn-primary">+ New listing</a>
+      <div class="grid grid-3" style="margin-top:2rem;">
+        {% for listing in listings %}
+          <div class="glass-panel card">
+            <h3>{{ listing.title }}</h3>
+            <p>₦{{ listing.price_naira }}</p>
+            {% if listing.status == "active" %}
+              <span class="badge badge-open">Live</span>
+            {% elif listing.status == "pending" %}
+              <span class="badge">Pending review</span>
+            {% else %}
+              <span class="badge badge-full">Rejected</span>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p>No listings yet.</p>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>You'll be able to create listings once your application is approved.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

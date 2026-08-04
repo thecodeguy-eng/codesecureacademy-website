@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Marketplace · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container">
+    <span class="eyebrow">Marketplace</span>
+    <h1>CSA <span class="text-gradient">Marketplace</span></h1>
+    <p class="lead">Digital products, tech services, and CSA merch from approved students and outsiders.</p>
+    <div class="hero-actions">
+      <a href="{% url 'marketplace:apply_seller' %}" class="btn btn-ghost">Sell on CSA Marketplace</a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;padding-bottom:0;">
+  <div class="container">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1677693972403-db681288b5da?w=1600&q=80&fm=jpg&fit=crop" alt="" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div style="display:flex;gap:0.75rem;margin-bottom:2rem;flex-wrap:wrap;">
+      <a href="{% url 'marketplace:listing_list' %}" class="badge{% if not selected_category %} badge-open{% endif %}">All</a>
+      {% for value, label in categories %}
+        <a href="?category={{ value }}" class="badge{% if selected_category == value %} badge-open{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+
+    <div class="grid grid-3">
+      {% for listing in listings %}
+        <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+          {% if listing.cover_image %}
+            <img src="{{ listing.cover_image.url }}" alt="{{ listing.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+          {% endif %}
+          <h3>{{ listing.title }}</h3>
+          <p>{{ listing.description|truncatewords:15 }}</p>
+          <p class="mono" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }}</p>
+          {% if listing.average_rating %}<p>★ {{ listing.average_rating|floatformat:1 }}</p>{% endif %}
+        </a>
+      {% empty %}
+        <p>No listings yet. Check back soon, or be the first to apply as a seller below.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Buy or sell, both are straightforward</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <span class="badge">Step 1</span>
+        <h3>Apply as a seller</h3>
+        <p>Students and outside sellers can both apply. Every application is reviewed before you can list anything.</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="badge">Step 2</span>
+        <h3>List what you sell</h3>
+        <p>Digital products, tech services, or CSA merch, each listing goes through a quick approval before it goes live.</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="badge">Step 3</span>
+        <h3>Get paid automatically</h3>
+        <p>Every sale splits instantly at checkout via Paystack: 90% to you, 10% to CSA. No manual payouts to wait on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Tracks · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container">
+    <span class="eyebrow">All tracks</span>
+    <h1>Choose your <span class="text-gradient">track</span></h1>
+    <p class="lead">Four tracks, each with its own cohort dates, price, and seat count.</p>
+  </div>
+</section>
+<section>
+  <div class="container grid grid-2">
+    {% for track in tracks %}
+      <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+        {% if track.display_cover_image %}
+          <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+        {% endif %}
+        <div class="card-body">
+          <h3>{{ track.name }}</h3>
+          <p>{{ track.tagline|default:track.description|truncatewords:24 }}</p>
+          {% with cohort=track.next_cohort %}
+            {% if cohort %}
+              <p><strong class="mono">₦{{ cohort.price_naira }}</strong> · starts {{ cohort.start_date }}</p>
+              {% if cohort.is_full %}
+                <span class="badge badge-full">Full, join waitlist</span>
+              {% else %}
+                <span class="badge badge-open">{{ cohort.seats_available }} seats left</span>
+              {% endif %}
+            {% else %}
+              <span class="badge">No cohort scheduled yet</span>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </a>
+    {% empty %}
+      <p>Tracks are being finalized. Check back shortly.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

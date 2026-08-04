@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}About · Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow">About us</span>
+    <h1>Training people to actually build things</h1>
+    <p class="lead">
+      Code Secure Academy runs cohort-based, hands-on training in Frontend Development,
+      Backend Development, Cybersecurity, and Graphic Design, built for people who want
+      to ship something real, not collect another certificate for watching videos.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="container manifesto">
+    <p data-scroll-reveal>We started this because too much online education ends the
+    same way: a finished playlist, a certificate nobody asks for, and no actual project
+    to show for it. A cohort changes that. Fixed dates, a group of people on the same
+    timeline, and a track that ends with something you built yourself.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?w=1600&q=80&fm=jpg&fit=crop" alt="" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container section-alt">
+    <div class="alt-text">
+      <span class="eyebrow">How we teach</span>
+      <h2>Structure, not a content dump</h2>
+      <p>Every track has a start date, an end date, and a sequence. You're not left to
+      figure out what to learn next on your own. You show up, work through the
+      curriculum with your cohort, and leave with a project you can actually point to.</p>
+      <ul class="alt-checklist">
+        <li><span class="tick">✓</span><span><strong>Fixed cohort dates.</strong> A real start and end, not a course that sits half-finished in your account.</span></li>
+        <li><span class="tick">✓</span><span><strong>One track at a time.</strong> Depth over a scattershot of unrelated tutorials.</span></li>
+        <li><span class="tick">✓</span><span><strong>A project you built.</strong> Something for a portfolio, not just a screenshot of a quiz score.</span></li>
+      </ul>
+    </div>
+    <div class="alt-visual">
+      <div class="glass-panel product-preview">
+        <div class="preview-bar"><span></span><span></span><span></span></div>
+        <div class="preview-body">
+          <div class="mock-track-card">
+            <span class="badge badge-open">In progress</span>
+            <div class="mock-title">Week 3 of 8</div>
+            <div class="mock-progress"><div class="mock-progress-fill" style="width:38%;"></div></div>
+            <div class="mock-row"><span>Capstone project</span><span class="mock-price">Started</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">What we believe</span>
+      <h2>A few things we won't compromise on</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <h3>Practical over theoretical</h3>
+        <p>Every track is built around a real project, not lecture slides you'll forget by the following week.</p>
+      </div>
+      <div class="glass-panel card">
+        <h3>Community that lasts</h3>
+        <p>Every cohort gets a WhatsApp group that keeps going long after the track officially ends.</p>
+      </div>
+      <div class="glass-panel card">
+        <h3>Security-minded by default</h3>
+        <p>Even outside the Cybersecurity track, we teach people to ask what could go wrong, not just what should go right.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
+      <h2>See it for yourself</h2>
+      <p class="lead" style="margin:0 auto var(--space-3);">Browse the four tracks and find the one that fits.</p>
+      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Order confirmed · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card" style="text-align:center;">
+      {% if order.status == "paid" %}
+        <span class="badge badge-open">Paid</span>
+        <h1>Order confirmed</h1>
+        <p>You bought <strong>{{ order.listing.title }}</strong> for ₦{{ order.amount_naira }}. The seller has been notified and will reach out to fulfil it.</p>
+        <p><a href="{% url 'reviews:submit_review' app_label='marketplace' model_name='order' object_id=order.id %}">Leave a review →</a></p>
+      {% else %}
+        <span class="badge">{{ order.get_status_display }}</span>
+        <h1>Payment processing</h1>
+        <p>We'll confirm the moment payment clears.</p>
+      {% endif %}
+      <p><a href="{% url 'dashboard' %}">Go to your dashboard →</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

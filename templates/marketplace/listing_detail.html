@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ listing.title }} · CSA Marketplace{% endblock %}
+{% block content %}
+<section>
+  <div class="container grid grid-2" style="max-width:960px;align-items:start;">
+    <div class="glass-panel card">
+      {% if listing.cover_image %}
+        <img src="{{ listing.cover_image.url }}" alt="{{ listing.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+      {% endif %}
+      <h1>{{ listing.title }}</h1>
+      <p>{{ listing.description|linebreaks }}</p>
+      <p>Sold by <strong>{{ listing.seller.business_name }}</strong></p>
+    </div>
+    <div class="glass-panel card">
+      <p class="mono" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ listing.price_naira }}</p>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'marketplace:start_checkout' slug=listing.slug %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-block">Buy now, pay with Paystack</button>
+        </form>
+      {% else %}
+        <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-block">Log in to buy</a>
+      {% endif %}
+
+      {% if listing.approved_reviews %}
+        <h3 style="margin-top:2rem;">Reviews</h3>
+        {% for review in listing.approved_reviews %}
+          <div style="border-top:1px solid var(--glass-border);padding-top:0.75rem;margin-top:0.75rem;">
+            <div>{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+            <p>{{ review.body }}</p>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

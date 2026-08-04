@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<section class="hero" id="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight" id="hero-spotlight"></div>
+  <div class="container">
+    <span class="eyebrow">Cohort-based tech training</span>
+    <h1>Learn to build and <span class="text-gradient">secure</span> the web, for real.</h1>
+    <p class="lead">Frontend, Backend, Cybersecurity, and Graphic Design. Hands-on cohorts, real projects, a community that keeps going after class ends.</p>
+    <div class="hero-actions">
+      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
+      <a href="{% url 'marketplace:listing_list' %}" class="btn btn-ghost">Visit the marketplace</a>
+    </div>
+  </div>
+</section>
+
+{% if site_settings.students_trained or site_settings.cohorts_run or site_settings.hiring_partners %}
+<section class="stats-bar container">
+  {% if site_settings.students_trained %}<div class="stat"><span class="num mono">{{ site_settings.students_trained }}+</span><span class="label">Students trained</span></div>{% endif %}
+  {% if site_settings.cohorts_run %}<div class="stat"><span class="num mono">{{ site_settings.cohorts_run }}+</span><span class="label">Cohorts run</span></div>{% endif %}
+  {% if site_settings.hiring_partners %}<div class="stat"><span class="num mono">{{ site_settings.hiring_partners }}+</span><span class="label">Hiring partners</span></div>{% endif %}
+</section>
+{% endif %}
+
+<section>
+  <div class="container manifesto">
+    <p data-scroll-reveal>Code Secure Academy exists to turn beginners into developers who ship real projects, think about security by default, and never stop learning once the cohort ends.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container section-alt">
+    <div class="alt-text">
+      <span class="eyebrow">Why CSA</span>
+      <h2>Built to get you actually building</h2>
+      <p>Most bootcamps sell you a video library. We sell you a seat in a cohort that
+      ships real, working things, with people doing it alongside you.</p>
+      <ul class="alt-checklist">
+        <li><span class="tick">✓</span><span><strong>Hands-on, not video-on.</strong> Every track ends with a project you shipped, not a certificate for watching.</span></li>
+        <li><span class="tick">✓</span><span><strong>A cohort, not a login.</strong> A WhatsApp community that keeps going after the track ends.</span></li>
+        <li><span class="tick">✓</span><span><strong>Security-minded by default.</strong> Even outside the Cybersecurity track, we build the habit of asking what could go wrong.</span></li>
+      </ul>
+    </div>
+    <div class="alt-visual">
+      <div class="glass-panel product-preview">
+        <div class="preview-bar"><span></span><span></span><span></span></div>
+        <div class="preview-body">
+          <div class="mock-track-card">
+            <span class="badge badge-open">Open</span>
+            <div class="mock-title">Cybersecurity · Aug cohort</div>
+            <div class="mock-progress"><div class="mock-progress-fill"></div></div>
+            <div class="mock-row"><span>17 of 25 seats left</span><span class="mock-price">₦150,000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Pick your track</span>
+      <h2>Four tracks, one bar for quality</h2>
+      <p>Each cohort has its own dates, price, and seat count. Enroll before it fills up.</p>
+    </div>
+    <div class="grid grid-2">
+      {% for track in tracks %}
+        <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+          {% if track.display_cover_image %}
+            <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+          {% endif %}
+          <div class="card-body">
+            <h3>{{ track.name }}</h3>
+            <p>{{ track.tagline|default:track.description|truncatewords:20 }}</p>
+            {% with cohort=track.next_cohort %}
+              {% if cohort %}
+                {% if cohort.is_full %}
+                  <span class="badge badge-full">Full, join waitlist</span>
+                {% else %}
+                  <span class="badge badge-open">{{ cohort.seats_available }} seats left</span>
+                {% endif %}
+              {% endif %}
+            {% endwith %}
+          </div>
+        </a>
+      {% empty %}
+        <p>Tracks are being finalized. Check back shortly.</p>
+      {% endfor %}
+    </div>
+
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:var(--space-4);">Tools & tech you'll work with</p>
+    <div class="pill-bar" style="margin-top:var(--space-2);">
+      <span class="tech-pill">HTML</span>
+      <span class="tech-pill">CSS</span>
+      <span class="tech-pill">JavaScript</span>
+      <span class="tech-pill">React</span>
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">Django</span>
+      <span class="tech-pill">PostgreSQL</span>
+      <span class="tech-pill">Git &amp; GitHub</span>
+      <span class="tech-pill">Figma</span>
+      <span class="tech-pill">OWASP Top 10</span>
+      <span class="tech-pill">REST APIs</span>
+      <span class="tech-pill">Network Security</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1600&q=80&fm=jpg&fit=crop" alt="" loading="lazy">
+    </div>
+    <p class="photo-banner-caption">A cohort, not a login screen. People learning the same track, on the same timeline, in the same WhatsApp group.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container section-alt reverse">
+    <div class="alt-text">
+      <span class="eyebrow">How it works</span>
+      <h2>From sign-up to shipped project</h2>
+      <ul class="alt-checklist">
+        <li><span class="tick mono">1</span><span><strong>Pick a track & enroll.</strong> Choose your track, pay securely with Paystack, and your seat is locked in.</span></li>
+        <li><span class="tick mono">2</span><span><strong>Join your cohort.</strong> Get your WhatsApp group invite the moment payment clears.</span></li>
+        <li><span class="tick mono">3</span><span><strong>Build something real.</strong> Work through hands-on projects with your cohort.</span></li>
+      </ul>
+    </div>
+    <div class="alt-visual">
+      <div class="glass-panel product-preview">
+        <div class="preview-bar"><span></span><span></span><span></span></div>
+        <div class="preview-body">
+          <div class="mock-chat">
+            <div class="mock-bubble">Payment confirmed ✅</div>
+            <div class="mock-bubble">You're enrolled in Frontend Development · Aug cohort</div>
+            <div class="mock-bubble mock-bubble-btn">Join WhatsApp group →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">What's included</span>
+      <h2>Every cohort, no matter the track</h2>
+    </div>
+    <div class="glass-panel feature-panel">
+      <div class="feature-panel-header">
+        <h3>Included with every enrollment</h3>
+      </div>
+      <div class="feature-checklist">
+        <div class="item">
+          <span class="tick">✓</span>
+          <h4>Project-based curriculum</h4>
+          <p>Structured and hands-on, not a video playlist.</p>
+        </div>
+        <div class="item">
+          <span class="tick">✓</span>
+          <h4>Direct WhatsApp access</h4>
+          <p>Straight to your cohort, the moment payment clears.</p>
+        </div>
+        <div class="item">
+          <span class="tick">✓</span>
+          <h4>Seat protection</h4>
+          <p>Once you pay, your seat is locked. Even a slow bank transfer won't cost you your spot.</p>
+        </div>
+        <div class="item">
+          <span class="tick">✓</span>
+          <h4>Track-specific tooling</h4>
+          <p>The same tools and workflow used on the job.</p>
+        </div>
+        <div class="item">
+          <span class="tick">✓</span>
+          <h4>Fixed cohort dates</h4>
+          <p>Real deadlines, not a self-paced course you'll never finish.</p>
+        </div>
+        <div class="item">
+          <span class="tick">✓</span>
+          <h4>Moderated community</h4>
+          <p>Reviews and groups are moderated, so there's no bad-faith noise.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if reviews %}
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Student reviews</span>
+      <h2>What students say</h2>
+    </div>
+    {% include "partials/testimonial_carousel.html" %}
+  </div>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section>
+  <div class="container" style="max-width:720px;">
+    <div class="section-head"><h2>Frequently asked</h2></div>
+    {% for item in faqs %}
+      <details class="glass-panel faq-item" style="margin-bottom:1rem;">
+        <summary>{{ item.question }}</summary>
+        <p>{{ item.answer }}</p>
+      </details>
+    {% endfor %}
+    <p style="text-align:center;margin-top:1rem;"><a href="{% url 'faq' %}">See all FAQs →</a></p>
+  </div>
+</section>
+{% endif %}
+
+<section>
+  <div class="container">
+    <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
+      <h2>Ready to start building?</h2>
+      <p class="lead" style="margin:0 auto var(--space-3);">Pick a track, lock in your seat, and get to work.</p>
+      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

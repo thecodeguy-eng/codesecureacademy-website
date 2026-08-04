@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}You're in! · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:600px;">
+    <div class="glass-panel card" style="text-align:center;">
+      {% if enrollment.status == "confirmed" %}
+        <span class="badge badge-open">Payment confirmed</span>
+        <h1>You're enrolled in {{ enrollment.cohort.track.name }}!</h1>
+        <p>Your seat for the {{ enrollment.cohort.start_date }} cohort is locked in.</p>
+        {% if whatsapp_link %}
+          <p>Join your cohort's WhatsApp group. You'll also get this by email.</p>
+          <a href="{{ whatsapp_link }}" target="_blank" rel="noopener" class="btn btn-primary">Join WhatsApp group</a>
+        {% else %}
+          <p>We'll email your WhatsApp group invite shortly.</p>
+        {% endif %}
+        <p style="margin-top:1.5rem;">
+          <a href="{% url 'reviews:submit_review' app_label='cohorts' model_name='enrollment' object_id=enrollment.id %}">Leave a review →</a>
+        </p>
+      {% elif enrollment.status == "held" %}
+        <span class="badge">Payment processing</span>
+        <h1>Almost there</h1>
+        <p>Your seat is held while we confirm your payment. This page will update once it's through. If you paid by bank transfer, confirmation can take a few extra minutes; your seat won't be released while a payment is still confirming.</p>
+        <div data-hold-expires="{{ enrollment.seat_held_at|date:'c' }}" style="color:var(--text-secondary);"></div>
+      {% else %}
+        <span class="badge badge-full">{{ enrollment.get_status_display }}</span>
+        <h1>Payment didn't go through</h1>
+        <p>No charge was completed. You can try again from the track page.</p>
+        <a href="{{ enrollment.cohort.track.get_absolute_url }}" class="btn btn-primary">Try again</a>
+      {% endif %}
+      <p style="margin-top:1.5rem;"><a href="{% url 'dashboard' %}">Go to your dashboard →</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

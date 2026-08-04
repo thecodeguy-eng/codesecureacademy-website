@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+// Runs synchronously before first paint so there's no flash of the wrong
+// theme. Default is light unless the visitor has explicitly switched to
+// dark before — this never follows OS preference automatically, so the
+// brand's primary look doesn't change on its own.
+(function () {
+  try {
+    var stored = localStorage.getItem("csa_theme");
+    document.documentElement.setAttribute("data-theme", stored === "dark" ? "dark" : "light");
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+
+// Circular-reveal for page-to-page navigation, echoing the same effect the
+// theme toggle uses: expands from wherever the link that brought you here
+// was clicked (see main.js, which stashes that position in sessionStorage
+// right before navigating away from the previous page). `pagereveal` is
+// the documented hook for customizing a cross-document view transition on
+// the arriving page — must be registered this early (inline, before any
+// external script loads) since it can fire before a bottom-of-body script
+// would ever run. No-ops cleanly on browsers without support, or when
+// there's no stashed origin (e.g. a bookmarked/typed-URL visit).
+window.addEventListener("pagereveal", function (event) {
+  if (!event.viewTransition) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var raw;
+  try {
+    raw = sessionStorage.getItem("csa_vt_origin");
+    sessionStorage.removeItem("csa_vt_origin");
+  } catch (e) {
+    return;
+  }
+  if (!raw) return;
+  var origin;
+  try {
+    origin = JSON.parse(raw);
+  } catch (e) {
+    return;
+  }
+  if (!origin || Date.now() - origin.t > 4000) return; // stale — e.g. back/forward, not a fresh click
+
+  var endRadius = Math.hypot(
+    Math.max(origin.x, window.innerWidth - origin.x),
+    Math.max(origin.y, window.innerHeight - origin.y)
+  );
+  event.viewTransition.ready.then(function () {
+    document.documentElement.animate(
+      { clipPath: ["circle(0px at " + origin.x + "px " + origin.y + "px)", "circle(" + endRadius + "px at " + origin.x + "px " + origin.y + "px)"] },
+      { duration: 550, easing: "ease-in-out", pseudoElement: "::view-transition-new(root)" }
+    );
+  });
+});
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Code Secure Academy{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}Learn Frontend, Backend, Cybersecurity, or Graphic Design with Code Secure Academy: cohort-based, hands-on, built for Nigeria.{% endblock %}">
+
+<meta property="og:title" content="{% block og_title %}Code Secure Academy{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Cohort-based tech training: Frontend, Backend, Cybersecurity, Graphic Design.{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}">{% endblock %}
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/design-system.css' %}">
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+<div id="nav-progress"></div>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="{% url 'home' %}" class="brand">
+      <img src="{% static 'img/logo.png' %}" alt="Code Secure Academy" class="brand-mark brand-mark-dark" onerror="this.style.display='none';this.nextElementSibling.nextElementSibling.style.display='inline'">
+      <img src="{% static 'img/logo-light.png' %}" alt="Code Secure Academy" class="brand-mark brand-mark-light" onerror="this.style.display='none'">
+      <span class="brand-word" style="display:none;"><span class="brand-code">Code</span> Secure Academy</span>
+    </a>
+
+    <nav class="main-nav" id="main-nav">
+      <a href="{% url 'cohorts:track_list' %}">Tracks</a>
+      <a href="{% url 'marketplace:listing_list' %}">Marketplace</a>
+      <a href="{% url 'faq' %}">FAQ</a>
+      <a href="{% url 'about' %}">About</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'account_logout' %}">Log out</a>
+      {% else %}
+        <a href="{% url 'account_login' %}">Log in</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Get started</a>
+      {% endif %}
+    </nav>
+
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light theme" type="button">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+  {% if messages %}
+    <div class="container messages">
+      {% for message in messages %}
+        <div class="glass-panel alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="brand-word"><span class="brand-code">Code</span> Secure Academy</span>
+      <p>Practical, cohort-based tech training, built in Nigeria, for Nigeria.</p>
+      <div class="footer-social">
+        <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2.2.27 3 .58a6 6 0 0 1 2.2 1.4 6 6 0 0 1 1.4 2.2c.3.8.5 1.8.6 3 .1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2.2-.6 3a6 6 0 0 1-1.4 2.2 6 6 0 0 1-2.2 1.4c-.8.3-1.8.5-3 .6-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2.2-.3-3-.6a6 6 0 0 1-2.2-1.4 6 6 0 0 1-1.4-2.2c-.3-.8-.5-1.8-.6-3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2.2.6-3a6 6 0 0 1 1.4-2.2A6 6 0 0 1 6.5 .5c.8-.3 1.8-.5 3-.6C10.8.2 11.2.2 12 .2zm0 1.8c-3.1 0-3.5 0-4.7.07-1 .05-1.6.22-2 .37a3.8 3.8 0 0 0-1.4.9 3.8 3.8 0 0 0-.9 1.4c-.15.4-.32 1-.37 2C2.5 8.5 2.5 8.9 2.5 12s0 3.5.07 4.7c.05 1 .22 1.6.37 2a3.8 3.8 0 0 0 .9 1.4 3.8 3.8 0 0 0 1.4.9c.4.15 1 .32 2 .37 1.2.07 1.6.07 4.7.07s3.5 0 4.7-.07c1-.05 1.6-.22 2-.37a3.8 3.8 0 0 0 1.4-.9 3.8 3.8 0 0 0 .9-1.4c.15-.4.32-1 .37-2 .07-1.2.07-1.6.07-4.7s0-3.5-.07-4.7c-.05-1-.22-1.6-.37-2a3.8 3.8 0 0 0-.9-1.4 3.8 3.8 0 0 0-1.4-.9c-.4-.15-1-.32-2-.37C15.5 2 15.1 2 12 2zm0 4.9a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
+        </a>
+        <a href="{{ FACEBOOK_URL }}" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M13.5 22v-8.4h2.8l.4-3.3h-3.2V8.1c0-.95.26-1.6 1.63-1.6H17V3.5c-.3-.04-1.3-.13-2.5-.13-2.5 0-4.2 1.5-4.2 4.3v2.6H7.5v3.3h2.8V22h3.2z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <h4>Explore</h4>
+      <a href="{% url 'cohorts:track_list' %}">Tracks</a>
+      <a href="{% url 'marketplace:listing_list' %}">Marketplace</a>
+      <a href="{% url 'faq' %}">FAQ</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Company</h4>
+      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'contact' %}">Contact</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Legal</h4>
+      <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+      <a href="{% url 'terms_of_service' %}">Terms of Service</a>
+      <a href="{% url 'cookie_policy' %}">Cookie Policy</a>
+      <a href="#" onclick="window.csaConsent && window.csaConsent.openPreferences(); return false;">Manage cookie preferences</a>
+    </div>
+  </div>
+  <p class="footer-copy">&copy; {% now "Y" %} Code Secure Academy. All rights reserved.</p>
+</footer>
+
+<a class="whatsapp-fab" href="https://wa.me/{{ WHATSAPP_CONTACT_NUMBER }}" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28"><path fill="currentColor" d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.5.7 4.8 2 6.8L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.7c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.2 1.3 1.3-4-.3-.4a10.2 10.2 0 0 1-1.6-5.4C5.5 9.8 10.2 5.3 16 5.3s10.5 4.5 10.5 10.2S21.8 25.7 16 25.7zm5.8-7.6c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.3 5.2 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.2-.6-.4z"/></svg>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/animations.js' %}"></script>
+{% include "partials/cookie_banner.html" %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>

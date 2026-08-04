@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <h1>Welcome back, {{ user.first_name|default:user.username }}</h1>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <h2>Your enrollments</h2>
+    <div class="grid grid-2">
+      {% for enrollment in enrollments %}
+        <div class="glass-panel card">
+          <h3>{{ enrollment.cohort.track.name }}</h3>
+          <p>{{ enrollment.cohort.start_date }} → {{ enrollment.cohort.end_date }}</p>
+          {% if enrollment.status == "confirmed" %}
+            <span class="badge badge-open">Confirmed</span>
+          {% elif enrollment.status == "held" %}
+            <span class="badge">Payment processing</span>
+          {% else %}
+            <span class="badge badge-full">{{ enrollment.get_status_display }}</span>
+          {% endif %}
+          <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
+        </div>
+      {% empty %}
+        <p>No enrollments yet. <a href="{% url 'cohorts:track_list' %}">Browse tracks →</a></p>
+      {% endfor %}
+    </div>
+
+    <h2 style="margin-top:3rem;">Your marketplace orders</h2>
+    <div class="grid grid-2">
+      {% for order in orders %}
+        <div class="glass-panel card">
+          <h3>{{ order.listing.title }}</h3>
+          <p>₦{{ order.amount_naira }}</p>
+          {% if order.status == "paid" %}
+            <span class="badge badge-open">Paid</span>
+            <p><a href="{% url 'reviews:submit_review' app_label='marketplace' model_name='order' object_id=order.id %}">Leave a review →</a></p>
+          {% else %}
+            <span class="badge">{{ order.get_status_display }}</span>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p>No marketplace orders yet. <a href="{% url 'marketplace:listing_list' %}">Browse the marketplace →</a></p>
+      {% endfor %}
+    </div>
+
+    {% if not user.seller_profile %}
+      <div class="glass-panel card" style="margin-top:3rem;">
+        <h3>Want to sell on CSA Marketplace?</h3>
+        <p>Apply as a seller. Once approved, you can list digital products, tech services, or CSA merch.</p>
+        <a href="{% url 'marketplace:apply_seller' %}" class="btn btn-primary">Apply to sell</a>
+      </div>
+    {% else %}
+      <div class="glass-panel card" style="margin-top:3rem;">
+        <h3>Seller dashboard</h3>
+        <p>Status: <strong>{{ user.seller_profile.get_status_display }}</strong></p>
+        <a href="{% url 'marketplace:seller_dashboard' %}" class="btn btn-ghost">Manage your listings</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
