@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Tutor dashboard · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <h1>{{ tutor.full_name }}</h1>
+    {% if tutor.status == "approved" %}
+      <span class="badge badge-open">Approved</span>
+    {% elif tutor.status == "pending" %}
+      <span class="badge">Pending review</span>
+    {% else %}
+      <span class="badge badge-full">Rejected</span>
+    {% endif %}
+  </div>
+</section>
+<section style="padding-top:0;">
+  <div class="container">
+    {% if tutor.status == "approved" %}
+      <a href="{% url 'courses:create_course' %}" class="btn btn-primary">+ New course</a>
+      <div class="grid grid-3" style="margin-top:2rem;">
+        {% for course in courses %}
+          <div class="glass-panel card">
+            <h3>{{ course.title }}</h3>
+            <p>₦{{ course.price_naira }} · {{ course.modules.count }} module{{ course.modules.count|pluralize }}</p>
+            {% if course.status == "active" %}
+              <span class="badge badge-open">Live</span>
+            {% elif course.status == "pending" %}
+              <span class="badge">Pending review</span>
+            {% else %}
+              <span class="badge badge-full">Rejected</span>
+            {% endif %}
+            <p style="margin-top:0.75rem;"><a href="{% url 'courses:add_module' slug=course.slug %}">+ Add module</a></p>
+          </div>
+        {% empty %}
+          <p>No courses yet.</p>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>You'll be able to create courses once your application is approved.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

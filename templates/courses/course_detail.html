@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} · Code Secure Academy{% endblock %}
+{% block content %}
+<section>
+  <div class="container grid grid-2" style="max-width:960px;align-items:start;">
+    <div class="glass-panel card">
+      {% if course.cover_image %}
+        <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+      {% endif %}
+      <h1>{{ course.title }}</h1>
+      {% if course.average_rating %}<p>★ {{ course.average_rating|floatformat:1 }} ({{ course.approved_reviews.count }} review{{ course.approved_reviews.count|pluralize }})</p>{% endif %}
+      <p>{{ course.description|linebreaks }}</p>
+      <p>Taught by <strong>{{ course.tutor.full_name }}</strong></p>
+
+      <h3 style="margin-top:1.5rem;">Modules</h3>
+      {% for module in course.modules.all %}
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--glass-border);padding:0.6rem 0;">
+          <span>{{ forloop.counter }}. {{ module.title }}</span>
+          {% if module.is_preview or owned %}
+            <a href="{% url 'courses:watch_module' slug=course.slug module_id=module.id %}" class="badge badge-open">{% if module.is_preview and not owned %}Preview{% else %}Watch{% endif %}</a>
+          {% else %}
+            <span class="badge lesson-locked">🔒 Locked</span>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p>No modules published yet.</p>
+      {% endfor %}
+    </div>
+    <div class="glass-panel card">
+      <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ course.price_naira }} <span class="price-fx"></span></p>
+      {% if owned %}
+        <p class="badge badge-open">You own this course</p>
+      {% elif user.is_authenticated %}
+        <form method="post" action="{% url 'courses:start_checkout' slug=course.slug %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-block">Buy now, pay with Paystack</button>
+        </form>
+      {% else %}
+        <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-block">Log in to buy</a>
+      {% endif %}
+
+      {% if course.approved_reviews %}
+        <h3 style="margin-top:2rem;">Reviews</h3>
+        {% for review in course.approved_reviews %}
+          <div style="border-top:1px solid var(--glass-border);padding-top:0.75rem;margin-top:0.75rem;">
+            <div>{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+            <p>{{ review.body }}</p>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

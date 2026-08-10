@@ -40,7 +40,7 @@
           {% endif %}
           <h3>{{ listing.title }}</h3>
           <p>{{ listing.description|truncatewords:15 }}</p>
-          <p class="mono" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }}</p>
+          <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }} <span class="price-fx"></span></p>
           {% if listing.average_rating %}<p>★ {{ listing.average_rating|floatformat:1 }}</p>{% endif %}
         </a>
       {% empty %}

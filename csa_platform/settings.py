@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     "apps.whatsapp",
     "apps.reviews",
     "apps.marketplace",
+    "apps.lessons",
+    "apps.tutorials",
+    "apps.courses",
 ]
 
 MIDDLEWARE = [
@@ -182,7 +185,7 @@ EMAIL_BACKEND = config(
     "EMAIL_BACKEND",
     default="django.core.mail.backends.console.EmailBackend",
 )
-EMAIL_HOST = config("EMAIL_HOST", default="smtp.zoho.com")
+EMAIL_HOST = config("EMAIL_HOST", default="smtp-relay.brevo.com")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
@@ -206,6 +209,14 @@ INTERNAL_TASK_TOKEN = config("INTERNAL_TASK_TOKEN", default="dev-only-change-me"
 
 # Marketplace commission split
 MARKETPLACE_CSA_SPLIT_PERCENT = config("MARKETPLACE_CSA_SPLIT_PERCENT", default=10, cast=int)
+
+# Course sales: percent of the sale a tutor is paid out (the rest is CSA's cut). Kept
+# separate from MARKETPLACE_CSA_SPLIT_PERCENT so the two can be tuned independently.
+COURSE_TUTOR_PAYOUT_PERCENT = config("COURSE_TUTOR_PAYOUT_PERCENT", default=90, cast=int)
+# Hours a Payout sits as "pending" before the automatic sweep (release_pending_payouts,
+# hit by the same external cron pinger as release_expired_holds) will release it — a short
+# safety window to catch a refund/dispute before money actually leaves the platform.
+PAYOUT_HOLD_HOURS = config("PAYOUT_HOLD_HOURS", default=48, cast=int)
 
 # --------------------------------------------------------------------------
 # Social links (used in templates)

@@ -205,6 +205,64 @@ a { color: var(--blue-400); text-decoration: none; }
 
 .mono { font-family: var(--font-mono); font-feature-settings: "tnum" 1; }
 
+/* Local-currency estimate next to a Naira price — empty until currency.js
+   fills it in for visitors outside Nigeria; invisible (no layout shift)
+   until then since it starts as an empty inline span. */
+.price-fx { font-family: var(--font-sans); font-weight: 500; font-size: 0.7em; color: var(--text-muted); }
+
+/* ---------- Lessons (free/paid-gated learning content) ---------- */
+
+.lesson-locked { background: rgba(255, 184, 77, 0.14); color: var(--status-amber-text); border-color: rgba(255, 184, 77, 0.3); }
+.lesson-body { color: var(--text-secondary); line-height: 1.75; margin-top: var(--space-2); }
+.lesson-body h2 { font-size: 1.4rem; margin-top: var(--space-4); }
+.lesson-body h3 { margin-top: var(--space-3); }
+.lesson-body p { margin-bottom: var(--space-2); }
+.lesson-body ul, .lesson-body ol { padding-left: 1.4rem; margin-bottom: var(--space-2); }
+.lesson-body li { margin-bottom: 0.4rem; }
+.lesson-body code {
+  font-family: var(--font-mono); font-size: 0.88em; background: var(--glass-bg-strong);
+  padding: 0.15em 0.4em; border-radius: 4px; color: var(--blue-300);
+}
+.lesson-body pre {
+  font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
+  padding: var(--space-2); overflow-x: auto; margin-bottom: var(--space-2); line-height: 1.6;
+}
+.lesson-body pre code { background: none; padding: 0; color: var(--text-primary); }
+[data-theme="light"] .lesson-body pre { background: rgba(13, 18, 36, 0.05); }
+
+.lesson-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: var(--space-3); font-size: 0.9rem; }
+
+/* ---------- Tutorials ("try it yourself" code editor + read-only examples) ---------- */
+
+.code-editor { margin-top: var(--space-3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; }
+.code-editor-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-1) var(--space-2); background: var(--glass-bg-strong);
+  font-size: 0.85rem; color: var(--text-secondary); border-bottom: 1px solid var(--glass-border);
+}
+.code-editor-panes { display: grid; grid-template-columns: 1fr 1fr; min-height: 260px; }
+@media (max-width: 640px) { .code-editor-panes { grid-template-columns: 1fr; } }
+.code-editor-input {
+  font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.25); border: none; border-right: 1px solid var(--glass-border);
+  padding: var(--space-2); resize: vertical; min-height: 260px;
+}
+.code-editor-input:focus { outline: none; background: rgba(0, 0, 0, 0.35); }
+.code-editor-output { border: none; background: #fff; min-height: 260px; }
+[data-theme="light"] .code-editor-input { background: rgba(13, 18, 36, 0.05); }
+
+.code-example { margin-top: var(--space-3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; }
+.code-example-toolbar {
+  padding: var(--space-1) var(--space-2); background: var(--glass-bg-strong);
+  font-size: 0.85rem; color: var(--text-secondary); border-bottom: 1px solid var(--glass-border);
+}
+.code-example pre {
+  font-family: var(--font-mono); font-size: 0.85rem; background: rgba(0, 0, 0, 0.25);
+  padding: var(--space-2); overflow-x: auto; margin: 0; line-height: 1.6; color: var(--text-primary);
+}
+[data-theme="light"] .code-example pre { background: rgba(13, 18, 36, 0.05); }
+
 .eyebrow {
   display: inline-flex; align-items: center; gap: 0.5rem;
   font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;

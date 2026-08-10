@@ -60,38 +60,64 @@
 </section>
 
 <section>
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Pick your track</span>
-      <h2>Four tracks, one bar for quality</h2>
-      <p>Each cohort has its own dates, price, and seat count. Enroll before it fills up.</p>
-    </div>
-    <div class="grid grid-2">
-      {% for track in tracks %}
-        <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
-          {% if track.display_cover_image %}
-            <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
-          {% endif %}
-          <div class="card-body">
-            <h3>{{ track.name }}</h3>
-            <p>{{ track.tagline|default:track.description|truncatewords:20 }}</p>
-            {% with cohort=track.next_cohort %}
-              {% if cohort %}
-                {% if cohort.is_full %}
-                  <span class="badge badge-full">Full, join waitlist</span>
-                {% else %}
-                  <span class="badge badge-open">{{ cohort.seats_available }} seats left</span>
-                {% endif %}
-              {% endif %}
-            {% endwith %}
-          </div>
-        </a>
-      {% empty %}
-        <p>Tracks are being finalized. Check back shortly.</p>
-      {% endfor %}
-    </div>
+  <div class="container manifesto">
+    <span class="eyebrow" style="display:block;text-align:center;">Pick your track</span>
+    <p data-scroll-reveal>What would you like to learn?</p>
+  </div>
+</section>
 
-    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:var(--space-4);">Tools & tech you'll work with</p>
+{% for track in tracks %}
+<section>
+  <div class="container section-alt{% if forloop.counter|divisibleby:2 %} reverse{% endif %}">
+    <div class="alt-text">
+      {% include "partials/track_icon.html" %}
+      <span class="eyebrow">{{ track.name }}</span>
+      <h2>{{ track.tagline|default:track.name }}</h2>
+      {% if track.why_join_list %}
+        <ul class="alt-checklist">
+          {% for reason in track.why_join_list|slice:":3" %}
+            <li><span class="tick">✓</span><span>{{ reason }}</span></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% with cohort=track.next_cohort %}
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-top:var(--space-2);flex-wrap:wrap;">
+          {% if cohort %}
+            <strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong>
+            {% if cohort.accepting_enrollment %}
+              <span class="badge badge-open">{{ cohort.seats_available }} seats left</span>
+            {% elif cohort.status == "closed" %}
+              <span class="badge">Not accepting right now, join waitlist</span>
+            {% else %}
+              <span class="badge badge-full">Full, join waitlist</span>
+            {% endif %}
+          {% else %}
+            <span class="badge">Admissions haven't opened yet</span>
+          {% endif %}
+        </div>
+      {% endwith %}
+      <a href="{{ track.get_absolute_url }}" class="btn btn-primary" style="margin-top:var(--space-2);">See full details</a>
+    </div>
+    <div class="alt-visual">
+      {% if track.display_cover_image %}
+        <div class="glass-panel product-preview">
+          <img src="{{ track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:260px;object-fit:cover;display:block;">
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% empty %}
+<section>
+  <div class="container">
+    <p style="text-align:center;">Tracks are being finalized. Check back shortly.</p>
+  </div>
+</section>
+{% endfor %}
+
+<section>
+  <div class="container">
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Tools & tech you'll work with</p>
     <div class="pill-bar" style="margin-top:var(--space-2);">
       <span class="tech-pill">HTML</span>
       <span class="tech-pill">CSS</span>

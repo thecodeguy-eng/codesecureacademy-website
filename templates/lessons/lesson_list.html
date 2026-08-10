@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ track.name }} lessons · Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:720px;">
+    {% include "partials/track_icon.html" %}
+    <span class="eyebrow">{{ track.name }}</span>
+    <h1>Free lessons</h1>
+    <p class="lead">Work through these in order, or jump to whatever you need. Locked lessons unlock once you enroll in {{ track.name }}.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:720px;">
+    {% for lesson in lessons %}
+      <a href="{{ lesson.get_absolute_url }}" class="glass-panel interactive card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <h3 style="margin-bottom:0.25rem;">{{ forloop.counter }}. {{ lesson.title }}</h3>
+          <p style="margin:0;">{{ lesson.summary }}</p>
+        </div>
+        {% if lesson.id in completed_ids %}
+          <span class="badge badge-open">Done</span>
+        {% elif lesson.is_free %}
+          <span class="badge">Free</span>
+        {% else %}
+          <span class="badge lesson-locked">🔒 Locked</span>
+        {% endif %}
+      </a>
+    {% empty %}
+      <p>No lessons yet for this track.</p>
+    {% endfor %}
+
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="{{ track.get_absolute_url }}" class="btn btn-primary">Enroll in {{ track.name }}</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

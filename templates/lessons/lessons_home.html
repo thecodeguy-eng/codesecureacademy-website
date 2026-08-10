@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Learn free · Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow">Learn free</span>
+    <h1>Try a track before you <span class="text-gradient">enroll</span></h1>
+    <p class="lead">Free lessons for every track, no account or payment needed. Go deeper by enrolling when you're ready.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container grid grid-2">
+    {% for track in tracks %}
+      <a href="{% url 'lessons:lesson_list' track_slug=track.slug %}" class="glass-panel interactive card-media" style="display:block;">
+        {% if track.display_cover_image %}
+          <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+        {% endif %}
+        <div class="card-body">
+          <h3>{{ track.name }}</h3>
+          <p>{{ track.tagline|truncatewords:18 }}</p>
+          <span class="badge badge-open">{{ track.lessons.count }} lesson{{ track.lessons.count|pluralize }}</span>
+        </div>
+      </a>
+    {% empty %}
+      <p>Lessons are being added. Check back shortly.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

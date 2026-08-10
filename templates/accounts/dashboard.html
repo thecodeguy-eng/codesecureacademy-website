@@ -7,6 +7,46 @@
   </div>
 </section>
 
+{% if recommended_track %}
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="glass-panel card-media" style="display:grid;grid-template-columns:1fr 1.4fr;overflow:hidden;">
+      {% if recommended_track.display_cover_image %}
+        <img src="{{ recommended_track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;min-height:180px;">
+      {% endif %}
+      <div class="card-body">
+        <span class="eyebrow">Based on what you told us at signup</span>
+        <h2 style="margin-bottom:0.5rem;">{{ recommended_track.name }}</h2>
+        <p>{{ recommended_track.tagline }}</p>
+        <a href="{{ recommended_track.get_absolute_url }}" class="btn btn-primary">Enroll in {{ recommended_track.name }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% elif other_tracks %}
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="section-head" style="text-align:left;margin-bottom:1rem;">
+      <span class="eyebrow">Ready when you are</span>
+      <h2>Pick a track to get started</h2>
+    </div>
+    <div class="grid grid-2">
+      {% for track in other_tracks %}
+        <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+          {% if track.display_cover_image %}
+            <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+          {% endif %}
+          <div class="card-body">
+            <h3>{{ track.name }}</h3>
+            <p>{{ track.tagline|truncatewords:14 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <section style="padding-top:0;">
   <div class="container">
     <h2>Your enrollments</h2>
@@ -47,6 +87,25 @@
       {% endfor %}
     </div>
 
+    <h2 style="margin-top:3rem;">Your courses</h2>
+    <div class="grid grid-2">
+      {% for purchase in course_purchases %}
+        <div class="glass-panel card">
+          <h3>{{ purchase.course.title }}</h3>
+          <p>₦{{ purchase.amount_naira }}</p>
+          {% if purchase.status == "paid" %}
+            <span class="badge badge-open">Paid</span>
+            <p><a href="{{ purchase.course.get_absolute_url }}">Start watching →</a></p>
+            <p><a href="{% url 'reviews:submit_review' app_label='courses' model_name='purchase' object_id=purchase.id %}">Leave a review →</a></p>
+          {% else %}
+            <span class="badge">{{ purchase.get_status_display }}</span>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p>No course purchases yet. <a href="{% url 'courses:course_list' %}">Browse courses →</a></p>
+      {% endfor %}
+    </div>
+
     {% if not user.seller_profile %}
       <div class="glass-panel card" style="margin-top:3rem;">
         <h3>Want to sell on CSA Marketplace?</h3>
@@ -58,6 +117,20 @@
         <h3>Seller dashboard</h3>
         <p>Status: <strong>{{ user.seller_profile.get_status_display }}</strong></p>
         <a href="{% url 'marketplace:seller_dashboard' %}" class="btn btn-ghost">Manage your listings</a>
+      </div>
+    {% endif %}
+
+    {% if not user.tutor_profile %}
+      <div class="glass-panel card" style="margin-top:1.5rem;">
+        <h3>Want to teach on Code Secure Academy?</h3>
+        <p>Apply as a tutor. Once approved, you can publish paid video courses and earn 90% of every sale.</p>
+        <a href="{% url 'courses:apply_tutor' %}" class="btn btn-primary">Apply to teach</a>
+      </div>
+    {% else %}
+      <div class="glass-panel card" style="margin-top:1.5rem;">
+        <h3>Tutor dashboard</h3>
+        <p>Status: <strong>{{ user.tutor_profile.get_status_display }}</strong></p>
+        <a href="{% url 'courses:tutor_dashboard' %}" class="btn btn-ghost">Manage your courses</a>
       </div>
     {% endif %}
   </div>

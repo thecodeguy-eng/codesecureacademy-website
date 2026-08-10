@@ -13,6 +13,9 @@ urlpatterns = [
     path("pay/", include("apps.payments.urls")),
     path("marketplace/", include("apps.marketplace.urls")),
     path("reviews/", include("apps.reviews.urls")),
+    path("learn/", include("apps.lessons.urls")),
+    path("tutorials/", include("apps.tutorials.urls")),
+    path("courses/", include("apps.courses.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("", include("apps.core.urls")),
 ]

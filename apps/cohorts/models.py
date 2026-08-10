@@ -68,34 +68,15 @@ class Track(models.Model):
 
     @property
     def is_embeddable_video(self):
-        """True for YouTube/Drive links that need an <iframe>; False for a
-        direct file URL (e.g. Cloudinary-hosted mp4) that a <video> tag can
-        play directly."""
-        url = self.intro_video_url
-        return bool(url) and ("youtube.com" in url or "youtu.be" in url or "drive.google.com" in url)
+        from apps.core.video import is_embeddable_video
+
+        return is_embeddable_video(self.intro_video_url)
 
     @property
     def embed_video_url(self):
-        """Normalises a pasted YouTube/Drive share link into its embeddable
-        form. Admins can paste whatever link format they were given —
-        watch/short URLs for YouTube, "view" links for Drive."""
-        import re
+        from apps.core.video import embed_video_url
 
-        url = self.intro_video_url
-        if not url:
-            return ""
-        youtu_be = re.match(r"https?://youtu\.be/([\w-]+)", url)
-        if youtu_be:
-            return f"https://www.youtube.com/embed/{youtu_be.group(1)}"
-        watch = re.search(r"[?&]v=([\w-]+)", url)
-        if "youtube.com" in url and watch:
-            return f"https://www.youtube.com/embed/{watch.group(1)}"
-        if "youtube.com/embed/" in url:
-            return url
-        drive = re.match(r"https?://drive\.google\.com/file/d/([\w-]+)", url)
-        if drive:
-            return f"https://drive.google.com/file/d/{drive.group(1)}/preview"
-        return url
+        return embed_video_url(self.intro_video_url)
 
     @property
     def open_cohort(self):
@@ -138,6 +119,14 @@ class Cohort(models.Model):
     @property
     def is_full(self):
         return self.status != self.Status.CLOSED and self.seats_available <= 0
+
+    @property
+    def accepting_enrollment(self):
+        """The single source of truth for whether the enroll CTA (vs.
+        waitlist) should show. Distinct from `is_full` — an admin can flip
+        a cohort to CLOSED to pull it out of direct enrollment even with
+        seats left, which `is_full` alone doesn't capture."""
+        return self.status == self.Status.OPEN and self.seats_available > 0
 
     def refresh_status(self):
         if self.status == self.Status.CLOSED:

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Courses · Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container">
+    <span class="eyebrow">Go deeper</span>
+    <h1>In-depth <span class="text-gradient">video courses</span></h1>
+    <p class="lead">Structured, tutor-taught courses that pick up where our free tutorials leave off.</p>
+    <div class="hero-actions">
+      <a href="{% url 'courses:apply_tutor' %}" class="btn btn-ghost">Teach on Code Secure Academy</a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;padding-bottom:0;">
+  <div class="container">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1549286633-b81cf3179c80?w=1600&q=80&fm=jpg&fit=crop" alt="" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="grid grid-3">
+      {% for course in courses %}
+        <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+          {% if course.cover_image %}
+            <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+          {% endif %}
+          <h3>{{ course.title }}</h3>
+          <p>{{ course.description|truncatewords:15 }}</p>
+          <p>By {{ course.tutor.full_name }}</p>
+          <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira }} <span class="price-fx"></span></p>
+          {% if course.average_rating %}<p>★ {{ course.average_rating|floatformat:1 }}</p>{% endif %}
+        </a>
+      {% empty %}
+        <p>No courses live yet. Check back soon, or be the first to apply as a tutor above.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

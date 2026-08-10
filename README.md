@@ -39,6 +39,13 @@ documented inline there. Nothing in `.env` should ever be committed.
   `https://codesecureacademy.com/pay/webhook/paystack/` once deployed.
 - **Cloudinary**: free account at cloudinary.com, Dashboard shows cloud
   name/API key/secret.
+- **Brevo (email)**: free account at brevo.com, then Settings → SMTP & API →
+  SMTP tab for the login (your Brevo account email) and SMTP key —
+  those go in `EMAIL_HOST_USER`/`EMAIL_HOST_PASSWORD`. Everything that
+  sends email (verification links, WhatsApp invite emails, order
+  confirmations, admin broadcast emails to the waitlist) already goes
+  through Django's standard email backend, so dropping in these two
+  values is the only step — no code changes needed.
 - **Supabase**: create a project, Database → Connection string → "Session
   pooler" URI is what goes in `DATABASE_URL`. Note: Supabase's free tier
   auto-pauses a project after 7 days with no API activity — the same
@@ -86,8 +93,9 @@ confirm/replace all of these before real money moves through the site:
       money — some Paystack API versions treat this as the platform's cut,
       others as the subaccount's. Getting it backwards sends CSA's 10% to
       the seller and vice versa.
-- [ ] Decide official email: Zoho Mail (free) vs Google Workspace (paid),
-      set up `info@codesecureacademy.com`, and fill in `EMAIL_*` vars.
+- [ ] Set up Brevo (or Zoho Mail / Google Workspace, same `EMAIL_*` vars
+      either way), get `info@codesecureacademy.com` sending, and fill in
+      the `EMAIL_*` vars.
 - [ ] Point Namecheap DNS at Render once the custom domain is added there.
 - [ ] **Have a Nigerian lawyer review the Privacy Policy and Terms of
       Service** (`apps/core/views.py` → `privacy_policy`/`terms_of_service`)

@@ -23,11 +23,13 @@
           <p>{{ track.tagline|default:track.description|truncatewords:24 }}</p>
           {% with cohort=track.next_cohort %}
             {% if cohort %}
-              <p><strong class="mono">₦{{ cohort.price_naira }}</strong> · starts {{ cohort.start_date }}</p>
-              {% if cohort.is_full %}
-                <span class="badge badge-full">Full, join waitlist</span>
-              {% else %}
+              <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong> · starts {{ cohort.start_date }}</p>
+              {% if cohort.accepting_enrollment %}
                 <span class="badge badge-open">{{ cohort.seats_available }} seats left</span>
+              {% elif cohort.status == "closed" %}
+                <span class="badge">Not accepting right now</span>
+              {% else %}
+                <span class="badge badge-full">Full, join waitlist</span>
               {% endif %}
             {% else %}
               <span class="badge">No cohort scheduled yet</span>

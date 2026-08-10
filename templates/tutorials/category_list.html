@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Free Tutorials · Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow">100% free, no sign-up needed</span>
+    <h1>Learn to code, free</h1>
+    <p class="lead">Pick a path, read tutorials, edit real code in your browser, and see results instantly. When you're ready to go deeper, our tutors' full video courses pick up where these leave off.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;padding-bottom:0;">
+  <div class="container">
+    <div class="photo-banner">
+      <img src="https://images.unsplash.com/photo-1699885960867-56d5f5262d38?w=1600&q=80&fm=jpg&fit=crop" alt="" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:960px;">
+    <div class="grid grid-3">
+      {% for category in categories %}
+        <a href="{{ category.get_absolute_url }}" class="glass-panel interactive card">
+          {% if category.icon %}<div style="font-size:2rem;">{{ category.icon }}</div>{% endif %}
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.description|truncatewords:20 }}</p>
+          <p style="margin:0;color:var(--text-muted);">{{ category.subjects.count }} subject{{ category.subjects.count|pluralize }}</p>
+        </a>
+      {% empty %}
+        <p>No tutorial categories published yet — check back soon.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from apps.core.admin_mixins import BroadcastEmailAdminMixin
+
 from .models import Cohort, Enrollment, Track, Waitlist
 
 
@@ -36,6 +38,10 @@ class EnrollmentAdmin(admin.ModelAdmin):
 
 
 @admin.register(Waitlist)
-class WaitlistAdmin(admin.ModelAdmin):
+class WaitlistAdmin(BroadcastEmailAdminMixin, admin.ModelAdmin):
     list_display = ("student", "track", "joined_at", "notified_at")
     list_filter = ("track",)
+    actions = ["broadcast_email"]
+
+    def get_broadcast_email(self, obj):
+        return obj.student.email

@@ -1,0 +1,37 @@
+{% comment %}
+Expects `subject` and `article` in context.
+
+Live-preview subjects (html/css/js): an editable textarea + a sandboxed
+iframe. The iframe uses sandbox="allow-scripts" WITHOUT "allow-same-origin"
+— this gives it a unique opaque origin, so any JS a visitor types can run,
+but it cannot read/write the parent page's cookies, CSRF token, or DOM. Same
+isolation pattern CodePen/MDN's playground use.
+
+Everything else: a read-only example + a static expected-output block. No
+server-side execution.
+{% endcomment %}
+{% if article.example_code %}
+  {% if subject.has_live_preview %}
+    <div class="code-editor" data-code-editor>
+      <div class="code-editor-toolbar">
+        <span>Try it yourself</span>
+        <button type="button" class="btn btn-primary btn-sm" data-code-run>Run ▶</button>
+      </div>
+      <div class="code-editor-panes">
+        <textarea class="code-editor-input" data-code-input spellcheck="false">{{ article.example_code }}</textarea>
+        <iframe class="code-editor-output" data-code-output sandbox="allow-scripts" title="Live preview"></iframe>
+      </div>
+    </div>
+  {% else %}
+    <div class="code-example">
+      <div class="code-example-toolbar">Example</div>
+      <pre><code>{{ article.example_code }}</code></pre>
+    </div>
+    {% if article.expected_output %}
+      <div class="code-example">
+        <div class="code-example-toolbar">Output</div>
+        <pre><code>{{ article.expected_output }}</code></pre>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endif %}

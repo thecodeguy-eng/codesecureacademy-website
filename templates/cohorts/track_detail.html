@@ -67,13 +67,16 @@
         <h3>Cohort dates</h3>
         <p>{{ cohort.start_date }} → {{ cohort.end_date }}</p>
         <h3>Price</h3>
-        <p class="mono" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira }}</p>
+        <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira }} <span class="price-fx"></span></p>
 
-        {% if cohort.is_full %}
+        {% if cohort.accepting_enrollment %}
+          <span class="badge badge-open">{{ cohort.seats_available }} of {{ cohort.seat_count }} seats left</span>
+        {% elif cohort.status == "closed" %}
+          <span class="badge">Not accepting enrollment right now</span>
+          <p>We're not admitting students for {{ track.name }} at the moment. Join the waitlist and we'll email you the moment enrollment reopens.</p>
+        {% else %}
           <span class="badge badge-full">Cohort full</span>
           <p>This cohort is full. Join the waitlist and we'll email you the moment a seat opens up.</p>
-        {% else %}
-          <span class="badge badge-open">{{ cohort.seats_available }} of {{ cohort.seat_count }} seats left</span>
         {% endif %}
       {% else %}
         <span class="badge">Admissions haven't opened yet</span>
@@ -82,7 +85,7 @@
 
       {% if not user.is_authenticated %}
         <a href="{% url 'account_signup' %}?next={{ request.path }}" class="btn btn-primary btn-block" style="margin-top:1rem;">Sign up to get started</a>
-      {% elif cohort and not cohort.is_full %}
+      {% elif cohort and cohort.accepting_enrollment %}
         <form method="post" action="{% url 'cohorts:start_checkout' cohort_id=cohort.id %}" style="margin-top:1rem;">
           {% csrf_token %}
           <button type="submit" class="btn btn-primary btn-block">Enroll now, pay with Paystack</button>
@@ -118,6 +121,19 @@
 </section>
 {% endif %}
 
+{% if track.lessons.exists %}
+<section>
+  <div class="container">
+    <div class="glass-panel card" style="text-align:center;">
+      <span class="eyebrow">Not ready to enroll?</span>
+      <h3>Try {{ track.name }} for free first</h3>
+      <p>A few free lessons, no account or payment needed.</p>
+      <a href="{% url 'lessons:lesson_list' track_slug=track.slug %}" class="btn btn-ghost">Try it free</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if track_reviews %}
 <section>
   <div class="container">
@@ -135,12 +151,12 @@
     <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
       <h2>Ready to start {{ track.name }}?</h2>
       <p class="lead" style="margin:0 auto var(--space-3);">
-        {% if cohort and not cohort.is_full %}Seats are open right now. Lock yours in.
+        {% if cohort and cohort.accepting_enrollment %}Seats are open right now. Lock yours in.
         {% else %}Join the waitlist and be first to know when enrollment opens.{% endif %}
       </p>
       {% if not user.is_authenticated %}
         <a href="{% url 'account_signup' %}?next={{ request.path }}" class="btn btn-primary">Sign up to get started</a>
-      {% elif cohort and not cohort.is_full %}
+      {% elif cohort and cohort.accepting_enrollment %}
         <form method="post" action="{% url 'cohorts:start_checkout' cohort_id=cohort.id %}">
           {% csrf_token %}
           <button type="submit" class="btn btn-primary">Enroll now</button>

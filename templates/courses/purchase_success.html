@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Purchase confirmed · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card" style="text-align:center;">
+      {% if purchase.status == "paid" %}
+        <span class="badge badge-open">Paid</span>
+        <h1>Purchase confirmed</h1>
+        <p>You bought <strong>{{ purchase.course.title }}</strong> for ₦{{ purchase.amount_naira }}.</p>
+        <p><a href="{{ purchase.course.get_absolute_url }}">Start watching →</a></p>
+        <p><a href="{% url 'reviews:submit_review' app_label='courses' model_name='purchase' object_id=purchase.id %}">Leave a review →</a></p>
+      {% else %}
+        <span class="badge">{{ purchase.get_status_display }}</span>
+        <h1>Payment processing</h1>
+        <p>We'll confirm the moment payment clears.</p>
+      {% endif %}
+      <p><a href="{% url 'dashboard' %}">Go to your dashboard →</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

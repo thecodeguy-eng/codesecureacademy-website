@@ -51,4 +51,6 @@ class Review(models.Model):
             return f"{obj.cohort.track.name} · {obj.cohort.start_date:%b %Y}"
         if hasattr(obj, "listing"):
             return obj.listing.title
+        if hasattr(obj, "course"):
+            return obj.course.title
         return ""

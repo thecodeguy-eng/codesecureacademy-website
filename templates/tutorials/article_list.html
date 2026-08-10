@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ subject.name }} Tutorial · Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow">Free tutorial</span>
+    <h1>{{ subject.name }}</h1>
+    <p class="lead">{{ subject.description }}</p>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:720px;">
+    <p style="margin-bottom:1rem;"><a href="{% url 'tutorials:subject_list' category_slug=category.slug %}">← {{ category.name }}</a></p>
+
+    {% for article in articles %}
+      <a href="{{ article.get_absolute_url }}" class="glass-panel interactive card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <h3 style="margin-bottom:0.25rem;">{{ forloop.counter }}. {{ article.title }}</h3>
+          <p style="margin:0;">{{ article.summary }}</p>
+        </div>
+        <span class="badge">Free</span>
+      </a>
+    {% empty %}
+      <p>No articles yet for {{ subject.name }}.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

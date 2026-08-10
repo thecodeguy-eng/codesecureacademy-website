@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ module.title }} · {{ course.title }}{% endblock %}
+{% block content %}
+<section>
+  <div class="container" style="max-width:860px;">
+    <p style="margin-bottom:0.5rem;"><a href="{{ course.get_absolute_url }}">← {{ course.title }}</a></p>
+
+    <div class="glass-panel card">
+      <span class="eyebrow">{{ course.title }}</span>
+      <h1>{{ module.title }}</h1>
+
+      <div style="aspect-ratio:16/9;margin:1rem 0;border-radius:12px;overflow:hidden;">
+        {% if module.is_embeddable_video %}
+          <iframe width="100%" height="100%" src="{{ module.embed_video_url }}" title="{{ module.title }}" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+        {% else %}
+          <video width="100%" height="100%" controls src="{{ module.video_url }}"></video>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      {% if prev_module %}
+        <a href="{% url 'courses:watch_module' slug=course.slug module_id=prev_module.id %}">← {{ prev_module.title }}</a>
+      {% else %}
+        <span></span>
+      {% endif %}
+      {% if next_module %}
+        <a href="{% url 'courses:watch_module' slug=course.slug module_id=next_module.id %}">{{ next_module.title }} →</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

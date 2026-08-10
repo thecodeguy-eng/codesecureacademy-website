@@ -132,6 +132,36 @@ def release_expired_holds(request):
     return JsonResponse({"released": released, "extended": extended, "confirmed": confirmed})
 
 
+@csrf_exempt
+def release_pending_payouts(request):
+    """Hit by the same external pinger as `release_expired_holds`, same
+    token check. Releases any tutor Payout that's sat `pending` for at
+    least `settings.PAYOUT_HOLD_HOURS` — a short safety window between a
+    course sale landing in the platform's Paystack balance and the tutor's
+    cut actually being transferred out, so an obvious refund/dispute can
+    still be caught before money leaves. To hold a specific payout back
+    past its window, just don't include it here — an admin can flip its
+    status away from `pending` in /admin/ any time before this runs."""
+    token = request.headers.get("X-Internal-Token") or request.GET.get("token")
+    if not token or token != settings.INTERNAL_TASK_TOKEN:
+        return HttpResponseForbidden("Invalid token")
+
+    from apps.courses.models import Payout
+
+    cutoff = timezone.now() - timezone.timedelta(hours=settings.PAYOUT_HOLD_HOURS)
+    due = Payout.objects.filter(status=Payout.Status.PENDING, created_at__lte=cutoff)
+
+    released, failed = 0, 0
+    for payout in due:
+        payout.release()
+        if payout.status == Payout.Status.PAID:
+            released += 1
+        else:
+            failed += 1
+
+    return JsonResponse({"released": released, "failed": failed})
+
+
 def healthz(request):
     """Cheap endpoint for the external keep-alive pinger to hit."""
     return JsonResponse({"status": "ok"})

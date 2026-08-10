@@ -88,6 +88,9 @@ window.addEventListener("pagereveal", function (event) {
 
     <nav class="main-nav" id="main-nav">
       <a href="{% url 'cohorts:track_list' %}">Tracks</a>
+      <a href="{% url 'tutorials:category_list' %}">Free Tutorials</a>
+      <a href="{% url 'courses:course_list' %}">Courses</a>
+      <a href="{% url 'lessons:lessons_home' %}">Learn Free</a>
       <a href="{% url 'marketplace:listing_list' %}">Marketplace</a>
       <a href="{% url 'faq' %}">FAQ</a>
       <a href="{% url 'about' %}">About</a>
@@ -141,6 +144,9 @@ window.addEventListener("pagereveal", function (event) {
     <div class="footer-links">
       <h4>Explore</h4>
       <a href="{% url 'cohorts:track_list' %}">Tracks</a>
+      <a href="{% url 'tutorials:category_list' %}">Free Tutorials</a>
+      <a href="{% url 'courses:course_list' %}">Courses</a>
+      <a href="{% url 'lessons:lessons_home' %}">Learn Free</a>
       <a href="{% url 'marketplace:listing_list' %}">Marketplace</a>
       <a href="{% url 'faq' %}">FAQ</a>
     </div>
@@ -170,6 +176,7 @@ window.addEventListener("pagereveal", function (event) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/animations.js' %}"></script>
+<script src="{% static 'js/currency.js' %}"></script>
 {% include "partials/cookie_banner.html" %}
 {% block extra_js %}{% endblock %}
 </body>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Teach on Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="padding-bottom:1rem;">
+  <div class="container" style="max-width:560px;">
+    <h1>Teach on Code Secure Academy</h1>
+    <p>Upload in-depth video courses that go further than our free tutorials. Applications are reviewed before you can publish anything. Once approved, every sale pays you 90% of the price, sent to the account below.</p>
+  </div>
+</section>
+<section style="padding-top:0;">
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card">
+      <form method="post">
+        {% csrf_token %}
+
+        <h3>Personal information</h3>
+        <p>{{ form.full_name.label_tag }}{{ form.full_name }}{{ form.full_name.errors }}</p>
+        <p>{{ form.phone_number.label_tag }}{{ form.phone_number }}{{ form.phone_number.errors }}</p>
+        <p>{{ form.bio.label_tag }}{{ form.bio }}{{ form.bio.errors }}</p>
+
+        <h3 style="margin-top:1.5rem;">Payout account details</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;">Used only to pay out your share of course sales — never shown to students.</p>
+        <p>{{ form.bank_code.label_tag }}{{ form.bank_code }}{{ form.bank_code.errors }}</p>
+        <p>{{ form.account_number.label_tag }}{{ form.account_number }}{{ form.account_number.errors }}</p>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;">Submit application</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

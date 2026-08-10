@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}New course · Code Secure Academy{% endblock %}
+{% block content %}
+<section>
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card">
+      <h1>New course</h1>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Submit for review</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

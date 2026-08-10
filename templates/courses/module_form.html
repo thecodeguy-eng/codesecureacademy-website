@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Add module · {{ course.title }}{% endblock %}
+{% block content %}
+<section>
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card">
+      <h1>Add a module to {{ course.title }}</h1>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Save module</button>
+      </form>
+      <p style="margin-top:1rem;"><a href="{% url 'courses:tutor_dashboard' %}">← Back to dashboard</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
