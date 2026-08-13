@@ -95,13 +95,20 @@ WSGI_APPLICATION = "csa_platform.wsgi.application"
 # Database (Supabase Postgres in prod, sqlite for local dev if no URL set)
 # --------------------------------------------------------------------------
 
+
+# --------------------------------------------------------------------------
+# Database
+# --------------------------------------------------------------------------
+
 DATABASES = {
     "default": dj_database_url.config(
-        default=config("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=config("DB_SSL_REQUIRE", default=False, cast=bool),
+        ssl_require=config("DB_SSL_REQUIRE", default=True, cast=bool),
     )
 }
+
+
 
 # --------------------------------------------------------------------------
 # Auth
@@ -167,12 +174,14 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 
+
+CLOUDINARY_URL = config("CLOUDINARY_URL", default="")
+
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default=""),
     "API_KEY": config("CLOUDINARY_API_KEY", default=""),
     "API_SECRET": config("CLOUDINARY_API_SECRET", default=""),
 }
-
 MEDIA_URL = "media/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
