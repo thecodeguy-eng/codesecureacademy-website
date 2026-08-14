@@ -26,7 +26,7 @@ if not DEBUG:
     render_hostname = config("RENDER_EXTERNAL_HOSTNAME", default="")
     if render_hostname:
         ALLOWED_HOSTS.append(render_hostname)
-        
+
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     default="https://codesecureacademy.com,https://www.codesecureacademy.com",
@@ -179,6 +179,7 @@ USE_TZ = True
 # --------------------------------------------------------------------------
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"] 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
