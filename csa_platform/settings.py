@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.sitemaps",
     # Media storage
+   "django.contrib.staticfiles",
     "cloudinary_storage",
-    "django.contrib.staticfiles",
     "cloudinary",
     # Auth
     "allauth",
@@ -175,12 +175,9 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-# Required by django-cloudinary-storage 0.3.0
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default=""),
