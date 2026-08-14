@@ -20,10 +20,13 @@
 
     <div class="grid grid-3">
       {% for subject in subjects %}
-        <a href="{{ subject.get_absolute_url }}" class="glass-panel interactive card">
-          {% if subject.icon %}<div style="font-size:2rem;">{{ subject.icon }}</div>{% endif %}
-          <h3>{{ subject.name }}</h3>
-          <p>{{ subject.description|truncatewords:20 }}</p>
+        <a href="{{ subject.get_absolute_url }}" class="glass-panel interactive card-media">
+          {% include "partials/term_chrome.html" with label=subject.slug|add:"/" %}
+          <div class="card-body">
+            {% if subject.icon %}<div style="font-size:2rem;">{{ subject.icon }}</div>{% endif %}
+            <h3>{{ subject.name }}</h3>
+            <p>{{ subject.description|truncatewords:20 }}</p>
+          </div>
         </a>
       {% empty %}
         <p>No subjects published yet under {{ category.name }} — check back soon.</p>

@@ -10,9 +10,7 @@ class Command(BaseCommand):
     help = (
         "Seeds placeholder tracks, cohorts, site stats, and FAQs so the site "
         "isn't empty locally. All prices/dates/seat counts are placeholders. "
-        "Replace them with real numbers from Victory in the admin before launch. "
-        "Idempotent — safe to rerun any time; tracks, the earliest cohort per "
-        "track, and FAQs are all updated in place rather than duplicated."
+        "Replace them with real numbers from Victory in the admin before launch."
     )
 
     def handle(self, *args, **options):
@@ -56,7 +54,7 @@ class Command(BaseCommand):
                     "Understand what's really happening behind every app you use\n"
                     "Finish with a live, deployed API you built from scratch"
                 ),
-                "cover_image_url": "https://images.unsplash.com/photo-1561233835-f937539b95b9?w=1200&q=80&fm=jpg&fit=crop",
+                "cover_image_url": "https://miro.medium.com/v2/resize:fit:1400/1*-RScwHg4ilGiM7cpK4xVpg.png",
             },
             {
                 "slug": "cybersecurity",
@@ -102,27 +100,15 @@ class Command(BaseCommand):
             status = "created" if created else "updated"
             self.stdout.write(f"Track '{track.name}' {status}")
 
-            # Update the earliest cohort for this track if one exists, otherwise
-            # create it. Keyed on `track` rather than a unique field, since Cohort
-            # has no natural unique key to update_or_create() against directly —
-            # if a track somehow has more than one cohort, only the earliest is
-            # touched on rerun, so extra cohorts an admin has added aren't clobbered.
-            cohort_defaults = {
-                "start_date": today + datetime.timedelta(days=21),
-                "end_date": today + datetime.timedelta(days=21 + 56),
-                "price_naira": 150000,  # PLACEHOLDER — replace with the real per-track price
-                "seat_count": 25,  # PLACEHOLDER — replace with the real seat count
-            }
-            cohort = track.cohorts.order_by("start_date").first()
-            if cohort:
-                for field, value in cohort_defaults.items():
-                    setattr(cohort, field, value)
-                cohort.save(update_fields=list(cohort_defaults.keys()))
-                cohort_status = "updated"
-            else:
-                cohort = Cohort.objects.create(track=track, **cohort_defaults)
-                cohort_status = "created"
-            self.stdout.write(self.style.WARNING(f"  -> cohort {cohort_status} for {track.name} (PLACEHOLDER price/dates/seats)"))
+            if not track.cohorts.exists():
+                Cohort.objects.create(
+                    track=track,
+                    start_date=today + datetime.timedelta(days=21),
+                    end_date=today + datetime.timedelta(days=21 + 56),
+                    price_naira=150000,  # PLACEHOLDER — replace with the real per-track price
+                    seat_count=25,  # PLACEHOLDER — replace with the real seat count
+                )
+                self.stdout.write(self.style.WARNING(f"  -> added a PLACEHOLDER cohort for {track.name} (fake price/dates/seats)"))
 
         # Left at 0 deliberately — these render as real trust stats on the
         # homepage, so they should never ship with made-up numbers. The
@@ -139,8 +125,6 @@ class Command(BaseCommand):
             ("Is the marketplace open to everyone?", "Yes, anyone can browse and buy. Selling requires an approved seller account, open to students and outside sellers alike."),
         ]
         for question, answer in faqs:
-            faq, created = FAQ.objects.update_or_create(question=question, defaults={"answer": answer})
-            faq_status = "created" if created else "updated"
-            self.stdout.write(f"FAQ '{question[:50]}' {faq_status}")
+            FAQ.objects.get_or_create(question=question, defaults={"answer": answer})
 
         self.stdout.write(self.style.SUCCESS("Seed data ready. Replace placeholder prices/dates/seats in the admin before launch."))

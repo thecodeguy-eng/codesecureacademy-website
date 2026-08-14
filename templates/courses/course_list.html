@@ -28,15 +28,18 @@
   <div class="container">
     <div class="grid grid-3">
       {% for course in courses %}
-        <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+        <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+          {% include "partials/term_chrome.html" with label=course.slug|add:".course" %}
           {% if course.cover_image %}
-            <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+            <img class="card-cover" src="{{ course.cover_image.url }}" alt="{{ course.title }}">
           {% endif %}
-          <h3>{{ course.title }}</h3>
-          <p>{{ course.description|truncatewords:15 }}</p>
-          <p>By {{ course.tutor.full_name }}</p>
-          <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira }} <span class="price-fx"></span></p>
-          {% if course.average_rating %}<p>★ {{ course.average_rating|floatformat:1 }}</p>{% endif %}
+          <div class="card-body">
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description|truncatewords:15 }}</p>
+            <p>By {{ course.tutor.full_name }}</p>
+            <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira }} <span class="price-fx"></span></p>
+            {% if course.average_rating %}<p>★ {{ course.average_rating|floatformat:1 }}</p>{% endif %}
+          </div>
         </a>
       {% empty %}
         <p>No courses live yet. Check back soon, or be the first to apply as a tutor above.</p>

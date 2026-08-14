@@ -16,6 +16,36 @@
 <section style="padding-top:0;">
   <div class="container">
     {% if seller.status == "approved" %}
+      <div class="glass-panel card" style="margin-bottom:2rem;max-width:320px;">
+        <span class="eyebrow">Your earnings (paid orders)</span>
+        <p class="mono" style="font-size:1.5rem;font-weight:700;color:var(--blue-300);">₦{{ seller_earnings }}</p>
+        <p style="color:var(--text-muted);font-size:0.8rem;">Your {{ seller_share_percent }}% share, paid straight to your bank account by Paystack at checkout — no separate payout step.</p>
+      </div>
+
+      {% if recent_orders %}
+        <div class="section-head"><h3>Recent orders</h3></div>
+        <div class="glass-panel card" style="margin-bottom:2rem;overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="text-align:left;color:var(--text-muted);font-size:0.85rem;">
+                <th style="padding:0.5rem;">Listing</th>
+                <th style="padding:0.5rem;">Amount</th>
+                <th style="padding:0.5rem;">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders %}
+                <tr style="border-top:1px solid var(--glass-border);">
+                  <td style="padding:0.5rem;">{{ order.listing.title }}</td>
+                  <td style="padding:0.5rem;" class="mono">₦{{ order.amount_naira }}</td>
+                  <td style="padding:0.5rem;">{{ order.paid_at|date:"d M Y" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
       <a href="{% url 'marketplace:create_listing' %}" class="btn btn-primary">+ New listing</a>
       <div class="grid grid-3" style="margin-top:2rem;">
         {% for listing in listings %}

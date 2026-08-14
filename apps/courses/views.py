@@ -3,6 +3,7 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -10,7 +11,7 @@ from apps.payments import services as payment_services
 from apps.payments.models import PaystackTransaction
 
 from .forms import CourseForm, CourseModuleForm, TutorApplicationForm
-from .models import Course, CourseModule, Purchase, Tutor
+from .models import Course, CourseModule, Payout, Purchase, Tutor
 
 
 def course_list(request):
@@ -48,7 +49,22 @@ def apply_tutor(request):
 def tutor_dashboard(request):
     tutor = get_object_or_404(Tutor, user=request.user)
     courses = tutor.courses.all()
-    return render(request, "courses/tutor_dashboard.html", {"tutor": tutor, "courses": courses})
+    payouts = tutor.payouts.select_related("purchase__course").all()
+    totals = payouts.aggregate(
+        paid=Sum("amount_naira", filter=Q(status=Payout.Status.PAID)),
+        pending=Sum("amount_naira", filter=Q(status=Payout.Status.PENDING)),
+    )
+    return render(
+        request,
+        "courses/tutor_dashboard.html",
+        {
+            "tutor": tutor,
+            "courses": courses,
+            "payouts": payouts[:20],
+            "total_paid": totals["paid"] or 0,
+            "total_pending": totals["pending"] or 0,
+        },
+    )
 
 
 @login_required

@@ -1,0 +1,9 @@
+{% comment %}
+Terminal window titlebar — drop as the first child inside a
+`.glass-panel.card-media` to give it the site's signature terminal-window
+look. Usage: {% include "partials/term_chrome.html" with label="frontend-dev.track" %}
+{% endcomment %}
+<div class="term-chrome">
+  <span class="term-dots"><span></span><span></span><span></span></span>
+  {% if label %}<span class="term-label">{{ label }}</span>{% endif %}
+</div>

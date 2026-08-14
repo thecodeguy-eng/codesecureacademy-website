@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import FAQ, SiteSettings
+from .admin_mixins import BroadcastEmailAdminMixin
+from .models import FAQ, SiteSettings, WaitlistSignup
 
 
 @admin.register(SiteSettings)
@@ -18,3 +19,13 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 class FAQAdmin(admin.ModelAdmin):
     list_display = ("question", "order")
     list_editable = ("order",)
+
+
+@admin.register(WaitlistSignup)
+class WaitlistSignupAdmin(BroadcastEmailAdminMixin, admin.ModelAdmin):
+    list_display = ("email", "joined_at", "notified_at")
+    search_fields = ("email",)
+    actions = ["broadcast_email"]
+
+    def get_broadcast_email(self, obj):
+        return obj.email

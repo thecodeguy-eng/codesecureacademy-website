@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{% if query %}Search: {{ query }} ·{% endif %} Code Secure Academy{% endblock %}
+{% block content %}
+
+<section class="hero" style="padding-bottom:1rem;">
+  <div class="container">
+    <span class="eyebrow">Search</span>
+    <h1>{% if query %}Results for "{{ query }}"{% else %}Search Code Secure Academy{% endif %}</h1>
+    <form method="get" action="{% url 'search' %}" style="max-width:480px;margin-top:1rem;display:flex;gap:0.5rem;">
+      <input type="search" name="q" value="{{ query }}" placeholder="Search tutorials, courses, tracks, marketplace..." autofocus style="flex:1;">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    {% if not query %}
+      <p>Type something above to search free tutorials, courses, tracks, and the marketplace.</p>
+    {% elif result_count == 0 %}
+      <p>No results for "{{ query }}". Try a different word.</p>
+    {% else %}
+
+      {% if tracks %}
+        <div class="section-head"><h2>Tracks</h2></div>
+        <div class="grid grid-3" style="margin-bottom:2rem;">
+          {% for track in tracks %}
+            <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+              <h3>{{ track.name }}</h3>
+              <p>{{ track.tagline }}</p>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if articles %}
+        <div class="section-head"><h2>Free tutorials</h2></div>
+        <div class="grid grid-3" style="margin-bottom:2rem;">
+          {% for article in articles %}
+            <a href="{{ article.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+              <span class="eyebrow">{{ article.subject.name }}</span>
+              <h3>{{ article.title }}</h3>
+              <p>{{ article.summary|truncatewords:15 }}</p>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if courses %}
+        <div class="section-head"><h2>Courses</h2></div>
+        <div class="grid grid-3" style="margin-bottom:2rem;">
+          {% for course in courses %}
+            <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+              <h3>{{ course.title }}</h3>
+              <p>{{ course.description|truncatewords:15 }}</p>
+              <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira }} <span class="price-fx"></span></p>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if listings %}
+        <div class="section-head"><h2>Marketplace</h2></div>
+        <div class="grid grid-3" style="margin-bottom:2rem;">
+          {% for listing in listings %}
+            <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+              <h3>{{ listing.title }}</h3>
+              <p>{{ listing.description|truncatewords:15 }}</p>
+              <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }} <span class="price-fx"></span></p>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

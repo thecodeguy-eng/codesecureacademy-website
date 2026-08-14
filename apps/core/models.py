@@ -25,6 +25,23 @@ class SiteSettings(models.Model):
         return "Site settings"
 
 
+class WaitlistSignup(models.Model):
+    """General 'notify me' email capture — not tied to a Track or a site
+    User account, unlike `cohorts.Waitlist` which requires both. This is
+    what the homepage waitlist form writes to, and what a launch-announce
+    broadcast email goes out to."""
+
+    email = models.EmailField(unique=True)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    notified_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-joined_at"]
+
+    def __str__(self):
+        return self.email
+
+
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()

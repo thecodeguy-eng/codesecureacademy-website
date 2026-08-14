@@ -121,19 +121,6 @@
 </section>
 {% endif %}
 
-{% if track.lessons.exists %}
-<section>
-  <div class="container">
-    <div class="glass-panel card" style="text-align:center;">
-      <span class="eyebrow">Not ready to enroll?</span>
-      <h3>Try {{ track.name }} for free first</h3>
-      <p>A few free lessons, no account or payment needed.</p>
-      <a href="{% url 'lessons:lesson_list' track_slug=track.slug %}" class="btn btn-ghost">Try it free</a>
-    </div>
-  </div>
-</section>
-{% endif %}
-
 {% if track_reviews %}
 <section>
   <div class="container">

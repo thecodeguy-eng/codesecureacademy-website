@@ -16,6 +16,48 @@
 <section style="padding-top:0;">
   <div class="container">
     {% if tutor.status == "approved" %}
+      <div class="grid grid-3" style="margin-bottom:2rem;">
+        <div class="glass-panel card">
+          <span class="eyebrow">Paid out</span>
+          <p class="mono" style="font-size:1.5rem;font-weight:700;color:var(--blue-300);">₦{{ total_paid }}</p>
+        </div>
+        <div class="glass-panel card">
+          <span class="eyebrow">Pending payout</span>
+          <p class="mono" style="font-size:1.5rem;font-weight:700;">₦{{ total_pending }}</p>
+          <p style="color:var(--text-muted);font-size:0.8rem;">Releases automatically after the hold window, or sooner if we push it manually.</p>
+        </div>
+      </div>
+
+      {% if payouts %}
+        <div class="section-head"><h3>Recent payouts</h3></div>
+        <div class="glass-panel card" style="margin-bottom:2rem;overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="text-align:left;color:var(--text-muted);font-size:0.85rem;">
+                <th style="padding:0.5rem;">Course</th>
+                <th style="padding:0.5rem;">Amount</th>
+                <th style="padding:0.5rem;">Status</th>
+                <th style="padding:0.5rem;">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for payout in payouts %}
+                <tr style="border-top:1px solid var(--glass-border);">
+                  <td style="padding:0.5rem;">{{ payout.purchase.course.title }}</td>
+                  <td style="padding:0.5rem;" class="mono">₦{{ payout.amount_naira }}</td>
+                  <td style="padding:0.5rem;">
+                    {% if payout.status == "paid" %}<span class="badge badge-open">Paid</span>
+                    {% elif payout.status == "pending" %}<span class="badge">Pending</span>
+                    {% else %}<span class="badge badge-full">Failed</span>{% endif %}
+                  </td>
+                  <td style="padding:0.5rem;">{{ payout.created_at|date:"d M Y" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
       <a href="{% url 'courses:create_course' %}" class="btn btn-primary">+ New course</a>
       <div class="grid grid-3" style="margin-top:2rem;">
         {% for course in courses %}

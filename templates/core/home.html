@@ -45,7 +45,7 @@
     </div>
     <div class="alt-visual">
       <div class="glass-panel product-preview">
-        <div class="preview-bar"><span></span><span></span><span></span></div>
+        <div class="preview-bar"><span></span><span></span><span></span><span class="term-label">cohort.json</span></div>
         <div class="preview-body">
           <div class="mock-track-card">
             <span class="badge badge-open">Open</span>
@@ -63,6 +63,20 @@
   <div class="container manifesto">
     <span class="eyebrow" style="display:block;text-align:center;">Pick your track</span>
     <p data-scroll-reveal>What would you like to learn?</p>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:560px;">
+    <div class="glass-panel card" style="text-align:center;">
+      <h3>Not ready to pick yet?</h3>
+      <p style="color:var(--text-muted);">Join the waitlist and we'll email you the moment a track you like opens for enrollment.</p>
+      <form method="post" action="{% url 'join_general_waitlist' %}" style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="you@example.com" required style="flex:1;min-width:220px;">
+        <button type="submit" class="btn btn-primary">Join the waitlist</button>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -157,7 +171,7 @@
     </div>
     <div class="alt-visual">
       <div class="glass-panel product-preview">
-        <div class="preview-bar"><span></span><span></span><span></span></div>
+        <div class="preview-bar"><span></span><span></span><span></span><span class="term-label">whatsapp.log</span></div>
         <div class="preview-body">
           <div class="mock-chat">
             <div class="mock-bubble">Payment confirmed ✅</div>

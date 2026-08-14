@@ -15,6 +15,7 @@
   <div class="container grid grid-2">
     {% for track in tracks %}
       <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+        {% include "partials/term_chrome.html" with label=track.slug|add:".track" %}
         {% if track.display_cover_image %}
           <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
         {% endif %}

@@ -206,6 +206,34 @@
     });
   }
 
+  // --- Nav search: collapses to an icon button, expands into an input on
+  // click so it never fights the nav links for horizontal space.
+  var searchWrap = document.getElementById("nav-search");
+  var searchToggle = document.getElementById("search-toggle");
+  var searchInput = document.getElementById("nav-search-input");
+  if (searchWrap && searchToggle && searchInput) {
+    searchToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = !searchWrap.classList.contains("open");
+      searchWrap.classList.toggle("open", open);
+      searchToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) searchInput.focus();
+    });
+    document.addEventListener("click", function (e) {
+      if (!searchWrap.contains(e.target)) {
+        searchWrap.classList.remove("open");
+        searchToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    searchInput.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        searchWrap.classList.remove("open");
+        searchToggle.setAttribute("aria-expanded", "false");
+        searchToggle.focus();
+      }
+    });
+  }
+
   // --- Cohort countdown timers: any element with [data-countdown="ISO-DATE"]
   function pad(n) { return String(n).padStart(2, "0"); }
 

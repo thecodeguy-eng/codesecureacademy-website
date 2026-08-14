@@ -1,8 +1,11 @@
 import uuid
+from decimal import Decimal
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -52,9 +55,27 @@ def apply_seller(request):
 
 @login_required
 def seller_dashboard(request):
+    """Unlike courses.Payout, there's no separate payout record here — a
+    paid Order settled straight into the seller's Paystack subaccount at
+    checkout (see Seller.approve / start_checkout below), so "earnings" is
+    just the seller's share of paid orders, computed for display."""
     seller = get_object_or_404(Seller, user=request.user)
     listings = seller.listings.all()
-    return render(request, "marketplace/seller_dashboard.html", {"seller": seller, "listings": listings})
+    paid_orders = Order.objects.filter(listing__seller=seller, status=Order.Status.PAID).select_related("listing")
+    gross = paid_orders.aggregate(total=Sum("amount_naira"))["total"] or 0
+    seller_share_percent = Decimal(100 - settings.MARKETPLACE_CSA_SPLIT_PERCENT)
+    seller_earnings = (Decimal(gross) * seller_share_percent / Decimal(100)).quantize(Decimal("0.01"))
+    return render(
+        request,
+        "marketplace/seller_dashboard.html",
+        {
+            "seller": seller,
+            "listings": listings,
+            "recent_orders": paid_orders.order_by("-paid_at")[:20],
+            "seller_earnings": seller_earnings,
+            "seller_share_percent": seller_share_percent,
+        },
+    )
 
 
 @login_required

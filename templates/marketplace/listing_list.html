@@ -34,14 +34,17 @@
 
     <div class="grid grid-3">
       {% for listing in listings %}
-        <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
+        <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+          {% include "partials/term_chrome.html" with label=listing.slug|add:".listing" %}
           {% if listing.cover_image %}
-            <img src="{{ listing.cover_image.url }}" alt="{{ listing.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+            <img class="card-cover" src="{{ listing.cover_image.url }}" alt="{{ listing.title }}">
           {% endif %}
-          <h3>{{ listing.title }}</h3>
-          <p>{{ listing.description|truncatewords:15 }}</p>
-          <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }} <span class="price-fx"></span></p>
-          {% if listing.average_rating %}<p>★ {{ listing.average_rating|floatformat:1 }}</p>{% endif %}
+          <div class="card-body">
+            <h3>{{ listing.title }}</h3>
+            <p>{{ listing.description|truncatewords:15 }}</p>
+            <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }} <span class="price-fx"></span></p>
+            {% if listing.average_rating %}<p>★ {{ listing.average_rating|floatformat:1 }}</p>{% endif %}
+          </div>
         </a>
       {% empty %}
         <p>No listings yet. Check back soon, or be the first to apply as a seller below.</p>
