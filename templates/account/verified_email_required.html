@@ -1,0 +1,7 @@
+{% extends "account/verified_email_required.html" %}
+{% block content %}
+{{ block.super }}
+<p style="margin-top:1rem;">
+  <a href="{% url 'accounts_extra:resend_confirmation' %}">Didn't get it? Resend the confirmation email</a>
+</p>
+{% endblock content %}

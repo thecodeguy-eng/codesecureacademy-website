@@ -1,8 +1,9 @@
 from django.urls import path
 
+from . import views
+
 app_name = "accounts_extra"
 
 urlpatterns = [
-    # Reserved for profile-edit / account-management views beyond what
-    # django-allauth already provides at /accounts/login/, /accounts/signup/, etc.
+    path("resend-confirmation/", views.resend_confirmation_email, name="resend_confirmation"),
 ]

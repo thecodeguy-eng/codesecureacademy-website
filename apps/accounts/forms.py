@@ -45,3 +45,7 @@ class CSASignupForm(SignupForm):
         user.track_of_interest = self.cleaned_data["track_of_interest"]
         user.save()
         return user
+
+
+class ResendConfirmationForm(forms.Form):
+    email = forms.EmailField(label="Email address")
