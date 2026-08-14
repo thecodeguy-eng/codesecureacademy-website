@@ -145,6 +145,7 @@ ACCOUNT_RATE_LIMITS = {
     "login_failed": "5/300s",
 }
 ACCOUNT_FORMS = {"signup": "apps.accounts.forms.CSASignupForm"}
+ACCOUNT_ADAPTER = "apps.accounts.adapters.CSAAccountAdapter"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
