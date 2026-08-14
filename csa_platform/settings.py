@@ -210,6 +210,11 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="Code Secure Academy <no-reply@codesecureacademy.com>")
+# Used by apps.core.email_backend.BrevoAPIEmailBackend — sends over Brevo's
+# HTTPS REST API instead of SMTP. This is a different credential than
+# EMAIL_HOST_PASSWORD above (Brevo dashboard -> SMTP & API -> API Keys tab,
+# not the SMTP tab), only needed when EMAIL_BACKEND is set to that class.
+BREVO_API_KEY = config("BREVO_API_KEY", default="")
 
 # --------------------------------------------------------------------------
 # Paystack
