@@ -14,9 +14,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --------------------------------------------------------------------------
 
 SECRET_KEY = config("SECRET_KEY", default="django-insecure-dev-only-change-me")
-DEBUG = True
-# DEBUG = config("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
+DEBUG = config("DEBUG", default=False, cast=bool)
+
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1",
+    cast=Csv()
+)
+
+if not DEBUG:
+    render_hostname = config("RENDER_EXTERNAL_HOSTNAME", default="")
+    if render_hostname:
+        ALLOWED_HOSTS.append(render_hostname)
+        
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     default="https://codesecureacademy.com,https://www.codesecureacademy.com",
@@ -176,7 +186,7 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
