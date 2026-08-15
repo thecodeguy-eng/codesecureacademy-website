@@ -445,6 +445,18 @@ a { color: var(--blue-400); text-decoration: none; }
 /* ---------- Cards / grids ---------- */
 
 .card { padding: var(--space-3); }
+
+/* Quiet inline reminder card — a lighter touch than a full promo card, so
+   it reads as a note in the page flow rather than an ad competing with
+   the actual content. Used on free-tutorial pages to nudge toward
+   enrollment/waitlist without ever blocking or overlaying anything. */
+.cta-banner {
+  padding: var(--space-2) var(--space-3); margin: var(--space-3) 0;
+  border-left: 3px solid var(--status-green-text);
+  display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; justify-content: space-between;
+}
+.cta-banner p { margin: 0; flex: 1; min-width: 220px; color: var(--text-secondary); }
+.cta-banner .eyebrow { display: none; }
 .grid { display: grid; gap: var(--space-3); }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }

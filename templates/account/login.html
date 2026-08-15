@@ -2,6 +2,9 @@
 {% block content %}
 {{ block.super }}
 <p style="margin-top:1rem;text-align:center;font-size:0.9rem;">
+  <a href="{% url 'account_reset_password' %}">Forgot your password?</a>
+</p>
+<p style="margin-top:0.5rem;text-align:center;font-size:0.9rem;">
   <a href="{% url 'accounts_extra:resend_confirmation' %}">Didn't get your confirmation email?</a>
 </p>
 {% endblock content %}

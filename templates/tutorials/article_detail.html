@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tutorial_extras %}
 {% block title %}{{ article.title }} · {{ subject.name }} · Code Secure Academy{% endblock %}
 {% block content %}
 
@@ -25,6 +26,8 @@
         <a href="{{ next_article.get_absolute_url }}">{{ next_article.title }} →</a>
       {% endif %}
     </div>
+
+    {% tutorial_cta_banner category %}
 
     {% if related_courses %}
       <div class="glass-panel card" style="margin-top:2rem;text-align:center;">

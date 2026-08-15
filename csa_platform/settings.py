@@ -147,6 +147,11 @@ ACCOUNT_RATE_LIMITS = {
 }
 ACCOUNT_FORMS = {"signup": "apps.accounts.forms.CSASignupForm"}
 ACCOUNT_ADAPTER = "apps.accounts.adapters.CSAAccountAdapter"
+# Forces https in every link allauth emails out (confirmation, password reset),
+# regardless of whether the request itself was correctly detected as secure —
+# it otherwise falls back to request.is_secure(), which depends on trusting
+# Render's proxy header (SECURE_PROXY_SSL_HEADER, only set when DEBUG=False).
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {

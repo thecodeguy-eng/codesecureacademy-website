@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tutorial_extras %}
 {% block title %}{{ category.name }} Tutorials · Code Secure Academy{% endblock %}
 {% block content %}
 
@@ -17,6 +18,8 @@
 <section>
   <div class="container" style="max-width:960px;">
     <p style="margin-bottom:1rem;"><a href="{% url 'tutorials:category_list' %}">← All categories</a></p>
+
+    {% tutorial_cta_banner category %}
 
     <div class="grid grid-3">
       {% for subject in subjects %}

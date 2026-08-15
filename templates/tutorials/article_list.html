@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tutorial_extras %}
 {% block title %}{{ subject.name }} Tutorial · Code Secure Academy{% endblock %}
 {% block content %}
 
@@ -16,6 +17,8 @@
 <section>
   <div class="container" style="max-width:720px;">
     <p style="margin-bottom:1rem;"><a href="{% url 'tutorials:subject_list' category_slug=category.slug %}">← {{ category.name }}</a></p>
+
+    {% tutorial_cta_banner category %}
 
     {% for article in articles %}
       <a href="{{ article.get_absolute_url }}" class="glass-panel interactive card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;">
