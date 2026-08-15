@@ -47,7 +47,7 @@
   --space-6: 6rem;
 
   --font-sans: "Manrope", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  --font-display: "Bricolage Grotesque", "Manrope", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Playfair Display", "Georgia", "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --header-bg: rgba(8, 11, 23, 0.66);
@@ -191,7 +191,10 @@ body::before {
 }
 
 h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 var(--space-2); }
-h1, h2 { font-family: var(--font-display); }
+/* Playfair Display is a high-contrast serif — the tight -0.03em tracking
+   tuned for the old grotesque sans crowds its hairlines at display sizes,
+   so h1/h2 get a gentler value here. */
+h1, h2 { font-family: var(--font-display); letter-spacing: -0.005em; }
 h1 { font-size: clamp(2.4rem, 4.5vw + 1rem, 4.2rem); }
 h2 { font-size: clamp(1.8rem, 2.5vw + 1rem, 2.6rem); }
 h3 { font-size: 1.25rem; letter-spacing: -0.015em; }
