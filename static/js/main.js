@@ -318,9 +318,17 @@
   });
 
   function pwFeedbackEl(input) {
-    var el = document.createElement("p");
+    // Django renders each password field's own helptext (the full
+    // "must be 8 characters / not all numeric / ..." list) right alongside
+    // it — redundant now that we show one rule at a time as they type, so
+    // it's replaced rather than left sitting underneath.
+    var field = input.closest(".field") || input.closest("p") || input.closest(".pw-field-wrap").parentNode;
+    var staticHelp = field.querySelector(".helptext");
+    if (staticHelp) staticHelp.remove();
+
+    var el = document.createElement("span");
     el.className = "pw-feedback";
-    input.closest(".pw-field-wrap").insertAdjacentElement("afterend", el);
+    field.insertAdjacentElement("afterend", el);
     return el;
   }
 

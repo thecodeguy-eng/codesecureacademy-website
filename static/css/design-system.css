@@ -725,7 +725,12 @@ form p { margin-bottom: var(--space-2); }
   color: var(--text-muted); cursor: pointer;
 }
 .pw-toggle:hover { color: var(--text-primary); }
-.pw-feedback { font-size: 0.8rem; margin: -0.5rem 0 var(--space-2); min-height: 1.1em; }
+.pw-feedback {
+  display: block; font-size: 0.82rem; font-weight: 600;
+  margin: 0.4rem 0 var(--space-2); min-height: 1.1em;
+  transition: color var(--transition-fast);
+}
+.pw-feedback:empty { margin: 0; }
 .pw-feedback-error { color: var(--status-red-text); }
 .pw-feedback-ok { color: var(--status-green-text); }
 
