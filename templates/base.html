@@ -109,12 +109,12 @@ window.addEventListener("pagereveal", function (event) {
         <a href="{% url 'account_login' %}">Log in</a>
         <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Get started</a>
       {% endif %}
+      <button class="theme-toggle" id="theme-toggle" type="button">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <span class="theme-toggle-label">Switch to dark mode</span>
+      </button>
     </nav>
-
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light theme" type="button">
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-    </button>
 
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -138,7 +138,7 @@ window.addEventListener("pagereveal", function (event) {
   <div class="container footer-inner">
     <div class="footer-brand">
       <span class="brand-word"><span class="brand-code">Code</span> Secure Academy</span>
-      <p>Practical, cohort-based tech training, built in Nigeria, for Nigeria.</p>
+      <p>Build. Secure. Dominate.</p>
       <div class="footer-social">
         <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
           <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2.2.27 3 .58a6 6 0 0 1 2.2 1.4 6 6 0 0 1 1.4 2.2c.3.8.5 1.8.6 3 .1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2.2-.6 3a6 6 0 0 1-1.4 2.2 6 6 0 0 1-2.2 1.4c-.8.3-1.8.5-3 .6-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2.2-.3-3-.6a6 6 0 0 1-2.2-1.4 6 6 0 0 1-1.4-2.2c-.3-.8-.5-1.8-.6-3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2.2.6-3a6 6 0 0 1 1.4-2.2A6 6 0 0 1 6.5 .5c.8-.3 1.8-.5 3-.6C10.8.2 11.2.2 12 .2zm0 1.8c-3.1 0-3.5 0-4.7.07-1 .05-1.6.22-2 .37a3.8 3.8 0 0 0-1.4.9 3.8 3.8 0 0 0-.9 1.4c-.15.4-.32 1-.37 2C2.5 8.5 2.5 8.9 2.5 12s0 3.5.07 4.7c.05 1 .22 1.6.37 2a3.8 3.8 0 0 0 .9 1.4 3.8 3.8 0 0 0 1.4.9c.4.15 1 .32 2 .37 1.2.07 1.6.07 4.7.07s3.5 0 4.7-.07c1-.05 1.6-.22 2-.37a3.8 3.8 0 0 0 1.4-.9 3.8 3.8 0 0 0 .9-1.4c.15-.4.32-1 .37-2 .07-1.2.07-1.6.07-4.7s0-3.5-.07-4.7c-.05-1-.22-1.6-.37-2a3.8 3.8 0 0 0-.9-1.4 3.8 3.8 0 0 0-1.4-.9c-.4-.15-1-.32-2-.37C15.5 2 15.1 2 12 2zm0 4.9a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>

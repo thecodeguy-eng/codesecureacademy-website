@@ -66,12 +66,21 @@ class Course(models.Model):
         ACTIVE = "active", "Active"
         REJECTED = "rejected", "Rejected"
 
+    class DeliveryType(models.TextChoices):
+        SELF_PACED = "self_paced", "Self-paced (recorded modules)"
+        LIVE = "live", "Virtual (live scheduled sessions)"
+
     tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, related_name="courses")
     title = models.CharField(max_length=150)
     slug = models.SlugField(unique=True)
     description = models.TextField()
     price_naira = models.DecimalField(max_digits=10, decimal_places=2)
     cover_image = models.ImageField(upload_to="courses/", blank=True, null=True)
+    delivery_type = models.CharField(
+        max_length=12, choices=DeliveryType.choices, default=DeliveryType.SELF_PACED,
+        help_text="Self-paced: students watch recorded modules anytime. Virtual: students attend "
+        "scheduled live sessions (Google Meet, Zoom, etc.) at set times.",
+    )
     related_subject = models.ForeignKey(
         "tutorials.Subject",
         on_delete=models.SET_NULL,
@@ -113,6 +122,10 @@ class Course(models.Model):
 
         return self.approved_reviews.aggregate(avg=Avg("rating"))["avg"]
 
+    @property
+    def is_live(self):
+        return self.delivery_type == self.DeliveryType.LIVE
+
 
 class CourseModule(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="modules")
@@ -145,6 +158,34 @@ class CourseModule(models.Model):
 
     def is_watchable_by(self, user):
         return self.is_preview or self.course.is_purchased_by(user)
+
+
+class LiveSession(models.Model):
+    """A scheduled live class (Google Meet, Zoom, etc.) for a `Course` with
+    `delivery_type=LIVE` — the virtual-cohort counterpart to the recorded
+    `CourseModule`. The meeting link is only ever shown to paying students,
+    same access rule as a course module."""
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="live_sessions")
+    title = models.CharField(max_length=200)
+    meeting_link = models.URLField(help_text="Google Meet, Zoom, or other video-call link for this session.")
+    scheduled_at = models.DateTimeField()
+    duration_minutes = models.PositiveIntegerField(default=60)
+
+    class Meta:
+        ordering = ["scheduled_at"]
+
+    def __str__(self):
+        return f"{self.course.title}: {self.title} ({self.scheduled_at:%Y-%m-%d %H:%M})"
+
+    def is_visible_to(self, user):
+        return self.course.is_purchased_by(user)
+
+    @property
+    def is_past(self):
+        from django.utils import timezone
+
+        return self.scheduled_at < timezone.now()
 
 
 class Purchase(models.Model):

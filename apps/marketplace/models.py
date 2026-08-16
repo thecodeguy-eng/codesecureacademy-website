@@ -34,8 +34,20 @@ class Seller(models.Model):
         return self.business_name
 
     def approve(self):
-        """Creates the Paystack subaccount on approval so checkout can
-        auto-split the sale — no manual payouts.
+        """Approval no longer requires bank details up front — sellers apply
+        with just their business info, and add payout details afterward via
+        `setup_payout_account()` (see marketplace.views.setup_payment_info).
+        Still calls it here too, in case an admin entered bank info before
+        approving."""
+        self.status = self.Status.APPROVED
+        self.approved_at = timezone.now()
+        self.save()
+        self.setup_payout_account()
+
+    def setup_payout_account(self):
+        """Creates the Paystack subaccount once bank details exist, so
+        checkout can auto-split the sale — no manual payouts. Safe to call
+        repeatedly; no-ops once a subaccount already exists.
 
         NOTE: verify `percentage_charge` semantics against Paystack's live
         docs before going live — some Paystack API versions treat it as the
@@ -53,9 +65,7 @@ class Seller(models.Model):
                 percentage_charge=settings.MARKETPLACE_CSA_SPLIT_PERCENT,
             )
             self.paystack_subaccount_code = data["subaccount_code"]
-        self.status = self.Status.APPROVED
-        self.approved_at = timezone.now()
-        self.save()
+            self.save(update_fields=["paystack_subaccount_code"])
 
 
 class Listing(models.Model):

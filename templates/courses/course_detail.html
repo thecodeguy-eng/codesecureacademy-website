@@ -12,19 +12,42 @@
       <p>{{ course.description|linebreaks }}</p>
       <p>Taught by <strong>{{ course.tutor.full_name }}</strong></p>
 
-      <h3 style="margin-top:1.5rem;">Modules</h3>
-      {% for module in course.modules.all %}
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--glass-border);padding:0.6rem 0;">
-          <span>{{ forloop.counter }}. {{ module.title }}</span>
-          {% if module.is_preview or owned %}
-            <a href="{% url 'courses:watch_module' slug=course.slug module_id=module.id %}" class="badge badge-open">{% if module.is_preview and not owned %}Preview{% else %}Watch{% endif %}</a>
-          {% else %}
-            <span class="badge lesson-locked">🔒 Locked</span>
-          {% endif %}
-        </div>
-      {% empty %}
-        <p>No modules published yet.</p>
-      {% endfor %}
+      {% if course.is_live %}
+        <h3 style="margin-top:1.5rem;">Live sessions</h3>
+        {% for session in live_sessions %}
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--glass-border);padding:0.6rem 0;">
+            <div>
+              <div>{{ session.title }}</div>
+              <div style="color:var(--text-muted);font-size:0.85rem;">{{ session.scheduled_at|date:"D, d M Y · H:i" }} · {{ session.duration_minutes }} min</div>
+            </div>
+            {% if owned %}
+              {% if session.is_past %}
+                <span class="badge">Ended</span>
+              {% else %}
+                <a href="{{ session.meeting_link }}" target="_blank" rel="noopener" class="badge badge-open">Join</a>
+              {% endif %}
+            {% else %}
+              <span class="badge lesson-locked">🔒 Locked</span>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p>No live sessions scheduled yet.</p>
+        {% endfor %}
+      {% else %}
+        <h3 style="margin-top:1.5rem;">Modules</h3>
+        {% for module in course.modules.all %}
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid var(--glass-border);padding:0.6rem 0;">
+            <span>{{ forloop.counter }}. {{ module.title }}</span>
+            {% if module.is_preview or owned %}
+              <a href="{% url 'courses:watch_module' slug=course.slug module_id=module.id %}" class="badge badge-open">{% if module.is_preview and not owned %}Preview{% else %}Watch{% endif %}</a>
+            {% else %}
+              <span class="badge lesson-locked">🔒 Locked</span>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p>No modules published yet.</p>
+        {% endfor %}
+      {% endif %}
     </div>
     <div class="glass-panel card">
       <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ course.price_naira }} <span class="price-fx"></span></p>

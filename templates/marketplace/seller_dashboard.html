@@ -16,10 +16,17 @@
 <section style="padding-top:0;">
   <div class="container">
     {% if seller.status == "approved" %}
+      {% if not seller.paystack_subaccount_code %}
+        <div class="glass-panel card" style="margin-bottom:2rem;">
+          <h3>Add your payment details</h3>
+          <p>You're approved to sell, one more step before you can list anything: add the bank account you want paid into.</p>
+          <a href="{% url 'marketplace:setup_payment_info' %}" class="btn btn-primary">Add payment details</a>
+        </div>
+      {% endif %}
       <div class="glass-panel card" style="margin-bottom:2rem;max-width:320px;">
         <span class="eyebrow">Your earnings (paid orders)</span>
         <p class="mono" style="font-size:1.5rem;font-weight:700;color:var(--blue-300);">₦{{ seller_earnings }}</p>
-        <p style="color:var(--text-muted);font-size:0.8rem;">Your {{ seller_share_percent }}% share, paid straight to your bank account by Paystack at checkout — no separate payout step.</p>
+        <p style="color:var(--text-muted);font-size:0.8rem;">Your {{ seller_share_percent }}% share, paid straight to your bank account by Paystack at checkout, no separate payout step.</p>
       </div>
 
       {% if recent_orders %}

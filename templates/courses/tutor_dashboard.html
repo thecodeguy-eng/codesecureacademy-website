@@ -63,7 +63,13 @@
         {% for course in courses %}
           <div class="glass-panel card">
             <h3>{{ course.title }}</h3>
-            <p>₦{{ course.price_naira }} · {{ course.modules.count }} module{{ course.modules.count|pluralize }}</p>
+            {% if course.is_live %}
+              <span class="badge">Virtual</span>
+              <p>₦{{ course.price_naira }} · {{ course.live_sessions.count }} session{{ course.live_sessions.count|pluralize }}</p>
+            {% else %}
+              <span class="badge">Self-paced</span>
+              <p>₦{{ course.price_naira }} · {{ course.modules.count }} module{{ course.modules.count|pluralize }}</p>
+            {% endif %}
             {% if course.status == "active" %}
               <span class="badge badge-open">Live</span>
             {% elif course.status == "pending" %}
@@ -71,7 +77,11 @@
             {% else %}
               <span class="badge badge-full">Rejected</span>
             {% endif %}
-            <p style="margin-top:0.75rem;"><a href="{% url 'courses:add_module' slug=course.slug %}">+ Add module</a></p>
+            {% if course.is_live %}
+              <p style="margin-top:0.75rem;"><a href="{% url 'courses:add_live_session' slug=course.slug %}">+ Schedule live session</a></p>
+            {% else %}
+              <p style="margin-top:0.75rem;"><a href="{% url 'courses:add_module' slug=course.slug %}">+ Add module</a></p>
+            {% endif %}
           </div>
         {% empty %}
           <p>No courses yet.</p>

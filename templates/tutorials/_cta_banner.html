@@ -7,11 +7,11 @@ cohort yet), or explore all tracks (no track matches this category).
 <div class="glass-panel card cta-banner">
   {% if track and cohort and cohort.accepting_enrollment %}
     <span class="eyebrow">Ready to go further?</span>
-    <p>These free tutorials are a preview — our <strong>{{ track.name }}</strong> cohort covers it in depth, with a real project and a cohort alongside you. <span class="badge badge-open">{{ cohort.seats_available }} seats left</span></p>
+    <p>These free tutorials are a preview, our <strong>{{ track.name }}</strong> cohort covers it in depth, with a real project and a cohort alongside you. <span class="badge badge-open">Active</span></p>
     <a href="{{ track.get_absolute_url }}" class="btn btn-primary btn-sm">Enroll in {{ track.name }}</a>
   {% elif track %}
     <span class="eyebrow">Ready to go further?</span>
-    <p>These free tutorials are a preview — we're not admitting students for our <strong>{{ track.name }}</strong> cohort right now, but you can join the waitlist and we'll email you the moment it opens.</p>
+    <p>These free tutorials are a preview, we're not admitting students for our <strong>{{ track.name }}</strong> cohort right now, but you can join the waitlist and we'll email you the moment it opens.</p>
     <a href="{{ track.get_absolute_url }}" class="btn btn-primary btn-sm">Join the {{ track.name }} waitlist</a>
   {% else %}
     <span class="eyebrow">Ready to go further?</span>

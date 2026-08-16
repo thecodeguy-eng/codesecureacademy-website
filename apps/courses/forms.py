@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Course, CourseModule, Tutor
+from .models import Course, CourseModule, LiveSession, Tutor
 
 
 class TutorApplicationForm(forms.ModelForm):
@@ -26,7 +26,7 @@ class TutorApplicationForm(forms.ModelForm):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ["title", "slug", "description", "price_naira", "cover_image", "related_subject"]
+        fields = ["title", "slug", "description", "price_naira", "cover_image", "related_subject", "delivery_type"]
 
 
 class CourseModuleForm(forms.ModelForm):
@@ -35,4 +35,16 @@ class CourseModuleForm(forms.ModelForm):
         fields = ["title", "order", "video_url", "is_preview"]
         help_texts = {
             "video_url": "Paste your Cloudinary video URL (or a YouTube/Drive share link).",
+        }
+
+
+class LiveSessionForm(forms.ModelForm):
+    class Meta:
+        model = LiveSession
+        fields = ["title", "meeting_link", "scheduled_at", "duration_minutes"]
+        widgets = {
+            "scheduled_at": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+        }
+        help_texts = {
+            "meeting_link": "Google Meet, Zoom, or other video-call link, shared only with students who've paid.",
         }

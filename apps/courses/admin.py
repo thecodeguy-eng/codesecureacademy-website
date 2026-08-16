@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Course, CourseModule, Payout, Purchase, Tutor
+from .models import Course, CourseModule, LiveSession, Payout, Purchase, Tutor
 
 
 @admin.register(Tutor)
@@ -24,12 +24,17 @@ class CourseModuleInline(admin.TabularInline):
     extra = 1
 
 
+class LiveSessionInline(admin.TabularInline):
+    model = LiveSession
+    extra = 1
+
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ("title", "tutor", "price_naira", "status", "created_at")
-    list_filter = ("status",)
+    list_display = ("title", "tutor", "delivery_type", "price_naira", "status", "created_at")
+    list_filter = ("status", "delivery_type")
     prepopulated_fields = {"slug": ("title",)}
-    inlines = [CourseModuleInline]
+    inlines = [CourseModuleInline, LiveSessionInline]
     actions = ["approve_courses", "reject_courses"]
 
     @admin.action(description="Approve selected courses")

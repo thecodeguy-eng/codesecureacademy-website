@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils import timezone
 
+from . import services
 from .models import Listing, Order, Seller
 
 
@@ -10,10 +11,11 @@ class SellerAdmin(admin.ModelAdmin):
     list_filter = ("status", "category")
     actions = ["approve_sellers", "reject_sellers"]
 
-    @admin.action(description="Approve selected sellers (creates Paystack subaccount)")
+    @admin.action(description="Approve selected sellers (emails them to add payment details)")
     def approve_sellers(self, request, queryset):
         for seller in queryset:
             seller.approve()
+            services.notify_seller_approved(seller, request=request)
 
     @admin.action(description="Reject selected sellers")
     def reject_sellers(self, request, queryset):

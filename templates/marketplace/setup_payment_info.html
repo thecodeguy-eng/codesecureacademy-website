@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Payment details · Code Secure Academy{% endblock %}
+{% block content %}
+<section>
+  <div class="container" style="max-width:480px;">
+    <div class="glass-panel card">
+      <h1>Add your payment details</h1>
+      <p>You're approved to sell on CSA Marketplace. Add the bank account you want to get paid into, every sale splits automatically at checkout, {{ seller_share_percent|default:"90" }}% to you.</p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Save and continue</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

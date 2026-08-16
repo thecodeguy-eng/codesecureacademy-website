@@ -268,22 +268,15 @@ a { color: var(--blue-400); text-decoration: none; }
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--blue-300); margin-bottom: var(--space-2);
 }
-.eyebrow::before { content: "$"; color: var(--status-green-text); font-weight: 700; }
-.eyebrow::after {
-  content: ""; display: inline-block; width: 7px; height: 1em; background: var(--status-green-text);
-  animation: term-blink 1.1s steps(1) infinite;
-}
-@keyframes term-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .eyebrow::after { animation: none; } }
+.eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-400); box-shadow: 0 0 12px var(--blue-400); }
 
-/* ---------- Terminal window chrome — the site's signature motif: content
-   panels styled like a code editor/terminal window instead of a plain
-   card. Drop `.term-chrome` as the first child of any `.glass-panel` (use
-   `.card-media` padding, not `.card`, so the bar can run edge-to-edge). ---------- */
+/* ---------- Card titlebar — small dot cluster + optional label on top of
+   a content card. Drop `.term-chrome` as the first child of any
+   `.glass-panel` (use `.card-media` padding, not `.card`, so the bar can
+   run edge-to-edge). ---------- */
 
 .term-chrome {
   display: flex; align-items: center; gap: 0.6rem;
@@ -292,12 +285,9 @@ a { color: var(--blue-400); text-decoration: none; }
 }
 [data-theme="light"] .term-chrome { background: rgba(13, 18, 36, 0.045); }
 .term-dots { display: flex; gap: 6px; flex-shrink: 0; }
-.term-dots span { width: 9px; height: 9px; border-radius: 50%; display: block; }
-.term-dots span:nth-child(1) { background: #ff5f57; }
-.term-dots span:nth-child(2) { background: #febc2e; }
-.term-dots span:nth-child(3) { background: #28c840; }
+.term-dots span { width: 9px; height: 9px; border-radius: 50%; display: block; background: var(--glass-border); }
 .term-label {
-  font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);
+  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
@@ -353,7 +343,7 @@ a { color: var(--blue-400); text-decoration: none; }
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem var(--space-3); gap: var(--space-2); }
 .brand { display: flex; align-items: center; gap: 0.6rem; color: var(--text-primary); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.01em; flex-shrink: 0; }
-.brand-mark { height: 52px; width: auto; border-radius: 10px; display: block; }
+.brand-mark { height: 38px; width: auto; border-radius: 8px; display: block; }
 /* Two logo assets — one with white/blue strokes for dark backgrounds, one
    recolored dark navy/blue for light backgrounds — swapped by theme so the
    white strokes never disappear against a light page. */
@@ -370,12 +360,13 @@ a { color: var(--blue-400); text-decoration: none; }
   background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary);
   cursor: pointer; transition: border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
-.theme-toggle:hover { color: var(--text-primary); border-color: var(--blue-400); transform: rotate(-12deg); }
-.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle:hover { color: var(--text-primary); border-color: var(--blue-400); }
+.theme-toggle svg { width: 18px; height: 18px; flex-shrink: 0; }
 .theme-toggle .icon-moon { display: block; }
 .theme-toggle .icon-sun { display: none; }
 [data-theme="light"] .theme-toggle .icon-moon { display: none; }
 [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+.theme-toggle-label { display: none; font-size: 0.92rem; font-weight: 600; white-space: nowrap; }
 .main-nav { display: flex; align-items: center; gap: var(--space-3); }
 
 /* Collapses to a 38px icon button (matching .theme-toggle) so it never
@@ -589,10 +580,9 @@ section { padding: var(--space-5) 0; }
 .alt-checklist { list-style: none; padding: 0; margin: var(--space-3) 0 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .alt-checklist li { display: flex; gap: 0.7rem; align-items: flex-start; color: var(--text-secondary); }
 .tick {
-  flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
+  flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
   background: rgba(60, 220, 150, 0.14); border: 1px solid rgba(60, 220, 150, 0.35); color: var(--status-green-text);
   display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
-  font-family: var(--font-mono);
 }
 .alt-checklist .tick { margin-top: 0.1rem; }
 
@@ -608,11 +598,9 @@ section { padding: var(--space-5) 0; }
    representation in the same visual language as the actual product. */
 
 .product-preview { padding: 0; overflow: hidden; }
-.preview-bar { display: flex; gap: 6px; padding: 0.85rem 1rem; border-bottom: 1px solid var(--glass-border); }
-.preview-bar span { width: 9px; height: 9px; border-radius: 50%; }
-.preview-bar span:nth-child(1) { background: #ff5f57; }
-.preview-bar span:nth-child(2) { background: #febc2e; }
-.preview-bar span:nth-child(3) { background: #28c840; }
+.preview-bar { display: flex; align-items: center; gap: 6px; padding: 0.85rem 1rem; border-bottom: 1px solid var(--glass-border); }
+.preview-bar span { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, 0.14); }
+.preview-bar .term-label { width: auto; height: auto; border-radius: 0; background: none; margin-left: 0.25rem; }
 .preview-body { padding: var(--space-3); }
 
 .mock-track-card {
@@ -725,6 +713,21 @@ input:focus, textarea:focus, select:focus {
 .helptext { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.3rem; }
 .errorlist { color: var(--status-red-text); font-size: 0.85rem; list-style: none; padding: 0; margin: 0.3rem 0 0; }
 form p { margin-bottom: var(--space-2); }
+
+/* ---------- Password fields: show/hide toggle + live feedback ---------- */
+
+.pw-field-wrap { position: relative; }
+.pw-field-wrap input { padding-right: 2.6rem; }
+.pw-toggle {
+  position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; padding: 0; border: none; background: none;
+  color: var(--text-muted); cursor: pointer;
+}
+.pw-toggle:hover { color: var(--text-primary); }
+.pw-feedback { font-size: 0.8rem; margin: -0.5rem 0 var(--space-2); min-height: 1.1em; }
+.pw-feedback-error { color: var(--status-red-text); }
+.pw-feedback-ok { color: var(--status-green-text); }
 
 /* ---------- Alerts / messages ---------- */
 
@@ -907,6 +910,13 @@ form p { margin-bottom: var(--space-2); }
   .search-toggle { display: none; }
   .nav-search-form { width: 100% !important; opacity: 1 !important; margin-left: 0 !important; }
   .nav-search-form input { width: 100%; }
+  /* Theme toggle lives inside the hamburger menu at this width — full-width
+     row with a visible label, not just an icon, so it's actually discoverable. */
+  .theme-toggle {
+    width: 100%; height: auto; border-radius: var(--radius-sm); justify-content: flex-start;
+    padding: 0.7rem 1rem; gap: 0.6rem; margin-top: 0.4rem;
+  }
+  .theme-toggle-label { display: inline; }
 }
 
 /* =========================================================

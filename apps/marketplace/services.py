@@ -1,4 +1,23 @@
 from django.core.mail import send_mail
+from django.urls import reverse
+
+
+def notify_seller_approved(seller, request=None):
+    setup_path = reverse("marketplace:setup_payment_info")
+    setup_url = request.build_absolute_uri(setup_path) if request else setup_path
+    send_mail(
+        subject="You're approved to sell on CSA Marketplace",
+        message=(
+            f"Hi {seller.business_name},\n\n"
+            f"Your application to sell on CSA Marketplace has been approved.\n\n"
+            f"One more step before you can list anything: add the bank account you want "
+            f"paid into. Every sale splits automatically at checkout once that's done.\n\n"
+            f"Add your payment details: {setup_url}"
+        ),
+        from_email=None,
+        recipient_list=[seller.user.email],
+        fail_silently=True,
+    )
 
 
 def notify_order_paid(order):

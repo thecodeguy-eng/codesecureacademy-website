@@ -1,0 +1,22 @@
+{% extends "account/email/_base_email.html" %}
+{% load account %}
+{% block heading %}Confirm your email address{% endblock %}
+{% block body_html %}
+{% user_display user as user_display %}
+<p style="margin:0 0 12px;">Hey {{ user_display }},</p>
+<p style="margin:0;">You're receiving this because this email address was used to sign up for Code Secure Academy. Confirm it's really you to finish setting up your account.</p>
+{% endblock %}
+{% block cta_block %}
+{% if code %}
+<tr>
+  <td style="padding:16px 32px 32px;">
+    <p style="margin:0 0 8px;font-size:14px;color:#454c5e;">Your verification code:</p>
+    <p style="margin:0;font-size:28px;font-weight:800;letter-spacing:0.1em;color:#0d1224;">{{ code }}</p>
+  </td>
+</tr>
+{% else %}
+{% with cta_url=activate_url cta_label="Confirm my email" %}
+{{ block.super }}
+{% endwith %}
+{% endif %}
+{% endblock %}

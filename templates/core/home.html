@@ -45,13 +45,13 @@
     </div>
     <div class="alt-visual">
       <div class="glass-panel product-preview">
-        <div class="preview-bar"><span></span><span></span><span></span><span class="term-label">cohort.json</span></div>
+        <div class="preview-bar"><span></span><span></span><span></span></div>
         <div class="preview-body">
           <div class="mock-track-card">
-            <span class="badge badge-open">Open</span>
+            <span class="badge badge-open">Active</span>
             <div class="mock-title">Cybersecurity · Aug cohort</div>
             <div class="mock-progress"><div class="mock-progress-fill"></div></div>
-            <div class="mock-row"><span>17 of 25 seats left</span><span class="mock-price">₦150,000</span></div>
+            <div class="mock-row"><span>Enrolling now</span><span class="mock-price">₦5,000</span></div>
           </div>
         </div>
       </div>
@@ -99,11 +99,9 @@
           {% if cohort %}
             <strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong>
             {% if cohort.accepting_enrollment %}
-              <span class="badge badge-open">{{ cohort.seats_available }} seats left</span>
-            {% elif cohort.status == "closed" %}
-              <span class="badge">Not accepting right now, join waitlist</span>
+              <span class="badge badge-open">Active</span>
             {% else %}
-              <span class="badge badge-full">Full, join waitlist</span>
+              <span class="badge badge-full">Not active, join the waitlist</span>
             {% endif %}
           {% else %}
             <span class="badge">Admissions haven't opened yet</span>
@@ -171,7 +169,7 @@
     </div>
     <div class="alt-visual">
       <div class="glass-panel product-preview">
-        <div class="preview-bar"><span></span><span></span><span></span><span class="term-label">whatsapp.log</span></div>
+        <div class="preview-bar"><span></span><span></span><span></span></div>
         <div class="preview-body">
           <div class="mock-chat">
             <div class="mock-bubble">Payment confirmed ✅</div>

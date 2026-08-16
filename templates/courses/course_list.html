@@ -34,6 +34,7 @@
             <img class="card-cover" src="{{ course.cover_image.url }}" alt="{{ course.title }}">
           {% endif %}
           <div class="card-body">
+            {% if course.is_live %}<span class="badge">Virtual, live sessions</span>{% else %}<span class="badge">Self-paced</span>{% endif %}
             <h3>{{ course.title }}</h3>
             <p>{{ course.description|truncatewords:15 }}</p>
             <p>By {{ course.tutor.full_name }}</p>

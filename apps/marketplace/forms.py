@@ -4,11 +4,22 @@ from .models import Listing, Seller
 
 
 class SellerApplicationForm(forms.ModelForm):
+    """Business details only — bank/payout info is collected afterward,
+    once the application is approved (see SellerPaymentInfoForm)."""
+
     class Meta:
         model = Seller
-        fields = ["business_name", "category", "bio", "bank_code", "account_number"]
+        fields = ["business_name", "category", "bio"]
         widgets = {
             "bio": forms.Textarea(attrs={"rows": 3, "placeholder": "What do you sell / offer?"}),
+        }
+
+
+class SellerPaymentInfoForm(forms.ModelForm):
+    class Meta:
+        model = Seller
+        fields = ["bank_code", "account_number"]
+        widgets = {
             "bank_code": forms.TextInput(attrs={"placeholder": "e.g. 058 for GTBank"}),
             "account_number": forms.TextInput(attrs={"placeholder": "10-digit NUBAN"}),
         }

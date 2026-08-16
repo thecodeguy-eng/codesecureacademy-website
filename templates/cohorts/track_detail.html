@@ -70,13 +70,10 @@
         <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira }} <span class="price-fx"></span></p>
 
         {% if cohort.accepting_enrollment %}
-          <span class="badge badge-open">{{ cohort.seats_available }} of {{ cohort.seat_count }} seats left</span>
-        {% elif cohort.status == "closed" %}
-          <span class="badge">Not accepting enrollment right now</span>
-          <p>We're not admitting students for {{ track.name }} at the moment. Join the waitlist and we'll email you the moment enrollment reopens.</p>
+          <span class="badge badge-open">Active</span>
         {% else %}
-          <span class="badge badge-full">Cohort full</span>
-          <p>This cohort is full. Join the waitlist and we'll email you the moment a seat opens up.</p>
+          <span class="badge badge-full">Not active</span>
+          <p>We're not admitting students for {{ track.name }} at the moment. Join the waitlist and we'll email you the moment enrollment reopens.</p>
         {% endif %}
       {% else %}
         <span class="badge">Admissions haven't opened yet</span>
@@ -138,7 +135,7 @@
     <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
       <h2>Ready to start {{ track.name }}?</h2>
       <p class="lead" style="margin:0 auto var(--space-3);">
-        {% if cohort and cohort.accepting_enrollment %}Seats are open right now. Lock yours in.
+        {% if cohort and cohort.accepting_enrollment %}This cohort is active right now. Lock your spot in.
         {% else %}Join the waitlist and be first to know when enrollment opens.{% endif %}
       </p>
       {% if not user.is_authenticated %}

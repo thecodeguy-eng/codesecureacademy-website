@@ -10,8 +10,8 @@ from django.urls import reverse
 from apps.payments import services as payment_services
 from apps.payments.models import PaystackTransaction
 
-from .forms import CourseForm, CourseModuleForm, TutorApplicationForm
-from .models import Course, CourseModule, Payout, Purchase, Tutor
+from .forms import CourseForm, CourseModuleForm, LiveSessionForm, TutorApplicationForm
+from .models import Course, CourseModule, LiveSession, Payout, Purchase, Tutor
 
 
 def course_list(request):
@@ -22,7 +22,12 @@ def course_list(request):
 def course_detail(request, slug):
     course = get_object_or_404(Course, slug=slug, status=Course.Status.ACTIVE)
     owned = course.is_purchased_by(request.user)
-    return render(request, "courses/course_detail.html", {"course": course, "owned": owned})
+    live_sessions = course.live_sessions.all() if course.is_live else []
+    return render(
+        request,
+        "courses/course_detail.html",
+        {"course": course, "owned": owned, "live_sessions": live_sessions},
+    )
 
 
 @login_required
@@ -102,6 +107,25 @@ def add_module(request, slug):
         form = CourseModuleForm()
 
     return render(request, "courses/module_form.html", {"form": form, "course": course})
+
+
+@login_required
+def add_live_session(request, slug):
+    tutor = get_object_or_404(Tutor, user=request.user, status=Tutor.Status.APPROVED)
+    course = get_object_or_404(Course, slug=slug, tutor=tutor)
+
+    if request.method == "POST":
+        form = LiveSessionForm(request.POST)
+        if form.is_valid():
+            session = form.save(commit=False)
+            session.course = course
+            session.save()
+            messages.success(request, "Live session scheduled.")
+            return redirect("courses:tutor_dashboard")
+    else:
+        form = LiveSessionForm()
+
+    return render(request, "courses/live_session_form.html", {"form": form, "course": course})
 
 
 @login_required

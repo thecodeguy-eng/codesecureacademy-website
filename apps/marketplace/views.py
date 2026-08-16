@@ -12,7 +12,7 @@ from django.urls import reverse
 from apps.payments import services as payment_services
 from apps.payments.models import PaystackTransaction
 
-from .forms import ListingForm, SellerApplicationForm
+from .forms import ListingForm, SellerApplicationForm, SellerPaymentInfoForm
 from .models import Listing, Order, Seller
 
 
@@ -45,12 +45,33 @@ def apply_seller(request):
             seller = form.save(commit=False)
             seller.user = request.user
             seller.save()
-            messages.success(request, "Application received — we'll review it shortly.")
+            messages.success(request, "Application received, we'll review it shortly.")
             return redirect("marketplace:seller_dashboard")
     else:
         form = SellerApplicationForm()
 
     return render(request, "marketplace/apply_seller.html", {"form": form})
+
+
+@login_required
+def setup_payment_info(request):
+    """Reachable only after admin approval — an approved seller with no
+    bank details yet lands here (linked from the dashboard) to add them,
+    which is what actually creates the Paystack subaccount and unlocks
+    listing creation."""
+    seller = get_object_or_404(Seller, user=request.user, status=Seller.Status.APPROVED)
+
+    if request.method == "POST":
+        form = SellerPaymentInfoForm(request.POST, instance=seller)
+        if form.is_valid():
+            form.save()
+            seller.setup_payout_account()
+            messages.success(request, "Payment details saved, you're all set to start listing.")
+            return redirect("marketplace:seller_dashboard")
+    else:
+        form = SellerPaymentInfoForm(instance=seller)
+
+    return render(request, "marketplace/setup_payment_info.html", {"form": form, "seller": seller})
 
 
 @login_required
@@ -81,6 +102,9 @@ def seller_dashboard(request):
 @login_required
 def create_listing(request):
     seller = get_object_or_404(Seller, user=request.user, status=Seller.Status.APPROVED)
+    if not seller.paystack_subaccount_code:
+        messages.info(request, "Add your payment details first so you can actually get paid for what you sell.")
+        return redirect("marketplace:setup_payment_info")
 
     if request.method == "POST":
         form = ListingForm(request.POST, request.FILES)
