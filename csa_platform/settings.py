@@ -241,6 +241,9 @@ PAYOUT_HOLD_HOURS = config("PAYOUT_HOLD_HOURS", default=48, cast=int)
 INSTAGRAM_URL = config("INSTAGRAM_URL", default="https://www.instagram.com/codesecuracademy?igsh=amRhZ2VsNDN3MmF2")
 FACEBOOK_URL = config("FACEBOOK_URL", default="https://www.facebook.com/share/1DVbyQE8Bo/")
 WHATSAPP_CONTACT_NUMBER = config("WHATSAPP_CONTACT_NUMBER", default="2348158983927")
+# The public "chat with us" touchpoints (nav FAB, contact page) link here —
+# a broadcast channel, not a direct wa.me chat to WHATSAPP_CONTACT_NUMBER.
+WHATSAPP_CHANNEL_URL = config("WHATSAPP_CHANNEL_URL", default="https://whatsapp.com/channel/0029Vai0H6fKGGGO6i7aso29")
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)

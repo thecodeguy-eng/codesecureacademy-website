@@ -10,5 +10,6 @@ def site_settings(request):
         "INSTAGRAM_URL": settings.INSTAGRAM_URL,
         "FACEBOOK_URL": settings.FACEBOOK_URL,
         "WHATSAPP_CONTACT_NUMBER": settings.WHATSAPP_CONTACT_NUMBER,
+        "WHATSAPP_CHANNEL_URL": settings.WHATSAPP_CHANNEL_URL,
         "footer_waitlist_form": WaitlistSignupForm(),
     }
