@@ -238,9 +238,9 @@ PAYOUT_HOLD_HOURS = config("PAYOUT_HOLD_HOURS", default=48, cast=int)
 # Social links (used in templates)
 # --------------------------------------------------------------------------
 
-INSTAGRAM_URL = config("INSTAGRAM_URL", default="https://instagram.com/codesecureacademy")
-FACEBOOK_URL = config("FACEBOOK_URL", default="https://facebook.com/codesecureacademy")
-WHATSAPP_CONTACT_NUMBER = config("WHATSAPP_CONTACT_NUMBER", default="2340000000000")
+INSTAGRAM_URL = config("INSTAGRAM_URL", default="https://www.instagram.com/codesecuracademy?igsh=amRhZ2VsNDN3MmF2")
+FACEBOOK_URL = config("FACEBOOK_URL", default="https://www.facebook.com/share/1DVbyQE8Bo/")
+WHATSAPP_CONTACT_NUMBER = config("WHATSAPP_CONTACT_NUMBER", default="2348158983927")
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
