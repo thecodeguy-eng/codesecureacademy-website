@@ -68,6 +68,9 @@ window.addEventListener("pagereveal", function (event) {
 {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}">{% endblock %}
 <meta name="twitter:card" content="summary_large_image">
 
+<link rel="icon" type="image/jpeg" href="{% static 'img/mark.jpg' %}">
+<link rel="apple-touch-icon" href="{% static 'img/mark.jpg' %}">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,600&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
