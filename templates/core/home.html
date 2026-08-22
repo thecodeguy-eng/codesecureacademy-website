@@ -265,4 +265,38 @@
   </div>
 </section>
 
+{# Same Organization + founder structured data as the About page — repeated
+   here since the homepage is what Google actually crawls most, and is
+   usually the page a Knowledge Panel/AI Overview pulls org identity from. #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Code Secure Academy",
+  "alternateName": "CSA",
+  "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
+  "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+  "description": "Practical, cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design.",
+  "sameAs": [
+    "{{ INSTAGRAM_URL }}",
+    "{{ FACEBOOK_URL }}",
+    "{{ WHATSAPP_CHANNEL_URL }}"
+  ],
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Ugochukwu Victory Emmanuel",
+      "jobTitle": "Founder, CEO and Academic Director",
+      "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/founder.jpg' %}"
+    },
+    {
+      "@type": "Person",
+      "name": "Ibeawuchi C.N.",
+      "jobTitle": "Co-Founder and Chief Technology Officer",
+      "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/co-founder.png' %}"
+    }
+  ]
+}
+</script>
+
 {% endblock %}
