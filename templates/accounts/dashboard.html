@@ -67,7 +67,6 @@
       {% for enrollment in enrollments %}
         <div class="glass-panel card">
           <h3>{{ enrollment.cohort.track.name }}</h3>
-          <p>{{ enrollment.cohort.start_date }} → {{ enrollment.cohort.end_date }}</p>
           {% if enrollment.status == "confirmed" %}
             <span class="badge badge-open">Confirmed</span>
           {% elif enrollment.status == "held" %}

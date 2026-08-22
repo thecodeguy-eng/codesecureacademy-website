@@ -64,8 +64,6 @@
 
     <div class="glass-panel card">
       {% if cohort %}
-        <h3>Cohort dates</h3>
-        <p>{{ cohort.start_date }} → {{ cohort.end_date }}</p>
         <h3>Price</h3>
         <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira }} <span class="price-fx"></span></p>
 

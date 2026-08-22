@@ -7,7 +7,7 @@
       {% if enrollment.status == "confirmed" %}
         <span class="badge badge-open">Payment confirmed</span>
         <h1>You're enrolled in {{ enrollment.cohort.track.name }}!</h1>
-        <p>Your seat for the {{ enrollment.cohort.start_date }} cohort is locked in.</p>
+        <p>Your seat for the {{ enrollment.cohort.track.name }} cohort is locked in.</p>
         {% if whatsapp_link %}
           <p>Join your cohort's WhatsApp group. You'll also get this by email.</p>
           <a href="{{ whatsapp_link }}" target="_blank" rel="noopener" class="btn btn-primary">Join WhatsApp group</a>

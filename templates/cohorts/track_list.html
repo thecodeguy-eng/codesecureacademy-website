@@ -8,7 +8,7 @@
   <div class="container">
     <span class="eyebrow">All tracks</span>
     <h1>Choose your <span class="text-gradient">track</span></h1>
-    <p class="lead">Four tracks, each with its own cohort dates, price, and seat count.</p>
+    <p class="lead">Four tracks, each with its own price and enrollment status.</p>
   </div>
 </section>
 <section>
@@ -24,7 +24,7 @@
           <p>{{ track.tagline|default:track.description|truncatewords:24 }}</p>
           {% with cohort=track.next_cohort %}
             {% if cohort %}
-              <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong> · starts {{ cohort.start_date }}</p>
+              <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong></p>
               {% if cohort.accepting_enrollment %}
                 <span class="badge badge-open">Active</span>
               {% else %}
