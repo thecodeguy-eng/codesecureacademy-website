@@ -5,18 +5,17 @@
   if (!backdrop) return;
 
   var STORAGE_KEY = "csa_signup_prompt_dismissed";
-  var DELAY_MS = 15000;
-  var SNOOZE_DAYS = 14;
+  var INITIAL_DELAY_MS = 15000;
+  var REPEAT_MS = 60000;
 
-  function dismissedRecently() {
+  function lastDismissedAt() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return false;
-      var dismissedAt = parseInt(raw, 10);
-      if (isNaN(dismissedAt)) return false;
-      return Date.now() - dismissedAt < SNOOZE_DAYS * 24 * 60 * 60 * 1000;
+      if (!raw) return null;
+      var t = parseInt(raw, 10);
+      return isNaN(t) ? null : t;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 
@@ -25,7 +24,23 @@
   }
 
   function show() { backdrop.classList.add("visible"); }
-  function hide() { backdrop.classList.remove("visible"); markDismissed(); }
+
+  // Every dismissal (X, "Maybe later", clicking outside, Escape, or the CTA
+  // itself) reschedules the next appearance a minute out — keeps nagging
+  // once a minute, on this page or the next one they navigate to, until
+  // they actually register or log in (at which point this whole partial
+  // stops rendering server-side, so this script never even loads).
+  function hide() {
+    backdrop.classList.remove("visible");
+    markDismissed();
+    scheduleNext();
+  }
+
+  function scheduleNext() {
+    var last = lastDismissedAt();
+    var wait = last ? Math.max(REPEAT_MS - (Date.now() - last), 0) : INITIAL_DELAY_MS;
+    setTimeout(show, wait);
+  }
 
   var closeBtn = document.getElementById("signup-prompt-close");
   var laterBtn = document.getElementById("signup-prompt-later");
@@ -40,6 +55,5 @@
     if (e.key === "Escape" && backdrop.classList.contains("visible")) hide();
   });
 
-  if (dismissedRecently()) return;
-  setTimeout(show, DELAY_MS);
+  scheduleNext();
 })();

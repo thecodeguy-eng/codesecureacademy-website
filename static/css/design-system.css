@@ -844,7 +844,12 @@ form p { margin-bottom: var(--space-2); }
   display: none; align-items: center; justify-content: center; padding: var(--space-3);
 }
 .cookie-modal-backdrop.visible { display: flex; }
-.cookie-modal { width: min(480px, 100%); padding: var(--space-4); max-height: 85vh; overflow-y: auto; }
+/* Same fix as .signup-prompt-modal below: sitting on a dark backdrop, the
+   ~4% glass tint isn't opaque enough to read against in light mode. */
+.glass-panel.cookie-modal {
+  width: min(480px, 100%); padding: var(--space-4); max-height: 85vh; overflow-y: auto;
+  background: var(--navy-900);
+}
 .cookie-pref-row {
   display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-2);
   padding: var(--space-2) 0; border-bottom: 1px solid var(--glass-border);
@@ -860,7 +865,15 @@ form p { margin-bottom: var(--space-2); }
   display: none; align-items: center; justify-content: center; padding: var(--space-3);
 }
 .signup-prompt-backdrop.visible { display: flex; animation: cookie-rise 400ms var(--ease-out-back); }
-.signup-prompt-modal { position: relative; width: min(440px, 100%); padding: var(--space-4); text-align: center; }
+/* .glass-panel's background is a ~4% translucent tint meant to blur the
+   page behind it — sitting on this backdrop's dark scrim instead, that
+   tint is nowhere near opaque enough to read against, so in light mode
+   you get dark theme text on what's effectively still a dark card. Solid
+   theme-correct background instead, specific enough to beat .glass-panel. */
+.glass-panel.signup-prompt-modal {
+  position: relative; width: min(440px, 100%); padding: var(--space-4); text-align: center;
+  background: var(--navy-900);
+}
 .signup-prompt-close {
   position: absolute; top: 0.75rem; right: 0.75rem;
   width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--glass-bg);
