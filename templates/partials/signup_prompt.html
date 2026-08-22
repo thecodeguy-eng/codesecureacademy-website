@@ -1,0 +1,16 @@
+{% load static %}
+{% if not user.is_authenticated %}
+<div class="signup-prompt-backdrop" id="signup-prompt-backdrop">
+  <div class="glass-panel signup-prompt-modal">
+    <button type="button" class="signup-prompt-close" id="signup-prompt-close" aria-label="Close">&times;</button>
+    <span class="eyebrow">Don't miss out</span>
+    <h2>Ready to build something real?</h2>
+    <p>Create a free account to enroll in a track, and get notified the moment a cohort opens.</p>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem;">
+      <a href="{% url 'account_signup' %}?next={{ request.path }}" class="btn btn-primary" id="signup-prompt-cta">Create free account</a>
+      <button type="button" class="btn btn-ghost" id="signup-prompt-later">Maybe later</button>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/signup-prompt.js' %}"></script>
+{% endif %}

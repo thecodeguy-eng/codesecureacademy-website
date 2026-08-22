@@ -853,6 +853,23 @@ form p { margin-bottom: var(--space-2); }
 .cookie-pref-row h4 { margin: 0 0 0.25rem; font-size: 0.95rem; }
 .cookie-pref-row p { margin: 0; font-size: 0.82rem; }
 
+/* ---------- Delayed signup prompt ---------- */
+
+.signup-prompt-backdrop {
+  position: fixed; inset: 0; z-index: 600; background: rgba(4, 6, 13, 0.7); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center; padding: var(--space-3);
+}
+.signup-prompt-backdrop.visible { display: flex; animation: cookie-rise 400ms var(--ease-out-back); }
+.signup-prompt-modal { position: relative; width: min(440px, 100%); padding: var(--space-4); text-align: center; }
+.signup-prompt-close {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--glass-bg);
+  color: var(--text-secondary); font-size: 1.3rem; line-height: 1; cursor: pointer;
+}
+.signup-prompt-close:hover { color: var(--text-primary); }
+.signup-prompt-modal .eyebrow { justify-content: center; }
+.signup-prompt-modal > div { justify-content: center; }
+
 .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .switch .slider {
