@@ -1,0 +1,12 @@
+{% extends "account/email/_base_email.html" %}
+{% block heading %}Your spot is still available{% endblock %}
+{% block body_html %}
+<p style="margin:0 0 12px;">Hello,</p>
+<p style="margin:0 0 12px;">This is a quick reminder that enrollment at Code Secure Academy is open, and spots are limited.</p>
+<p style="margin:0;">Choose the track that fits you best, whether that is Frontend Development, Backend Development, Cybersecurity, or Graphic Design, and claim your spot before it's gone.</p>
+{% endblock %}
+{% block cta_block %}
+{% with cta_url="https://codesecureacademy.com/tracks/" cta_label="Choose Your Track" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}
