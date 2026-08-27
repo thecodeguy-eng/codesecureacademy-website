@@ -18,7 +18,7 @@
   <div class="container">
     <div class="glass-panel card-media" style="display:grid;grid-template-columns:1fr 1.4fr;overflow:hidden;">
       {% if recommended_track.display_cover_image %}
-        <img src="{{ recommended_track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;min-height:180px;">
+        <img src="{{ recommended_track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;background:#060a27;min-height:180px;">
       {% endif %}
       <div class="card-body">
         <span class="eyebrow">Based on what you told us at signup</span>
@@ -40,7 +40,7 @@
       {% for track in other_tracks %}
         <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
           {% if track.display_cover_image %}
-            <img class="card-cover" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+            <img class="card-cover-track" src="{{ track.display_cover_image }}" alt="" loading="lazy">
           {% endif %}
           <div class="card-body">
             <h3>{{ track.name }}</h3>

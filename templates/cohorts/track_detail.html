@@ -56,7 +56,7 @@
           {% endif %}
         </div>
       {% elif track.display_cover_image %}
-        <img src="{{ track.display_cover_image }}" alt="" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:1rem;">
+        <img src="{{ track.display_cover_image }}" alt="" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:contain;background:#060a27;border-radius:12px;margin-bottom:1rem;">
       {% endif %}
       <h3>About this track</h3>
       <p>{{ track.description|linebreaks }}</p>

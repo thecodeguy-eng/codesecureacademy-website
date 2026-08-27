@@ -460,6 +460,13 @@ a { color: var(--blue-400); text-decoration: none; }
    corners. */
 .card-media { padding: 0; overflow: hidden; }
 .card-cover { width: 100%; height: 160px; object-fit: cover; display: block; }
+/* Track cover art is a designed poster with baked-in headline text, not a
+   generic photo — object-fit:cover crops that text off whenever the
+   image's native ratio doesn't match the card. object-fit:contain shows
+   the whole poster instead, letterboxed against its own dark backdrop
+   color (sampled from the artwork) so the bars blend in rather than
+   showing an unrelated background through them. */
+.card-cover-track { width: 100%; height: 160px; object-fit: contain; display: block; background: #060a27; }
 .card-body { padding: var(--space-3); }
 
 /* Full-width photo band with a caption underneath — used to break up
@@ -543,7 +550,7 @@ a { color: var(--blue-400); text-decoration: none; }
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 var(--glass-highlight), 0 20px 50px -20px rgba(0, 0, 0, 0.5);
 }
-.why-visual-photo img { width: 100%; height: 220px; object-fit: cover; display: block; }
+.why-visual-photo img { width: 100%; height: 220px; object-fit: contain; display: block; background: #060a27; }
 .why-reasons { display: flex; flex-direction: column; gap: var(--space-3); }
 .why-reason { display: flex; gap: var(--space-2); align-items: flex-start; }
 .why-reason-num { flex-shrink: 0; font-size: 0.85rem; font-weight: 700; color: var(--blue-300); padding-top: 0.15rem; }
