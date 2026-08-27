@@ -34,6 +34,10 @@ def initialize_transaction(*, email, amount_naira, reference, callback_url, suba
         "amount": int(amount_naira * 100),
         "reference": reference,
         "callback_url": callback_url,
+        # Most of our users pay by Nigerian bank transfer/USSD rather than
+        # card, so lead the Paystack checkout with those channels instead
+        # of its card-first default.
+        "channels": ["bank_transfer", "bank", "ussd", "card", "mobile_money"],
     }
     if subaccount_code:
         payload["subaccount"] = subaccount_code

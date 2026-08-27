@@ -56,7 +56,9 @@ class Track(models.Model):
         back to the hotlinked URL so templates don't need an if/elif chain
         wherever a track's cover image is shown."""
         if self.cover_image:
-            return self.cover_image.url
+            from apps.core.utils import cloudinary_optimized_url
+
+            return cloudinary_optimized_url(self.cover_image.url)
         return self.cover_image_url
 
     @property
@@ -169,7 +171,9 @@ class Enrollment(models.Model):
         self.save(update_fields=["status", "confirmed_at"])
         self.cohort.refresh_status()
         from apps.whatsapp.services import send_invite_for_enrollment
+        from apps.cohorts.services import send_enrollment_receipt
 
+        send_enrollment_receipt(self)
         send_invite_for_enrollment(self)
 
 

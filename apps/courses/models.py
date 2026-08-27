@@ -98,6 +98,14 @@ class Course(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def display_cover_image(self):
+        if not self.cover_image:
+            return ""
+        from apps.core.utils import cloudinary_optimized_url
+
+        return cloudinary_optimized_url(self.cover_image.url)
+
     def get_absolute_url(self):
         return reverse("courses:course_detail", args=[self.slug])
 

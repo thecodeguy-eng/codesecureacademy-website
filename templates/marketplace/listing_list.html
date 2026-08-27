@@ -37,7 +37,7 @@
         <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
           {% include "partials/term_chrome.html" with label=listing.slug|add:".listing" %}
           {% if listing.cover_image %}
-            <img class="card-cover" src="{{ listing.cover_image.url }}" alt="{{ listing.title }}">
+            <img class="card-cover" src="{{ listing.display_cover_image }}" alt="{{ listing.title }}" loading="lazy">
           {% endif %}
           <div class="card-body">
             <h3>{{ listing.title }}</h3>

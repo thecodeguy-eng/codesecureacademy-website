@@ -5,7 +5,7 @@
   <div class="container grid grid-2" style="max-width:960px;align-items:start;">
     <div class="glass-panel card">
       {% if listing.cover_image %}
-        <img src="{{ listing.cover_image.url }}" alt="{{ listing.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+        <img src="{{ listing.display_cover_image }}" alt="{{ listing.title }}" loading="lazy" style="width:100%;border-radius:12px;margin-bottom:1rem;">
       {% endif %}
       <h1>{{ listing.title }}</h1>
       <p>{{ listing.description|linebreaks }}</p>

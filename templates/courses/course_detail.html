@@ -5,7 +5,7 @@
   <div class="container grid grid-2" style="max-width:960px;align-items:start;">
     <div class="glass-panel card">
       {% if course.cover_image %}
-        <img src="{{ course.cover_image.url }}" alt="{{ course.title }}" style="width:100%;border-radius:12px;margin-bottom:1rem;">
+        <img src="{{ course.display_cover_image }}" alt="{{ course.title }}" loading="lazy" style="width:100%;border-radius:12px;margin-bottom:1rem;">
       {% endif %}
       <h1>{{ course.title }}</h1>
       {% if course.average_rating %}<p>★ {{ course.average_rating|floatformat:1 }} ({{ course.approved_reviews.count }} review{{ course.approved_reviews.count|pluralize }})</p>{% endif %}

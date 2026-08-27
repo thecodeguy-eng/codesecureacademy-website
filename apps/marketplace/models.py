@@ -94,6 +94,14 @@ class Listing(models.Model):
         return reverse("marketplace:listing_detail", args=[self.slug])
 
     @property
+    def display_cover_image(self):
+        if not self.cover_image:
+            return ""
+        from apps.core.utils import cloudinary_optimized_url
+
+        return cloudinary_optimized_url(self.cover_image.url)
+
+    @property
     def approved_reviews(self):
         from apps.reviews.models import Review
 

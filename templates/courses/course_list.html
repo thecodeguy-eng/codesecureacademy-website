@@ -31,7 +31,7 @@
         <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
           {% include "partials/term_chrome.html" with label=course.slug|add:".course" %}
           {% if course.cover_image %}
-            <img class="card-cover" src="{{ course.cover_image.url }}" alt="{{ course.title }}">
+            <img class="card-cover" src="{{ course.display_cover_image }}" alt="{{ course.title }}" loading="lazy">
           {% endif %}
           <div class="card-body">
             {% if course.is_live %}<span class="badge">Virtual, live sessions</span>{% else %}<span class="badge">Self-paced</span>{% endif %}
