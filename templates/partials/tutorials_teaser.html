@@ -1,0 +1,39 @@
+{% load static %}
+<div class="container section-alt">
+  <div class="alt-text">
+    <span class="eyebrow">100% free, no sign-up needed</span>
+    <h2>Learn by doing, right in your browser</h2>
+    <p>Real, editable code and an instant live preview, the same way you'd learn on w3schools, just for HTML, CSS, JavaScript, Python, and 15+ more languages, all free.</p>
+    <a href="{% url 'tutorials:category_list' %}" class="btn btn-primary" style="margin-top:var(--space-2);">Browse Free Tutorials</a>
+  </div>
+  <div class="alt-visual">
+    <div class="glass-panel product-preview">
+      <div class="preview-bar"><span></span><span></span><span></span><span class="term-label">Try it yourself</span></div>
+      <div class="preview-body" style="padding:0;">
+        <div class="code-editor" data-code-editor style="border:none;border-radius:0;">
+          <div class="code-editor-panes">
+            <textarea class="code-editor-input" data-code-input spellcheck="false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+  body { font-family: sans-serif; background: #0d1224; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    height: 100vh; margin: 0; text-align: center; }
+  button { padding: 10px 20px; background: #2f7dff; color: #fff;
+    border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div&gt;
+    &lt;h2&gt;Edit this code, then click Run &rarr;&lt;/h2&gt;
+    &lt;button onclick="this.textContent='You did it! 🎉'"&gt;Click me&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+            <iframe class="code-editor-output" data-code-output sandbox="allow-scripts" title="Live preview"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

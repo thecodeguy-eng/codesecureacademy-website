@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Dashboard · Code Secure Academy{% endblock %}
+{% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script>{% endblock %}
 {% block content %}
 <section class="hero" style="text-align:left;padding-bottom:1rem;">
   <div class="container">
@@ -8,16 +10,7 @@
 </section>
 
 <section style="padding-top:0;">
-  <div class="container">
-    <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
-      <div>
-        <span class="eyebrow">100% free, no extra sign-up</span>
-        <h3 style="margin-bottom:0.25rem;">Free Tutorials</h3>
-        <p style="margin:0;">Read tutorials and edit real code in your browser, whether or not you've enrolled in a track yet.</p>
-      </div>
-      <a href="{% url 'tutorials:category_list' %}" class="btn btn-primary">Browse Free Tutorials</a>
-    </div>
-  </div>
+  {% include "partials/tutorials_teaser.html" %}
 </section>
 
 {% if recommended_track %}

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script>{% endblock %}
 {% block content %}
 
 <section class="hero" id="hero">
@@ -56,6 +57,10 @@
       </div>
     </div>
   </div>
+</section>
+
+<section>
+  {% include "partials/tutorials_teaser.html" %}
 </section>
 
 <section>

@@ -78,6 +78,7 @@ window.addEventListener("pagereveal", function (event) {
           <input type="search" name="q" id="nav-search-input" placeholder="Search..." aria-label="Search Code Secure Academy">
         </form>
       </div>
+      <a href="{% url 'home' %}">Home</a>
       <a href="{% url 'cohorts:track_list' %}">Tracks</a>
       <a href="{% url 'tutorials:category_list' %}">Free Tutorials</a>
       <a href="{% url 'courses:course_list' %}">Courses</a>

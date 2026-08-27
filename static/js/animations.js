@@ -18,7 +18,12 @@
   // --- The "opening of the site": header + hero stagger in on load, not
   // on scroll. This is the first thing a visitor sees, so it's what makes
   // the site feel considered rather than just present.
-  var headerTargets = document.querySelectorAll(".site-header .brand, .site-header .main-nav > *");
+  // Excludes interactive controls (buttons, toggles) from the stagger — if
+  // the tab is backgrounded or GSAP's ticker gets throttled mid-animation,
+  // an element frozen at its from() state (y:-12, opacity:0) looks broken
+  // rather than just "not yet animated in". Not worth that risk on the
+  // primary CTA and the theme toggle, so only plain nav links get it.
+  var headerTargets = document.querySelectorAll(".site-header .brand, .site-header .main-nav a:not(.btn)");
   if (headerTargets.length) {
     gsap.from(headerTargets, { y: -12, opacity: 0, duration: 0.5, ease: EASE, stagger: 0.05 });
   }
