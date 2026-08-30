@@ -13,32 +13,38 @@
     <span class="eyebrow">The real story</span>
     <h2>Before the questions, here's why we exist</h2>
   </div>
-  <div class="container" style="max-width:640px;">
-    <div class="faq-story-pin" id="faq-story-pin">
-      <div class="faq-story-track" id="faq-story-track">
-        <div class="faq-story-slide">
-          <div class="faq-story-card">
-            <img src="{% static 'img/faq-story/slide-1.jpg' %}" alt="You bought the course. You got the certificate. You never finished.">
+  <div class="container" style="max-width:500px;">
+    <div class="faq-story-stack">
+      <div class="faq-story-item" style="--i:0;">
+        <div class="faq-story-card">
+          <div class="faq-story-card-media"><img src="{% static 'img/faq-story/slide-1.jpg' %}" alt="You bought the course. You got the certificate. You never finished." loading="lazy"></div>
+          <div class="faq-story-card-body">
+            <p class="faq-story-caption">Most online courses are built to be sold, not finished. No deadline means no urgency, and no urgency means the course sits unfinished in a tab you never open again.</p>
           </div>
-          <p class="faq-story-caption">Most online courses are built to be sold, not finished. No deadline means no urgency, and no urgency means the course sits unfinished in a tab you never open again.</p>
         </div>
-        <div class="faq-story-slide">
-          <div class="faq-story-card">
-            <img src="{% static 'img/faq-story/slide-2.jpg' %}" alt="Real cohorts. Real deadlines. A community that doesn't disappear when the course ends.">
+      </div>
+      <div class="faq-story-item" style="--i:1;">
+        <div class="faq-story-card">
+          <div class="faq-story-card-media"><img src="{% static 'img/faq-story/slide-2.jpg' %}" alt="Real cohorts. Real deadlines. A community that doesn't disappear when the course ends." loading="lazy"></div>
+          <div class="faq-story-card-body">
+            <p class="faq-story-caption">A cohort gives you what a video library can't: people learning the same track, on the same timeline, in the same WhatsApp group, holding each other to the deadline.</p>
           </div>
-          <p class="faq-story-caption">A cohort gives you what a video library can't: people learning the same track, on the same timeline, in the same WhatsApp group, holding each other to the deadline.</p>
         </div>
-        <div class="faq-story-slide">
-          <div class="faq-story-card">
-            <img src="{% static 'img/faq-story/slide-3.jpg' %}" alt="Pay in your local currency. Bank transfer, USSD, or card. No unnecessary friction.">
+      </div>
+      <div class="faq-story-item" style="--i:2;">
+        <div class="faq-story-card">
+          <div class="faq-story-card-media"><img src="{% static 'img/faq-story/slide-3.jpg' %}" alt="Pay in your local currency. Bank transfer, USSD, or card. No unnecessary friction." loading="lazy"></div>
+          <div class="faq-story-card-body">
+            <p class="faq-story-caption">Most platforms assume everyone pays by card in dollars. We built for how Nigerians actually pay, and the free tutorials are open to everyone before they spend a naira.</p>
           </div>
-          <p class="faq-story-caption">Most platforms assume everyone pays by card in dollars. We built for how Nigerians actually pay, and the free tutorials are open to everyone before they spend a naira.</p>
         </div>
-        <div class="faq-story-slide">
-          <div class="faq-story-card">
-            <img src="{% static 'img/faq-story/slide-4.jpg' %}" alt="Learn. Get certified. Get referred. Even earn, through our marketplace.">
+      </div>
+      <div class="faq-story-item" style="--i:3;">
+        <div class="faq-story-card">
+          <div class="faq-story-card-media"><img src="{% static 'img/faq-story/slide-4.jpg' %}" alt="Learn. Get certified. Get referred. Even earn, through our marketplace." loading="lazy"></div>
+          <div class="faq-story-card-body">
+            <p class="faq-story-caption">This isn't just a course platform, it's an ecosystem. Learn a track, get referred through our network, and even earn by selling on the marketplace once you're ready.</p>
           </div>
-          <p class="faq-story-caption">This isn't just a course platform, it's an ecosystem. Learn a track, get referred through our network, and even earn by selling on the marketplace once you're ready.</p>
         </div>
       </div>
     </div>
