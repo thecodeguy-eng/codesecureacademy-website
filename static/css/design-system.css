@@ -567,19 +567,20 @@ a { color: var(--blue-400); text-decoration: none; }
 }
 
 /* ---------- Stacked story cards (FAQ page) ----------
-   A classic sticky-stack: each card is position:sticky with a slightly
-   larger `top` offset than the one before it, so as the visitor scrolls,
-   each new card slides up and settles just below where the previous one
-   stuck, covering most of it but leaving a sliver visible above, like
-   cards being laid down on top of each other. Pure CSS positioning (no
-   scroll-jacking, no pinning) — GSAP in animations.js only adds a subtle
-   scale/fade as each card arrives, entirely optional/decorative. */
+   A classic sticky-stack: each card is position:sticky, landing at
+   almost the exact same spot as the one before it (a few px deeper),
+   so each new card settles nearly directly on top of the last, like
+   laying a card down on an existing pile — not beside it, on it. Pure
+   CSS positioning (no scroll-jacking, no pinning); GSAP in
+   animations.js adds the entrance motion plus a scale/dim on whichever
+   card is currently underneath, so the "on top of" read is unmistakable
+   even though the offset itself is tiny. */
 .faq-story-stack { display: flex; flex-direction: column; }
 .faq-story-item { min-height: 46vh; display: flex; justify-content: center; }
 .faq-story-item:last-child { min-height: 0; padding-bottom: var(--space-4); }
 .faq-story-card {
-  position: sticky; top: calc(84px + var(--i, 0) * 26px);
-  width: 100%; max-width: 400px; align-self: flex-start;
+  position: sticky; top: calc(84px + var(--i, 0) * 10px);
+  width: 100%; max-width: 400px; align-self: flex-start; transform-origin: top center;
   background: #0a0f24; border-radius: var(--radius-lg); overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6);

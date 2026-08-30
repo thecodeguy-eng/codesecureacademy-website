@@ -133,17 +133,28 @@
   });
 
   // --- Stacked story cards (FAQ page): the stacking itself is plain CSS
-  // position:sticky (see .faq-story-card), no scroll-jacking involved.
-  // This just adds a quick scale/fade as each card arrives at its sticky
-  // position, so the stack builds with a bit of motion instead of
-  // snapping in — skipped on narrow viewports, where the CSS drops the
-  // sticky positioning entirely and this becomes a plain static list.
+  // position:sticky (see .faq-story-card) with only a few px between each
+  // card's landing spot, so they land almost directly on top of one
+  // another. That alone can read as "cards close together" rather than
+  // "on top of" until something moves — so as each new card arrives, the
+  // one currently underneath it visibly recedes (scales down, dims),
+  // exactly like it's been covered by the card placed on it. Skipped on
+  // narrow viewports, where the CSS drops the sticky positioning
+  // entirely and this becomes a plain static list.
   if (window.innerWidth >= 640) {
-    document.querySelectorAll(".faq-story-card").forEach(function (card) {
+    var storyCards = document.querySelectorAll(".faq-story-card");
+    storyCards.forEach(function (card, i) {
       gsap.from(card, {
         y: 36, scale: 0.95, opacity: 0, duration: 0.5, ease: EASE,
         scrollTrigger: { trigger: card, start: "top 92%", end: "top 65%", scrub: 0.4 },
       });
+      var below = storyCards[i - 1];
+      if (below) {
+        gsap.to(below, {
+          scale: 0.94, filter: "brightness(0.55)", duration: 0.5, ease: EASE,
+          scrollTrigger: { trigger: card, start: "top 90%", end: "top 55%", scrub: 0.4 },
+        });
+      }
     });
   }
 
