@@ -132,6 +132,33 @@
     }
   });
 
+  // --- Pinned "story slides" (FAQ page): a stack of full-height slides
+  // that slide up past a pinned viewport as the visitor scrolls, one
+  // slide's bottom pushing off the top while the next slides up from the
+  // bottom, same technique as the "why register" pin above. Skipped on
+  // narrow viewports for the same jank-avoidance reason: the CSS mobile
+  // fallback turns it into a plain stacked list instead.
+  document.querySelectorAll(".faq-story-pin").forEach(function (pin) {
+    var track = pin.querySelector(".faq-story-track");
+    var slides = pin.querySelectorAll(".faq-story-slide");
+    if (!track || slides.length < 2 || window.innerWidth < 700) return;
+
+    var step = 100 / slides.length;
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pin,
+        start: "top top+=84",
+        end: "+=" + (slides.length - 1) * 550,
+        pin: true,
+        scrub: 0.6,
+        anticipatePin: 1,
+      },
+    });
+    for (var i = 1; i < slides.length; i++) {
+      tl.to(track, { yPercent: -step * i, duration: 1, ease: "power2.inOut" }, i - 1);
+    }
+  });
+
   // --- Countdown / stat numbers get a quick count-up instead of just
   // appearing, when they first scroll into view.
   document.querySelectorAll(".stat .num").forEach(function (el) {
