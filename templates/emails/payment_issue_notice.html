@@ -1,0 +1,13 @@
+{% extends "account/email/_base_email.html" %}
+{% block heading %}Your payment didn't go through, you were not charged{% endblock %}
+{% block body_html %}
+<p style="margin:0 0 12px;">Hi Bridget,</p>
+<p style="margin:0 0 12px;">We saw a few payment attempts on your Frontend Development enrollment earlier today. There was a technical issue on our end with the payment setup at the time, so none of those attempts went through successfully.</p>
+<p style="margin:0 0 12px;">To be clear: no money was taken from you, and your seat has not been activated. Nothing is missing from your side.</p>
+<p style="margin:0;">The issue is now fixed. If you'd still like to join the Frontend Development cohort, you're welcome to try enrolling again, and it should go through normally this time. Sorry for the back and forth, and thank you for your patience.</p>
+{% endblock %}
+{% block cta_block %}
+{% with cta_url="https://codesecureacademy.com/tracks/frontend/" cta_label="Try enrolling again" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %}

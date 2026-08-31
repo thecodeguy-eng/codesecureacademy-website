@@ -98,6 +98,10 @@ class Cohort(models.Model):
     track = models.ForeignKey(Track, on_delete=models.CASCADE, related_name="cohorts")
     start_date = models.DateField()
     end_date = models.DateField()
+    enrollment_deadline = models.DateField(
+        null=True, blank=True,
+        help_text="Last day new enrollments are accepted for this cohort. Leave blank for no cutoff.",
+    )
     price_naira = models.DecimalField(max_digits=10, decimal_places=2)
     seat_count = models.PositiveIntegerField()
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.OPEN)
@@ -123,12 +127,16 @@ class Cohort(models.Model):
         return self.status != self.Status.CLOSED and self.seats_available <= 0
 
     @property
+    def is_past_deadline(self):
+        return bool(self.enrollment_deadline) and timezone.now().date() > self.enrollment_deadline
+
+    @property
     def accepting_enrollment(self):
         """The single source of truth for whether the enroll CTA (vs.
         waitlist) should show. Distinct from `is_full` — an admin can flip
         a cohort to CLOSED to pull it out of direct enrollment even with
         seats left, which `is_full` alone doesn't capture."""
-        return self.status == self.Status.OPEN and self.seats_available > 0
+        return self.status == self.Status.OPEN and self.seats_available > 0 and not self.is_past_deadline
 
     def refresh_status(self):
         if self.status == self.Status.CLOSED:

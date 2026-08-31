@@ -8,7 +8,7 @@ from .models import Cohort, Enrollment, Track, Waitlist
 class CohortInline(admin.TabularInline):
     model = Cohort
     extra = 0
-    fields = ("start_date", "end_date", "price_naira", "seat_count", "status")
+    fields = ("start_date", "end_date", "enrollment_deadline", "price_naira", "seat_count", "status")
     readonly_fields = ()
 
 
@@ -21,7 +21,7 @@ class TrackAdmin(admin.ModelAdmin):
 
 @admin.register(Cohort)
 class CohortAdmin(admin.ModelAdmin):
-    list_display = ("track", "start_date", "end_date", "price_naira", "seat_count", "seats_taken_display", "status")
+    list_display = ("track", "start_date", "end_date", "enrollment_deadline", "price_naira", "seat_count", "seats_taken_display", "status")
     list_filter = ("track", "status")
 
     @admin.display(description="Seats taken")

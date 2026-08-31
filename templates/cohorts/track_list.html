@@ -27,6 +27,9 @@
               <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong></p>
               {% if cohort.accepting_enrollment %}
                 <span class="badge badge-open">Active</span>
+                {% if cohort.enrollment_deadline %}
+                  <p style="margin:0.4rem 0 0;font-size:0.82rem;color:var(--text-muted);">Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}</p>
+                {% endif %}
               {% else %}
                 <span class="badge badge-full">Not active, join the waitlist</span>
               {% endif %}

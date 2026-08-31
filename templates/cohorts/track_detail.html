@@ -69,6 +69,9 @@
 
         {% if cohort.accepting_enrollment %}
           <span class="badge badge-open">Active</span>
+          {% if cohort.enrollment_deadline %}
+            <p style="margin:0.5rem 0 0;font-size:0.9rem;color:var(--text-muted);">Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}</p>
+          {% endif %}
         {% else %}
           <span class="badge badge-full">Not active</span>
           <p>We're not admitting students for {{ track.name }} at the moment. Join the waitlist and we'll email you the moment enrollment reopens.</p>
@@ -133,7 +136,7 @@
     <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
       <h2>Ready to start {{ track.name }}?</h2>
       <p class="lead" style="margin:0 auto var(--space-3);">
-        {% if cohort and cohort.accepting_enrollment %}This cohort is active right now. Lock your spot in.
+        {% if cohort and cohort.accepting_enrollment %}This cohort is active right now.{% if cohort.enrollment_deadline %} Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}, lock your spot in before then.{% else %} Lock your spot in.{% endif %}
         {% else %}Join the waitlist and be first to know when enrollment opens.{% endif %}
       </p>
       {% if not user.is_authenticated %}

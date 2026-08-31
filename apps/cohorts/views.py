@@ -54,7 +54,11 @@ def start_checkout(request, cohort_id):
     cohort.refresh_status()
 
     if cohort.is_full:
-        messages.warning(request, "That cohort just filled up — join the waitlist instead.")
+        messages.warning(request, "That cohort just filled up, join the waitlist instead.")
+        return redirect("cohorts:track_detail", slug=cohort.track.slug)
+
+    if cohort.is_past_deadline:
+        messages.warning(request, "Enrollment for this cohort has closed, join the waitlist instead.")
         return redirect("cohorts:track_detail", slug=cohort.track.slug)
 
     existing = Enrollment.objects.filter(

@@ -9,6 +9,20 @@
   </div>
 </section>
 
+{% if next_enrollment_deadline %}
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <span class="eyebrow">Enrollment deadline</span>
+        <p style="margin:0.25rem 0 0;">Spots for the current cohorts close on <strong>{{ next_enrollment_deadline|date:"F j, Y" }}</strong>. Enroll before then to lock in your seat.</p>
+      </div>
+      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">View tracks</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <section style="padding-top:0;">
   {% include "partials/tutorials_teaser.html" %}
 </section>
