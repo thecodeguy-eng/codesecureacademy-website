@@ -129,7 +129,13 @@ def release_expired_holds(request):
             enrollment.cohort.refresh_status()
             released += 1
 
-    return JsonResponse({"released": released, "extended": extended, "confirmed": confirmed})
+    from apps.core.services import send_deadline_reminder_if_due
+
+    reminder_result = send_deadline_reminder_if_due()
+
+    return JsonResponse(
+        {"released": released, "extended": extended, "confirmed": confirmed, "deadline_reminder": reminder_result}
+    )
 
 
 @csrf_exempt

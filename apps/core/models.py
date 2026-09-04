@@ -8,6 +8,16 @@ class SiteSettings(models.Model):
     students_trained = models.PositiveIntegerField(default=0)
     cohorts_run = models.PositiveIntegerField(default=0)
     hiring_partners = models.PositiveIntegerField(default=0)
+    last_deadline_reminder_sent_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text="When the enrollment-reminder campaign last sent an email. "
+        "Set automatically — the campaign re-sends itself on its own schedule until the deadline passes.",
+    )
+    last_deadline_reminder_variant = models.SmallIntegerField(
+        default=-1,
+        help_text="Index of the last reminder variant sent, so the next automatic send rotates to a "
+        "different one instead of repeating the same email every time.",
+    )
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -37,6 +47,19 @@ class WaitlistSignup(models.Model):
 
     class Meta:
         ordering = ["-joined_at"]
+
+    def __str__(self):
+        return self.email
+
+
+class EmailOptOut(models.Model):
+    """Anyone who's clicked "unsubscribe" on a marketing/reminder email —
+    checked before every recurring send (the deadline reminder campaign),
+    never applied to one-off transactional email (receipts, password
+    resets, etc.), which don't carry an unsubscribe link at all."""
+
+    email = models.EmailField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.email

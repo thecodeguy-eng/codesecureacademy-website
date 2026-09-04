@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Unsubscribe · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container" style="max-width:560px;text-align:center;">
+    {% if invalid %}
+      <h1>Link expired</h1>
+      <p class="lead">This unsubscribe link is no longer valid. If you're still getting emails you'd like to stop, reach out to us and we'll take care of it.</p>
+    {% else %}
+      <h1>You're unsubscribed</h1>
+      <p class="lead">{{ email }} won't receive any more reminder emails from us. You can still log in and check your dashboard any time.</p>
+    {% endif %}
+    <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top:1rem;">Back to homepage</a>
+  </div>
+</section>
+{% endblock %}

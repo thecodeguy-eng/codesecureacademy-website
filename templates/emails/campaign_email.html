@@ -1,0 +1,17 @@
+{% extends "account/email/_base_email.html" %}
+{% block heading %}{{ heading }}{% endblock %}
+{% block body_html %}
+{% for para in paragraphs %}
+<p style="margin:0 0 12px;">{{ para|safe }}</p>
+{% endfor %}
+{% endblock %}
+{% block cta_block %}
+{% with cta_url=cta_url cta_label=cta_label %}
+{{ block.super }}
+{% endwith %}
+<tr>
+  <td style="padding:0 32px 28px;">
+    <p style="margin:0;font-size:12px;line-height:1.6;color:#9aa1b3;">Don't want these reminders? <a href="{{ unsubscribe_url }}" style="color:#9aa1b3;">Unsubscribe here</a>.</p>
+  </td>
+</tr>
+{% endblock %}

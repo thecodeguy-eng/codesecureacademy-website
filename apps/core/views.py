@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.core import signing
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -10,7 +11,7 @@ from apps.reviews.models import Review
 from apps.tutorials.models import Article
 
 from .forms import WaitlistSignupForm
-from .models import FAQ, WaitlistSignup
+from .models import FAQ, EmailOptOut, WaitlistSignup
 
 
 def home(request):
@@ -101,6 +102,19 @@ def terms_of_service(request):
 
 def cookie_policy(request):
     return render(request, "core/cookies.html")
+
+
+def unsubscribe(request, token):
+    """Link is a signed email (see apps.core.services.unsubscribe_url), not
+    a database lookup — so it works even for waitlist-only addresses with
+    no account, and can't be guessed/enumerated for someone else's email."""
+    try:
+        email = signing.loads(token, salt="email-unsubscribe", max_age=60 * 60 * 24 * 365)
+    except signing.BadSignature:
+        return render(request, "core/unsubscribe.html", {"invalid": True})
+
+    EmailOptOut.objects.get_or_create(email=email)
+    return render(request, "core/unsubscribe.html", {"email": email})
 
 
 def error_404(request, exception=None):
