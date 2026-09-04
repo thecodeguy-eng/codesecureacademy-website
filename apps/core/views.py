@@ -31,10 +31,10 @@ def join_general_waitlist(request):
         email = request.POST.get("email", "").strip()
         form = WaitlistSignupForm(request.POST)
         if WaitlistSignup.objects.filter(email__iexact=email).exists():
-            messages.success(request, "You're already on the waitlist — we'll email you when a track opens up.")
+            messages.success(request, "You're already on the waitlist, we'll email you when a track opens up.")
         elif form.is_valid():
             form.save()
-            messages.success(request, "You're on the waitlist — we'll email you when a track opens up.")
+            messages.success(request, "You're on the waitlist, we'll email you when a track opens up.")
         else:
             messages.error(request, "Enter a valid email address to join the waitlist.")
 

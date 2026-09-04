@@ -37,6 +37,52 @@ CSRF_TRUSTED_ORIGINS = config(
 SITE_ID = 1
 
 # --------------------------------------------------------------------------
+# Error alerting — Django emails ADMINS on any unhandled 500 automatically
+# (built-in, was just never wired up since ADMINS was empty). LOGGING below
+# extends the same mechanism to the app's own logger.error/.exception/
+# .warning calls, e.g. apps.accounts.adapters swallowing a failed account
+# email — those never surface as a request error, so without this they
+# went nowhere. Only active when DEBUG=False (production).
+# --------------------------------------------------------------------------
+
+ADMINS = [("Ibeawuchi", config("ADMIN_ALERT_EMAIL", default="ichukwugozirim@gmail.com"))]
+MANAGERS = ADMINS
+SERVER_EMAIL = config("SERVER_EMAIL", default="Code Secure Academy Alerts <info@codesecureacademy.com>")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+        "mail_admins": {
+            "level": "ERROR",
+            "filters": ["require_debug_false"],
+            "class": "django.utils.log.AdminEmailHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "mail_admins"],
+            "level": "INFO",
+        },
+        # Every apps.<name> logger (logging.getLogger(__name__) inside any
+        # apps/ module) inherits this — one place to wire alerting for the
+        # whole codebase rather than per-app.
+        "apps": {
+            "handlers": ["console", "mail_admins"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
+
+# --------------------------------------------------------------------------
 # Applications
 # --------------------------------------------------------------------------
 
