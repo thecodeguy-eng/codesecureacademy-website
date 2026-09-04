@@ -52,6 +52,22 @@ class WaitlistSignup(models.Model):
         return self.email
 
 
+class ReminderQueueItem(models.Model):
+    """One recipient still waiting for the current day's reminder-campaign
+    email. Populated all at once when a new day's send becomes due, then
+    drained a small chunk at a time on each external cron ping (see
+    apps.core.services.send_deadline_reminder_if_due) — sending the full
+    list synchronously inside one request reliably exceeds the platform's
+    request timeout, so the batch is spread across several pings instead."""
+
+    email = models.EmailField()
+    variant_index = models.PositiveSmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+
 class EmailOptOut(models.Model):
     """Anyone who's clicked "unsubscribe" on a marketing/reminder email —
     checked before every recurring send (the deadline reminder campaign),

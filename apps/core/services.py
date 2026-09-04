@@ -8,6 +8,7 @@ from django.utils import timezone
 logger = logging.getLogger(__name__)
 
 REMINDER_INTERVAL_DAYS = 1
+REMINDER_CHUNK_SIZE = 15
 TRACKS_URL = "https://codesecureacademy.com/tracks/"
 TUTORIALS_URL = "https://codesecureacademy.com/tutorials/"
 
@@ -116,13 +117,78 @@ def _deadline_reminder_recipients():
     return sorted(e for e in all_emails if e and e.lower() not in paid_emails and e.lower() not in opted_out)
 
 
+def _send_variant_to(email, variant):
+    html_body = render_to_string(
+        "emails/campaign_email.html",
+        {
+            "heading": variant["heading"],
+            "paragraphs": variant["paragraphs"],
+            "cta_url": variant["cta_url"],
+            "cta_label": variant["cta_label"],
+            "unsubscribe_url": unsubscribe_url(email),
+        },
+    )
+    plain_body = "\n\n".join(
+        [p.replace("&#8358;", "NGN") for p in variant["paragraphs"]]
+        + [f"{variant['cta_label']}: {variant['cta_url']}", "Code Secure Academy", f"Unsubscribe: {unsubscribe_url(email)}"]
+    )
+    msg = EmailMultiAlternatives(variant["subject"], plain_body, to=[email])
+    msg.attach_alternative(html_body, "text/html")
+    return msg
+
+
+def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
+    """Sends the next small chunk of whatever's left in the queue for the
+    day's already-chosen variant. Deliberately request-sized (not "send
+    everyone") — a mass send inside one HTTP request reliably exceeds the
+    platform's request timeout, so the full list drains across however
+    many pings it takes, usually just a couple minutes given how often
+    the external pinger hits this."""
+    from apps.core.models import ReminderQueueItem
+
+    chunk = list(ReminderQueueItem.objects.order_by("id")[:chunk_size])
+    if not chunk:
+        return {"skipped": "queue empty"}
+
+    variant_index = chunk[0].variant_index
+    deadline = _next_enrollment_deadline()
+    deadline_display = f"{deadline:%B} {deadline.day}, {deadline.year}" if deadline else "soon"
+    variant = _reminder_variants(deadline_display)[variant_index]
+
+    connection = get_connection(fail_silently=True)
+    connection.open()
+    sent, failed = 0, 0
+    processed_ids = []
+    try:
+        for item in chunk:
+            msg = _send_variant_to(item.email, variant)
+            msg.connection = connection
+            ok = msg.send(fail_silently=True)
+            processed_ids.append(item.id)
+            if ok:
+                sent += 1
+            else:
+                failed += 1
+    finally:
+        connection.close()
+
+    ReminderQueueItem.objects.filter(id__in=processed_ids).delete()
+    remaining = ReminderQueueItem.objects.count()
+    logger.info("Reminder queue chunk sent: %s ok, %s failed, %s remaining, variant=%s", sent, failed, remaining, variant_index)
+    return {"sent": sent, "failed": failed, "remaining_in_queue": remaining, "variant": variant_index}
+
+
 def send_deadline_reminder_if_due(force=False):
-    """Self-throttled: safe to call as often as you like (e.g. every ping
-    from the external cron hitting release_expired_holds) — it only
-    actually sends once every REMINDER_INTERVAL_DAYS, rotating to the
-    next content variant each time, and skips entirely once there's no
+    """Call on every external cron ping. If a day's send is already in
+    progress (queue non-empty), sends the next chunk of it. Otherwise,
+    checks whether a new day's send is due and, if so, starts one: picks
+    the next rotating variant, queues every current recipient for it, and
+    sends the first chunk immediately. Skips entirely once there's no
     upcoming deadline left to remind anyone about."""
-    from apps.core.models import SiteSettings
+    from apps.core.models import ReminderQueueItem, SiteSettings
+
+    if ReminderQueueItem.objects.exists():
+        return _drain_reminder_queue()
 
     deadline = _next_enrollment_deadline()
     if not deadline:
@@ -133,44 +199,21 @@ def send_deadline_reminder_if_due(force=False):
     if not force and last_sent and timezone.now() - last_sent < timezone.timedelta(days=REMINDER_INTERVAL_DAYS):
         return {"skipped": "not due yet", "last_sent": last_sent}
 
-    deadline_display = f"{deadline:%B} {deadline.day}, {deadline.year}"
-    variants = _reminder_variants(deadline_display)
-    variant_index = (site_settings.last_deadline_reminder_variant + 1) % len(variants)
-    variant = variants[variant_index]
-
+    variants_count = len(_reminder_variants("placeholder"))
+    variant_index = (site_settings.last_deadline_reminder_variant + 1) % variants_count
     recipients = _deadline_reminder_recipients()
 
-    connection = get_connection(fail_silently=True)
-    connection.open()
-    sent, failed = 0, 0
-    try:
-        for email in recipients:
-            html_body = render_to_string(
-                "emails/campaign_email.html",
-                {
-                    "heading": variant["heading"],
-                    "paragraphs": variant["paragraphs"],
-                    "cta_url": variant["cta_url"],
-                    "cta_label": variant["cta_label"],
-                    "unsubscribe_url": unsubscribe_url(email),
-                },
-            )
-            plain_body = "\n\n".join(
-                [p.replace("&#8358;", "NGN") for p in variant["paragraphs"]]
-                + [f"{variant['cta_label']}: {variant['cta_url']}", "Code Secure Academy", f"Unsubscribe: {unsubscribe_url(email)}"]
-            )
-            msg = EmailMultiAlternatives(variant["subject"], plain_body, to=[email], connection=connection)
-            msg.attach_alternative(html_body, "text/html")
-            if msg.send(fail_silently=True):
-                sent += 1
-            else:
-                failed += 1
-    finally:
-        connection.close()
+    from apps.core.models import ReminderQueueItem as _RQI
 
+    _RQI.objects.bulk_create([_RQI(email=e, variant_index=variant_index) for e in recipients])
+
+    # Marked as "sent" now, at cycle-start, not once the queue finishes
+    # draining — otherwise the due-check above would see no recent send
+    # while a multi-ping drain is still in progress and start a second
+    # cycle on top of the first.
     site_settings.last_deadline_reminder_sent_at = timezone.now()
     site_settings.last_deadline_reminder_variant = variant_index
     site_settings.save(update_fields=["last_deadline_reminder_sent_at", "last_deadline_reminder_variant"])
 
-    logger.info("Reminder campaign sent: %s ok, %s failed, variant=%s, deadline=%s", sent, failed, variant_index, deadline)
-    return {"sent": sent, "failed": failed, "variant": variant_index, "subject": variant["subject"]}
+    logger.info("New reminder cycle started: variant=%s, %s recipients queued", variant_index, len(recipients))
+    return _drain_reminder_queue()
