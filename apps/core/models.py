@@ -18,6 +18,15 @@ class SiteSettings(models.Model):
         help_text="Index of the last reminder variant sent, so the next automatic send rotates to a "
         "different one instead of repeating the same email every time.",
     )
+    reminder_campaign_started_at = models.DateTimeField(
+        null=True, blank=True,
+        help_text="When the current bounded reminder push (N sends/day for N days) began. "
+        "Cleared once the push finishes its full run — set again to start a new bounded push.",
+    )
+    reminder_campaign_sends_done = models.PositiveSmallIntegerField(
+        default=0,
+        help_text="How many sends of the current bounded push have gone out so far.",
+    )
 
     def save(self, *args, **kwargs):
         self.pk = 1

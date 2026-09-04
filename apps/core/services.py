@@ -7,7 +7,10 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-REMINDER_INTERVAL_DAYS = 1
+REMINDER_SENDS_PER_DAY = 3
+REMINDER_BURST_DAYS = 7
+REMINDER_BURST_TOTAL_SENDS = REMINDER_SENDS_PER_DAY * REMINDER_BURST_DAYS  # 21
+REMINDER_SEND_INTERVAL = timezone.timedelta(hours=24 / REMINDER_SENDS_PER_DAY)  # 8h apart
 REMINDER_CHUNK_SIZE = 15
 TRACKS_URL = "https://codesecureacademy.com/tracks/"
 TUTORIALS_URL = "https://codesecureacademy.com/tutorials/"
@@ -34,9 +37,11 @@ def _next_enrollment_deadline():
 
 
 def _reminder_variants(deadline_display):
-    """Five distinct angles the campaign rotates through, so recipients
-    getting this daily see a different, genuine email each time rather
-    than the same "don't forget to pay" message on repeat."""
+    """Seven distinct angles the campaign rotates through. At three sends a
+    day for a week that's 21 emails per person, so variety matters more
+    here than it would for a slower campaign — every variant also gets a
+    real, freshly-computed "days left" line injected at send time (see
+    _drain_reminder_queue), not just a different subject line."""
     return [
         {
             "subject": f"Enrollment closes {deadline_display}, spots are limited",
@@ -88,14 +93,61 @@ def _reminder_variants(deadline_display):
             "cta_url": TRACKS_URL,
             "cta_label": "Enroll Now",
         },
+        {
+            "subject": "A quick note from the people building this",
+            "heading": "Why we built Code Secure Academy",
+            "paragraphs": [
+                "We started this because too much online education ends the same way, a finished playlist, a certificate nobody asks for, and no actual project to show for it.",
+                "A cohort changes that. Fixed dates, a group of people on the same timeline, and a track that ends with something you actually built yourself. That's the whole idea, and it's still open for this round.",
+            ],
+            "cta_url": TRACKS_URL,
+            "cta_label": "See the Tracks",
+        },
+        {
+            "subject": "Answers before you ask, laptop, payment, refunds",
+            "heading": "What to know before you enroll",
+            "paragraphs": [
+                "A few things people usually ask before joining. Payment is by bank transfer, USSD, or card, whichever is easiest for you, right on the track page. Laptop requirements vary a bit by track, the track page has the specifics for yours.",
+                "Once you're in, you get direct WhatsApp access to your cohort, real project work, and fixed dates that keep things moving. &#8358;5,000 per track, enrollment still open right now.",
+            ],
+            "cta_url": TRACKS_URL,
+            "cta_label": "View Track Details",
+        },
     ]
+
+
+def _brevo_blocked_emails():
+    """Addresses Brevo itself has suppressed (hard bounces, spam
+    complaints). Repeatedly trying to send to an address Brevo has already
+    blocked doesn't just fail quietly, it's the kind of thing that can
+    degrade sender reputation for every other email this account sends,
+    receipts and password resets included. Best-effort: a flaky response
+    here should never block the whole campaign, so any failure just means
+    "nothing known to skip" rather than an error."""
+    import requests
+    from django.conf import settings
+
+    try:
+        resp = requests.get(
+            "https://api.brevo.com/v3/smtp/blockedContacts",
+            params={"limit": 50},
+            headers={"api-key": settings.BREVO_API_KEY, "Accept": "application/json"},
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return set()
+        return {c["email"].lower() for c in resp.json().get("contacts", [])}
+    except Exception:
+        logger.warning("Could not fetch Brevo's blocked-contacts list, skipping that filter this run.", exc_info=True)
+        return set()
 
 
 def _deadline_reminder_recipients():
     """Everyone worth reminding: general waitlist signups plus every
     registered user, minus anyone who already has a confirmed (paid)
     enrollment in any track (they don't need to be told to pay again),
-    and minus anyone who's unsubscribed."""
+    minus anyone who's unsubscribed, and minus anyone Brevo has already
+    blocked (hard bounce or spam complaint) — see _brevo_blocked_emails."""
     from django.contrib.auth import get_user_model
 
     from apps.cohorts.models import Enrollment
@@ -112,12 +164,25 @@ def _deadline_reminder_recipients():
         )
     }
     opted_out = {e.lower() for e in EmailOptOut.objects.values_list("email", flat=True)}
+    blocked = _brevo_blocked_emails()
 
     all_emails = waitlist_emails | user_emails
-    return sorted(e for e in all_emails if e and e.lower() not in paid_emails and e.lower() not in opted_out)
+    excluded = paid_emails | opted_out | blocked
+    return sorted(e for e in all_emails if e and e.lower() not in excluded)
 
 
-def _send_variant_to(email, variant):
+def _days_left_display(deadline):
+    if not deadline:
+        return None
+    days = (deadline - timezone.now().date()).days
+    if days <= 0:
+        return None
+    if days == 1:
+        return "1 day left to enroll"
+    return f"{days} days left to enroll"
+
+
+def _send_variant_to(email, variant, days_left_display):
     html_body = render_to_string(
         "emails/campaign_email.html",
         {
@@ -126,12 +191,14 @@ def _send_variant_to(email, variant):
             "cta_url": variant["cta_url"],
             "cta_label": variant["cta_label"],
             "unsubscribe_url": unsubscribe_url(email),
+            "days_left_display": days_left_display,
         },
     )
-    plain_body = "\n\n".join(
-        [p.replace("&#8358;", "NGN") for p in variant["paragraphs"]]
-        + [f"{variant['cta_label']}: {variant['cta_url']}", "Code Secure Academy", f"Unsubscribe: {unsubscribe_url(email)}"]
-    )
+    plain_parts = [p.replace("&#8358;", "NGN") for p in variant["paragraphs"]]
+    if days_left_display:
+        plain_parts.insert(0, days_left_display.upper())
+    plain_parts += [f"{variant['cta_label']}: {variant['cta_url']}", "Code Secure Academy", f"Unsubscribe: {unsubscribe_url(email)}"]
+    plain_body = "\n\n".join(plain_parts)
     msg = EmailMultiAlternatives(variant["subject"], plain_body, to=[email])
     msg.attach_alternative(html_body, "text/html")
     return msg
@@ -154,6 +221,7 @@ def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
     deadline = _next_enrollment_deadline()
     deadline_display = f"{deadline:%B} {deadline.day}, {deadline.year}" if deadline else "soon"
     variant = _reminder_variants(deadline_display)[variant_index]
+    days_left_display = _days_left_display(deadline)
 
     connection = get_connection(fail_silently=True)
     connection.open()
@@ -161,7 +229,7 @@ def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
     processed_ids = []
     try:
         for item in chunk:
-            msg = _send_variant_to(item.email, variant)
+            msg = _send_variant_to(item.email, variant, days_left_display)
             msg.connection = connection
             ok = msg.send(fail_silently=True)
             processed_ids.append(item.id)
@@ -179,11 +247,13 @@ def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
 
 
 def send_deadline_reminder_if_due(force=False):
-    """Call on every external cron ping. If a day's send is already in
-    progress (queue non-empty), sends the next chunk of it. Otherwise,
-    checks whether a new day's send is due and, if so, starts one: picks
-    the next rotating variant, queues every current recipient for it, and
-    sends the first chunk immediately. Skips entirely once there's no
+    """Call on every external cron ping. If a send is already mid-drain
+    (queue non-empty), sends the next chunk of it. Otherwise, runs a
+    bounded push: REMINDER_SENDS_PER_DAY sends a day for REMINDER_BURST_DAYS
+    days (REMINDER_BURST_TOTAL_SENDS total), spaced REMINDER_SEND_INTERVAL
+    apart, rotating through _reminder_variants. Stops automatically once
+    the push completes its full run — it does not restart itself; call
+    with force=True to begin a new push. Skips entirely once there's no
     upcoming deadline left to remind anyone about."""
     from apps.core.models import ReminderQueueItem, SiteSettings
 
@@ -195,8 +265,19 @@ def send_deadline_reminder_if_due(force=False):
         return {"skipped": "no upcoming deadline"}
 
     site_settings = SiteSettings.load()
+
+    if force:
+        # Explicit restart: begin a fresh bounded push regardless of where
+        # the previous one left off.
+        site_settings.reminder_campaign_started_at = timezone.now()
+        site_settings.reminder_campaign_sends_done = 0
+    elif site_settings.reminder_campaign_sends_done >= REMINDER_BURST_TOTAL_SENDS:
+        return {"skipped": "push complete", "sends_done": site_settings.reminder_campaign_sends_done}
+    elif not site_settings.reminder_campaign_started_at:
+        site_settings.reminder_campaign_started_at = timezone.now()
+
     last_sent = site_settings.last_deadline_reminder_sent_at
-    if not force and last_sent and timezone.now() - last_sent < timezone.timedelta(days=REMINDER_INTERVAL_DAYS):
+    if not force and last_sent and timezone.now() - last_sent < REMINDER_SEND_INTERVAL:
         return {"skipped": "not due yet", "last_sent": last_sent}
 
     variants_count = len(_reminder_variants("placeholder"))
@@ -213,7 +294,14 @@ def send_deadline_reminder_if_due(force=False):
     # cycle on top of the first.
     site_settings.last_deadline_reminder_sent_at = timezone.now()
     site_settings.last_deadline_reminder_variant = variant_index
-    site_settings.save(update_fields=["last_deadline_reminder_sent_at", "last_deadline_reminder_variant"])
+    site_settings.reminder_campaign_sends_done += 1
+    site_settings.save(update_fields=[
+        "last_deadline_reminder_sent_at", "last_deadline_reminder_variant",
+        "reminder_campaign_started_at", "reminder_campaign_sends_done",
+    ])
 
-    logger.info("New reminder cycle started: variant=%s, %s recipients queued", variant_index, len(recipients))
+    logger.info(
+        "New reminder send started (%s/%s of this push): variant=%s, %s recipients queued",
+        site_settings.reminder_campaign_sends_done, REMINDER_BURST_TOTAL_SENDS, variant_index, len(recipients),
+    )
     return _drain_reminder_queue()
