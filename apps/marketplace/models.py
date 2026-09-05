@@ -143,5 +143,7 @@ class Order(models.Model):
         self.paid_at = timezone.now()
         self.save(update_fields=["status", "paid_at"])
         from . import services
+        from apps.referrals.services import create_commission_for_order
 
         services.notify_order_paid(self)
+        create_commission_for_order(self)

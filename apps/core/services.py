@@ -113,6 +113,18 @@ def _reminder_variants(deadline_display):
             "cta_url": TRACKS_URL,
             "cta_label": "View Track Details",
         },
+        {
+            "personal": True,
+            "sender_name": "Victory Ugochukwu",
+            "sender_title": "Founder & CEO, Code Secure Academy",
+            "sign_off": "Talk soon,",
+            "subject_named": "{first_name}, quick note from Victory",
+            "subject_anonymous": "A quick note from our founder",
+            "paragraphs": [
+                "I'm Victory, founder of Code Secure Academy. I noticed you signed up but haven't enrolled in a track yet, and wanted to check in myself instead of leaving it to another automated email.",
+                f"If something's holding you back, cost, timing, or just not being sure which track fits, reply and tell me directly, I read these myself. If you're ready, you can see the four tracks here: {TRACKS_URL}",
+            ],
+        },
     ]
 
 
@@ -182,7 +194,48 @@ def _days_left_display(deadline):
     return f"{days} days left to enroll"
 
 
-def _send_variant_to(email, variant, days_left_display):
+def _first_names_for(emails):
+    """Best-effort first-name lookup for a batch of addresses, for the
+    personal-note variant. Waitlist-only addresses (no account) have no
+    name on file at all — those get a graceful "there" instead of "Hi
+    None,". One query for the whole chunk rather than one per recipient."""
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+    rows = User.objects.filter(email__in=emails).exclude(first_name="").values_list("email", "first_name")
+    return {email.lower(): name for email, name in rows}
+
+
+def _send_variant_to(email, variant, days_left_display, first_name=None):
+    if variant.get("personal"):
+        greeting_name = first_name or "there"
+        subject = (
+            variant["subject_named"].format(first_name=first_name)
+            if first_name else variant["subject_anonymous"]
+        )
+        html_body = render_to_string(
+            "emails/personal_note.html",
+            {
+                "first_name": greeting_name,
+                "paragraphs": variant["paragraphs"],
+                "sign_off": variant["sign_off"],
+                "sender_name": variant["sender_name"],
+                "sender_title": variant["sender_title"],
+                "unsubscribe_url": unsubscribe_url(email),
+            },
+        )
+        plain_body = "\n\n".join(
+            [f"Hi {greeting_name},"] + variant["paragraphs"]
+            + [variant["sign_off"], f"{variant['sender_name']}\n{variant['sender_title']}", f"Unsubscribe: {unsubscribe_url(email)}"]
+        )
+        msg = EmailMultiAlternatives(
+            subject, plain_body, to=[email],
+            from_email=f"{variant['sender_name']} <info@codesecureacademy.com>",
+            reply_to=["info@codesecureacademy.com"],
+        )
+        msg.attach_alternative(html_body, "text/html")
+        return msg
+
     html_body = render_to_string(
         "emails/campaign_email.html",
         {
@@ -222,6 +275,7 @@ def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
     deadline_display = f"{deadline:%B} {deadline.day}, {deadline.year}" if deadline else "soon"
     variant = _reminder_variants(deadline_display)[variant_index]
     days_left_display = _days_left_display(deadline)
+    first_names = _first_names_for([item.email for item in chunk]) if variant.get("personal") else {}
 
     connection = get_connection(fail_silently=True)
     connection.open()
@@ -229,7 +283,7 @@ def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
     processed_ids = []
     try:
         for item in chunk:
-            msg = _send_variant_to(item.email, variant, days_left_display)
+            msg = _send_variant_to(item.email, variant, days_left_display, first_names.get(item.email.lower()))
             msg.connection = connection
             ok = msg.send(fail_silently=True)
             processed_ids.append(item.id)

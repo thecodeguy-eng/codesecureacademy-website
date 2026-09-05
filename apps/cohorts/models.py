@@ -180,9 +180,11 @@ class Enrollment(models.Model):
         self.cohort.refresh_status()
         from apps.whatsapp.services import send_invite_for_enrollment
         from apps.cohorts.services import send_enrollment_receipt
+        from apps.referrals.services import create_commission_for_enrollment
 
         send_enrollment_receipt(self)
         send_invite_for_enrollment(self)
+        create_commission_for_enrollment(self)
 
 
 class Waitlist(models.Model):
