@@ -20,12 +20,29 @@ class SiteSettings(models.Model):
     )
     reminder_campaign_started_at = models.DateTimeField(
         null=True, blank=True,
-        help_text="When the current bounded reminder push (N sends/day for N days) began. "
-        "Cleared once the push finishes its full run — set again to start a new bounded push.",
+        help_text="When the current bounded reminder push (runs for REMINDER_BURST_DAYS days) began. "
+        "Set again (or pass force=True) to start a new bounded push.",
     )
-    reminder_campaign_sends_done = models.PositiveSmallIntegerField(
+    reminder_campaign_sends_done = models.PositiveIntegerField(
         default=0,
-        help_text="How many sends of the current bounded push have gone out so far.",
+        help_text="Running total of emails sent by the current bounded push, across all days/batches.",
+    )
+    reminder_sent_today = models.PositiveSmallIntegerField(
+        default=0,
+        help_text="How many reminder-campaign emails have gone out today, counted against REMINDER_DAILY_CAP "
+        "so the campaign never eats the whole Brevo daily quota and starves transactional email "
+        "(signup confirmations, receipts, password resets).",
+    )
+    reminder_today_date = models.DateField(
+        null=True, blank=True,
+        help_text="The date reminder_sent_today's count applies to — reset to 0 automatically once the date rolls over.",
+    )
+    reminder_campaign_paused = models.BooleanField(
+        default=False,
+        help_text="Emergency stop: while checked, send_deadline_reminder_if_due does nothing at all "
+        "(no queueing, no sending) so the full Brevo daily quota is free for transactional email "
+        "(signup confirmations, receipts, password resets). Queue/progress is left untouched, so "
+        "unchecking resumes exactly where the campaign left off.",
     )
 
     def save(self, *args, **kwargs):

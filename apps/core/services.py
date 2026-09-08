@@ -7,11 +7,11 @@ from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
-REMINDER_SENDS_PER_DAY = 3
 REMINDER_BURST_DAYS = 7
-REMINDER_BURST_TOTAL_SENDS = REMINDER_SENDS_PER_DAY * REMINDER_BURST_DAYS  # 21
-REMINDER_SEND_INTERVAL = timezone.timedelta(hours=24 / REMINDER_SENDS_PER_DAY)  # 8h apart
 REMINDER_CHUNK_SIZE = 15
+REMINDER_DAILY_CAP = 200  # stays well under Brevo's free-tier 300/day ceiling, leaving headroom
+# for transactional mail (signup confirmations, receipts, password resets) so the campaign can
+# never eat the whole quota and silently block those.
 TRACKS_URL = "https://codesecureacademy.com/tracks/"
 TUTORIALS_URL = "https://codesecureacademy.com/tutorials/"
 
@@ -37,9 +37,8 @@ def _next_enrollment_deadline():
 
 
 def _reminder_variants(deadline_display):
-    """Seven distinct angles the campaign rotates through. At three sends a
-    day for a week that's 21 emails per person, so variety matters more
-    here than it would for a slower campaign — every variant also gets a
+    """Eight distinct angles the campaign rotates through, one per batch
+    cycle (see send_deadline_reminder_if_due) — every variant also gets a
     real, freshly-computed "days left" line injected at send time (see
     _drain_reminder_queue), not just a different subject line."""
     return [
@@ -301,61 +300,68 @@ def _drain_reminder_queue(chunk_size=REMINDER_CHUNK_SIZE):
 
 
 def send_deadline_reminder_if_due(force=False):
-    """Call on every external cron ping. If a send is already mid-drain
-    (queue non-empty), sends the next chunk of it. Otherwise, runs a
-    bounded push: REMINDER_SENDS_PER_DAY sends a day for REMINDER_BURST_DAYS
-    days (REMINDER_BURST_TOTAL_SENDS total), spaced REMINDER_SEND_INTERVAL
-    apart, rotating through _reminder_variants. Stops automatically once
-    the push completes its full run — it does not restart itself; call
-    with force=True to begin a new push. Skips entirely once there's no
-    upcoming deadline left to remind anyone about."""
+    """Call on every external cron ping. Rather than blasting every
+    recipient at once, this spreads each variant's send across as many
+    days as it takes, capped at REMINDER_DAILY_CAP emails/day total, so the
+    campaign can never eat the whole Brevo daily quota and starve
+    transactional mail. A ~380-person recipient list at a 200/day cap
+    means one variant takes ~2 days to fully reach everyone before the
+    next variant's batch begins — same rotating content as before, just
+    grouped into safe daily batches instead of firing all at once.
+
+    Stops automatically once REMINDER_BURST_DAYS have elapsed since the
+    push started (it does not restart itself; call with force=True to
+    begin a new push). Skips entirely once there's no upcoming deadline
+    left to remind anyone about."""
     from apps.core.models import ReminderQueueItem, SiteSettings
 
-    if ReminderQueueItem.objects.exists():
-        return _drain_reminder_queue()
+    site_settings = SiteSettings.load()
+    if site_settings.reminder_campaign_paused:
+        return {"skipped": "campaign paused"}
 
     deadline = _next_enrollment_deadline()
     if not deadline:
         return {"skipped": "no upcoming deadline"}
 
-    site_settings = SiteSettings.load()
+    today = timezone.now().date()
+    if site_settings.reminder_today_date != today:
+        site_settings.reminder_today_date = today
+        site_settings.reminder_sent_today = 0
 
     if force:
         # Explicit restart: begin a fresh bounded push regardless of where
-        # the previous one left off.
+        # the previous one left off, dropping any half-drained batch.
         site_settings.reminder_campaign_started_at = timezone.now()
-        site_settings.reminder_campaign_sends_done = 0
-    elif site_settings.reminder_campaign_sends_done >= REMINDER_BURST_TOTAL_SENDS:
-        return {"skipped": "push complete", "sends_done": site_settings.reminder_campaign_sends_done}
+        ReminderQueueItem.objects.all().delete()
     elif not site_settings.reminder_campaign_started_at:
         site_settings.reminder_campaign_started_at = timezone.now()
 
-    last_sent = site_settings.last_deadline_reminder_sent_at
-    if not force and last_sent and timezone.now() - last_sent < REMINDER_SEND_INTERVAL:
-        return {"skipped": "not due yet", "last_sent": last_sent}
+    daily_remaining = REMINDER_DAILY_CAP - site_settings.reminder_sent_today
+    if daily_remaining <= 0:
+        site_settings.save(update_fields=["reminder_today_date", "reminder_sent_today", "reminder_campaign_started_at"])
+        return {"skipped": "daily cap reached", "sent_today": site_settings.reminder_sent_today}
 
-    variants_count = len(_reminder_variants("placeholder"))
-    variant_index = (site_settings.last_deadline_reminder_variant + 1) % variants_count
-    recipients = _deadline_reminder_recipients()
+    push_expired = timezone.now() - site_settings.reminder_campaign_started_at > timezone.timedelta(days=REMINDER_BURST_DAYS)
+    queue_empty = not ReminderQueueItem.objects.exists()
 
-    from apps.core.models import ReminderQueueItem as _RQI
+    if queue_empty:
+        if push_expired and not force:
+            site_settings.save(update_fields=["reminder_today_date", "reminder_sent_today", "reminder_campaign_started_at"])
+            return {"skipped": "push complete (7-day window elapsed)"}
 
-    _RQI.objects.bulk_create([_RQI(email=e, variant_index=variant_index) for e in recipients])
+        variants_count = len(_reminder_variants("placeholder"))
+        variant_index = (site_settings.last_deadline_reminder_variant + 1) % variants_count
+        recipients = _deadline_reminder_recipients()
+        ReminderQueueItem.objects.bulk_create([ReminderQueueItem(email=e, variant_index=variant_index) for e in recipients])
+        site_settings.last_deadline_reminder_variant = variant_index
+        site_settings.last_deadline_reminder_sent_at = timezone.now()
+        logger.info("New reminder cycle started: variant=%s, %s recipients queued", variant_index, len(recipients))
 
-    # Marked as "sent" now, at cycle-start, not once the queue finishes
-    # draining — otherwise the due-check above would see no recent send
-    # while a multi-ping drain is still in progress and start a second
-    # cycle on top of the first.
-    site_settings.last_deadline_reminder_sent_at = timezone.now()
-    site_settings.last_deadline_reminder_variant = variant_index
-    site_settings.reminder_campaign_sends_done += 1
+    result = _drain_reminder_queue(chunk_size=min(REMINDER_CHUNK_SIZE, daily_remaining))
+    site_settings.reminder_sent_today += result.get("sent", 0) + result.get("failed", 0)
+    site_settings.reminder_campaign_sends_done += result.get("sent", 0)
     site_settings.save(update_fields=[
-        "last_deadline_reminder_sent_at", "last_deadline_reminder_variant",
-        "reminder_campaign_started_at", "reminder_campaign_sends_done",
+        "reminder_today_date", "reminder_sent_today", "reminder_campaign_started_at",
+        "last_deadline_reminder_variant", "last_deadline_reminder_sent_at", "reminder_campaign_sends_done",
     ])
-
-    logger.info(
-        "New reminder send started (%s/%s of this push): variant=%s, %s recipients queued",
-        site_settings.reminder_campaign_sends_done, REMINDER_BURST_TOTAL_SENDS, variant_index, len(recipients),
-    )
-    return _drain_reminder_queue()
+    return result
