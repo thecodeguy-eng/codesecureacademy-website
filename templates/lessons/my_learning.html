@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}My Learning · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <h1>My Learning</h1>
+    <p>Lessons for the tracks you're enrolled in.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="grid grid-2">
+      {% for row in track_progress %}
+        <a href="{% url 'lessons:track_lessons' track_slug=row.track.slug %}" class="glass-panel interactive card">
+          <h3>{{ row.track.name }}</h3>
+          <p>{{ row.done }} of {{ row.total }} lessons complete</p>
+          <div style="background:rgba(127,127,127,0.2);border-radius:999px;height:8px;overflow:hidden;margin-top:0.5rem;">
+            <div style="background:var(--accent, #2f7dff);height:100%;width:{{ row.percent }}%;"></div>
+          </div>
+        </a>
+      {% empty %}
+        <p>No lessons yet — enroll in a track to unlock its curriculum. <a href="{% url 'cohorts:track_list' %}">Browse tracks →</a></p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

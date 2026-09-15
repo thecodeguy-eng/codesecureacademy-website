@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ track.name }} lessons · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <span class="eyebrow">{{ track.name }}</span>
+    <h1>Lessons</h1>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="grid grid-2">
+      {% for lesson in lessons %}
+        <a href="{{ lesson.get_absolute_url }}" class="glass-panel interactive card">
+          <h3>{{ lesson.title }}</h3>
+          <p>{{ lesson.summary }}</p>
+          {% if lesson.id in completed_ids %}
+            <span class="badge badge-open">Completed</span>
+          {% endif %}
+        </a>
+      {% empty %}
+        <p>No lessons published for this track yet — check back soon.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

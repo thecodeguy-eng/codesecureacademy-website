@@ -28,6 +28,25 @@ def dashboard(request):
         .order_by("-created_at")
     )
 
+    from apps.lessons.models import LessonProgress
+
+    confirmed_track_ids = enrollments.filter(status=Enrollment.Status.CONFIRMED).values_list(
+        "cohort__track_id", flat=True
+    )
+    completed_lesson_ids = set(
+        LessonProgress.objects.filter(student=request.user).values_list("lesson_id", flat=True)
+    )
+    learning_progress = []
+    for track in Track.objects.filter(id__in=set(confirmed_track_ids)):
+        lessons = list(track.lessons.all())
+        if not lessons:
+            continue
+        done = sum(1 for lesson in lessons if lesson.id in completed_lesson_ids)
+        learning_progress.append({
+            "track": track, "total": len(lessons), "done": done,
+            "percent": round(done / len(lessons) * 100),
+        })
+
     recommended_track = None
     other_tracks = Track.objects.none()
     if not enrollments:
@@ -47,6 +66,7 @@ def dashboard(request):
             "course_purchases": course_purchases,
             "recommended_track": recommended_track,
             "other_tracks": other_tracks,
+            "learning_progress": learning_progress,
         },
     )
 

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <span class="eyebrow"><a href="{% url 'lessons:track_lessons' track_slug=track.slug %}">{{ track.name }}</a></span>
+    <h1>{{ lesson.title }}</h1>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container" style="max-width:760px;">
+    <div class="glass-panel card">
+      {{ lesson.body|safe }}
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <div>
+        {% if previous_lesson %}<a href="{{ previous_lesson.get_absolute_url }}">← {{ previous_lesson.title }}</a>{% endif %}
+      </div>
+      <form method="post" action="{% url 'lessons:mark_lesson_complete' track_slug=track.slug lesson_slug=lesson.slug %}">
+        {% csrf_token %}
+        {% if is_complete %}
+          <span class="badge badge-open">Completed</span>
+        {% else %}
+          <button type="submit" class="btn btn-primary">Mark as complete</button>
+        {% endif %}
+      </form>
+      <div>
+        {% if next_lesson %}<a href="{{ next_lesson.get_absolute_url }}">{{ next_lesson.title }} →</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
