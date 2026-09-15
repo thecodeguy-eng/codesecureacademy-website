@@ -48,6 +48,17 @@ class Partner(models.Model):
     def referral_url(self):
         return f"{settings.SITE_URL}/r/{self.referral_code}/"
 
+    @property
+    def dashboard_url(self):
+        """A private, self-serve stats link for the partner — no login
+        needed, same signed-token pattern as the unsubscribe link (see
+        apps.core.services.unsubscribe_url), so it can't be guessed or
+        used for anyone else's stats."""
+        from django.core import signing
+
+        token = signing.dumps(self.referral_code, salt="partner-dashboard")
+        return f"{settings.SITE_URL}/r/{self.referral_code}/dashboard/?t={token}"
+
 
 class ReferralAttribution(models.Model):
     """Permanently ties a student to whichever partner's link brought them

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Partner dashboard · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    {% if invalid %}
+      <h1>This link isn't valid</h1>
+      <p>Ask Code Secure Academy for a fresh dashboard link.</p>
+    {% else %}
+      <span class="eyebrow">Partner dashboard</span>
+      <h1>{{ partner.name }}</h1>
+      <p>Your link: <code>{{ partner.referral_url }}</code></p>
+    {% endif %}
+  </div>
+</section>
+
+{% if not invalid %}
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <span class="label">People referred</span>
+        <p class="num mono" style="font-size:1.8rem;">{{ referred_count }}</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Commission rates</span>
+        <p>Enrollment: {{ partner.enrollment_commission_percent }}%</p>
+        <p>Marketplace: {{ partner.marketplace_commission_percent }}%</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Commission totals</span>
+        <p>Pending: ₦{{ totals.pending|default:0 }}</p>
+        <p>Approved: ₦{{ totals.approved|default:0 }}</p>
+        <p>Paid: ₦{{ totals.paid|default:0 }}</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:3rem;">Recent commissions</h2>
+    <div class="glass-panel card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="text-align:left;">
+            <th style="padding:0.5rem;">Date</th>
+            <th style="padding:0.5rem;">Type</th>
+            <th style="padding:0.5rem;">Amount</th>
+            <th style="padding:0.5rem;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in commissions %}
+          <tr>
+            <td style="padding:0.5rem;">{{ c.created_at|date:"M j, Y" }}</td>
+            <td style="padding:0.5rem;">{{ c.get_kind_display }}</td>
+            <td style="padding:0.5rem;">₦{{ c.commission_amount_naira }}</td>
+            <td style="padding:0.5rem;">
+              {% if c.status == "paid" %}<span class="badge badge-open">Paid</span>
+              {% elif c.status == "approved" %}<span class="badge">Approved</span>
+              {% else %}<span class="badge">Pending review</span>{% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td style="padding:0.5rem;" colspan="4">No commissions yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

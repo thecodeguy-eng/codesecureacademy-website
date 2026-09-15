@@ -7,7 +7,7 @@ from .models import Partner, ReferralAttribution, ReferralCommission
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ("name", "referral_code", "email", "enrollment_commission_percent", "marketplace_commission_percent", "is_active", "referred_count", "referral_link_display")
     search_fields = ("name", "email", "referral_code")
-    readonly_fields = ("referral_link_display",)
+    readonly_fields = ("referral_link_display", "dashboard_link_display")
 
     @admin.display(description="Referrals")
     def referred_count(self, obj):
@@ -16,6 +16,10 @@ class PartnerAdmin(admin.ModelAdmin):
     @admin.display(description="Referral link")
     def referral_link_display(self, obj):
         return obj.referral_url if obj.pk else "(save first)"
+
+    @admin.display(description="Partner dashboard link")
+    def dashboard_link_display(self, obj):
+        return obj.dashboard_url if obj.pk else "(save first)"
 
 
 @admin.register(ReferralCommission)
