@@ -144,6 +144,8 @@ class Order(models.Model):
         self.save(update_fields=["status", "paid_at"])
         from . import services
         from apps.referrals.services import create_commission_for_order
+        from apps.analytics.services import track
 
         services.notify_order_paid(self)
         create_commission_for_order(self)
+        track("order_paid", user=self.buyer, listing_id=self.listing_id, amount_naira=str(self.amount_naira))

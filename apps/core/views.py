@@ -34,6 +34,9 @@ def join_general_waitlist(request):
             messages.success(request, "You're already on the waitlist, we'll email you when a track opens up.")
         elif form.is_valid():
             form.save()
+            from apps.analytics.services import track
+
+            track("waitlist_joined", email=email)
             messages.success(request, "You're on the waitlist, we'll email you when a track opens up.")
         else:
             messages.error(request, "Enter a valid email address to join the waitlist.")

@@ -153,6 +153,32 @@ def _brevo_blocked_emails():
         return set()
 
 
+def brevo_account_status():
+    """Live plan type + remaining daily send credits, straight from Brevo's
+    own account endpoint — the one source of truth that actually distinguishes
+    "we sent it" from "Brevo accepted the API call but had no quota left to
+    dispatch it." Used by the admin insights dashboard so this doesn't have
+    to be checked by hand again. Best-effort: returns None on any failure."""
+    import requests
+    from django.conf import settings
+
+    try:
+        resp = requests.get(
+            "https://api.brevo.com/v3/account",
+            headers={"api-key": settings.BREVO_API_KEY, "Accept": "application/json"},
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            return None
+        for plan in resp.json().get("plan", []):
+            if plan.get("creditsType") == "sendLimit":
+                return {"type": plan.get("type"), "credits_remaining": plan.get("credits")}
+        return None
+    except Exception:
+        logger.warning("Could not check Brevo account status.", exc_info=True)
+        return None
+
+
 def _deadline_reminder_recipients():
     """Everyone worth reminding: general waitlist signups plus every
     registered user, minus anyone who already has a confirmed (paid)

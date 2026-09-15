@@ -68,7 +68,12 @@ def start_checkout(request, cohort_id):
         messages.info(request, "You're already enrolled in this cohort.")
         return redirect("cohorts:enrollment_success", enrollment_id=existing.id)
 
+    is_new_enrollment = existing is None
     enrollment = existing or Enrollment.objects.create(student=request.user, cohort=cohort)
+    if is_new_enrollment:
+        from apps.analytics.services import track
+
+        track("enrollment_started", user=request.user, track_slug=cohort.track.slug, cohort_id=cohort.id)
 
     reference = f"CSA-ENR-{enrollment.id}-{uuid.uuid4().hex[:8]}"
     callback_url = request.build_absolute_uri(reverse("payments:verify_callback", args=[reference]))

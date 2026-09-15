@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Insights · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <span class="eyebrow">Staff only · last {{ since_days }} days</span>
+    <h1>Insights</h1>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+
+    <h2>Email campaign &amp; quota</h2>
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <span class="label">Brevo plan</span>
+        {% if brevo_status %}
+          <p class="num mono" style="font-size:1.4rem;">{{ brevo_status.credits_remaining }} <span style="font-size:0.9rem;">left today</span></p>
+          <p>Plan: {{ brevo_status.type }}</p>
+        {% else %}
+          <p>Couldn't reach Brevo's account API right now.</p>
+        {% endif %}
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Reminder campaign</span>
+        {% if site_settings.reminder_campaign_paused %}
+          <span class="badge badge-full">Paused</span>
+        {% else %}
+          <span class="badge badge-open">Active</span>
+        {% endif %}
+        <p>Sent today: {{ site_settings.reminder_sent_today }}</p>
+        <p>Queued, not yet sent: {{ reminder_queue_remaining }}</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Push started</span>
+        <p>{{ site_settings.reminder_campaign_started_at|date:"M j, Y H:i"|default:"Not started" }}</p>
+        <p>Total sent this push: {{ site_settings.reminder_campaign_sends_done }}</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:3rem;">Signups &amp; funnel</h2>
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <span class="label">New signups</span>
+        <p class="num mono" style="font-size:1.8rem;">{{ total_signups_30d }}</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Waitlist joins</span>
+        <p class="num mono" style="font-size:1.8rem;">{{ waitlist_joined_count }}</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Enrollment conversion</span>
+        <p class="num mono" style="font-size:1.8rem;">{% if conversion_rate is not None %}{{ conversion_rate }}%{% else %}—{% endif %}</p>
+        <p>{{ enrollment_confirmed }} confirmed of {{ enrollment_started }} started</p>
+      </div>
+    </div>
+
+    {% if signups_by_day %}
+    <div class="glass-panel card" style="margin-top:1.5rem;">
+      <span class="label">Signups per day</span>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:0.75rem;">
+        {% for row in signups_by_day %}
+          <div title="{{ row.day }}: {{ row.count }}" style="flex:1;min-width:4px;background:var(--accent, #2f7dff);border-radius:2px 2px 0 0;height:{% widthratio row.count max_signups_in_a_day 100 %}%;"></div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <h2 style="margin-top:3rem;">Referrals</h2>
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <span class="label">Link clicks</span>
+        <p class="num mono" style="font-size:1.8rem;">{{ referral_clicks }}</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Referred signups</span>
+        <p class="num mono" style="font-size:1.8rem;">{{ referral_signups }}</p>
+      </div>
+      <div class="glass-panel card">
+        <span class="label">Commissions</span>
+        <p>Pending: ₦{{ commission_totals.pending|default:0 }}</p>
+        <p>Approved: ₦{{ commission_totals.approved|default:0 }}</p>
+        <p>Paid: ₦{{ commission_totals.paid|default:0 }}</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:3rem;">Revenue events</h2>
+    <div class="grid grid-3">
+      <div class="glass-panel card">
+        <span class="label">Marketplace orders paid</span>
+        <p class="num mono" style="font-size:1.8rem;">{{ order_paid_count }}</p>
+      </div>
+    </div>
+
+    <p style="margin-top:2rem;"><a href="{% url 'admin:index' %}">Go to Django admin →</a></p>
+  </div>
+</section>
+{% endblock %}

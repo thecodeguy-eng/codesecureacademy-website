@@ -112,6 +112,8 @@ INSTALLED_APPS = [
     "apps.tutorials",
     "apps.courses",
     "apps.referrals",
+    "apps.analytics",
+    "apps.lessons",
 ]
 
 MIDDLEWARE = [

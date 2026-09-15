@@ -181,10 +181,15 @@ class Enrollment(models.Model):
         from apps.whatsapp.services import send_invite_for_enrollment
         from apps.cohorts.services import send_enrollment_receipt
         from apps.referrals.services import create_commission_for_enrollment
+        from apps.analytics.services import track
 
         send_enrollment_receipt(self)
         send_invite_for_enrollment(self)
         create_commission_for_enrollment(self)
+        track(
+            "enrollment_confirmed", user=self.student,
+            track_slug=self.cohort.track.slug, amount_naira=str(self.cohort.price_naira),
+        )
 
 
 class Waitlist(models.Model):
