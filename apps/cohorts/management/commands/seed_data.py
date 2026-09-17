@@ -34,7 +34,6 @@ class Command(BaseCommand):
                 "why_join": (
                     "You'll ship a real, working project, not a tutorial you forget by next week\n"
                     "Learn the exact stack (HTML, CSS, JavaScript, React) that's actually hiring right now\n"
-                    "A cohort and a WhatsApp community, not a lonely login screen\n"
                     "Walk away with something you can put in a portfolio and show off"
                 ),
                 "cover_image_url": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&q=80&fm=jpg&fit=crop",
@@ -132,7 +131,8 @@ class Command(BaseCommand):
         faqs = [
             ("How do I pay for a cohort?", "Pick a track, log in, and check out securely with Paystack. Card or bank transfer both work."),
             ("What happens if my cohort fills up?", "Join the waitlist and we'll email you the moment a seat opens for the next cohort."),
-            ("How do I get into the WhatsApp group?", "The moment your payment is confirmed, you'll get the invite link by email and on-screen."),
+            # Paused along with the cohort WhatsApp group feature (see git history) —
+            # ("How do I get into the WhatsApp group?", "The moment your payment is confirmed, you'll get the invite link by email and on-screen."),
             ("Do I need prior experience to join a track?", "No. Each track starts from the fundamentals and builds up from there. You just need to be ready to put in the work."),
             ("Do I need my own laptop?", "Yes, you'll need a laptop capable of running the tools for your track. We'll share the specific requirements once you're enrolled."),
             ("What's your refund policy?", "Check our Terms of Service page for the full refund policy."),

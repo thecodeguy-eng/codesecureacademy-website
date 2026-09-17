@@ -20,7 +20,7 @@ and defensive exercises with your cohort.</p>
 <ul>
   <li>Work through lessons in order — later ones assume the earlier ones.</li>
   <li>Mark each lesson complete as you finish it, so you can see your progress here and pick up where you left off.</li>
-  <li>Bring questions to your cohort's WhatsApp group. You're not doing this alone.</li>
+  <li>Bring questions to your cohort. You're not doing this alone.</li>
 </ul>
 """,
     },
@@ -114,9 +114,8 @@ with:</p>
 <p>A common cohort setup is one VM running a security-focused Linux
 distribution for practicing techniques, and a second, deliberately
 vulnerable VM as a target, so you're always attacking a machine built for
-exactly that purpose rather than anything real. Your cohort's WhatsApp group
-is the right place to ask for the current recommended images once you're
-ready to set this up.</p>
+exactly that purpose rather than anything real. Ask your cohort for the
+current recommended images once you're ready to set this up.</p>
 <p><strong>Rule that doesn't have exceptions:</strong> everything you try in
 this track happens inside this isolated lab, or against a system you have
 explicit written permission to test. Never against anything else.</p>
