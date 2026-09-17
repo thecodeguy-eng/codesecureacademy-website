@@ -108,7 +108,11 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+/* Matches body's own background so mobile Safari's rubber-band overscroll
+   (bouncing past the top/bottom while scrolling) reveals this instead of
+   the browser's plain-white default canvas — that mismatch is what shows
+   up as a white flash at the bottom of the screen in dark mode. */
+html { scroll-behavior: smooth; background: var(--navy-950); }
 
 /* ---------- Page-to-page transitions (native View Transitions API) ----------
    This is a multi-page Django app, not an SPA — full navigations reload the
