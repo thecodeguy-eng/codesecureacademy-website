@@ -178,13 +178,13 @@ class Enrollment(models.Model):
         self.confirmed_at = timezone.now()
         self.save(update_fields=["status", "confirmed_at"])
         self.cohort.refresh_status()
-        from apps.whatsapp.services import send_invite_for_enrollment
         from apps.cohorts.services import send_enrollment_receipt
         from apps.referrals.services import create_commission_for_enrollment
         from apps.analytics.services import track
 
         send_enrollment_receipt(self)
-        send_invite_for_enrollment(self)
+        # from apps.whatsapp.services import send_invite_for_enrollment
+        # send_invite_for_enrollment(self)  # paused — see enrollment_success.html
         create_commission_for_enrollment(self)
         track(
             "enrollment_confirmed", user=self.student,
