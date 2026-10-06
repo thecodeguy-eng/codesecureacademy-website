@@ -66,6 +66,12 @@
       {% if cohort %}
         <h3>Price</h3>
         <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></p>
+        <p style="font-size:0.9rem;color:var(--text-muted);margin:0 0 0.75rem;">Starts {{ cohort.start_date|date:"F j, Y" }} · {{ cohort.duration_weeks }}-week cohort · runs through {{ cohort.end_date|date:"F j, Y" }}</p>
+        <ul class="alt-checklist" style="margin:0 0 0.75rem;">
+          <li><span class="tick">✓</span><span>Full {{ track.name }} curriculum for this cohort</span></li>
+          <li><span class="tick">✓</span><span>Lesson access on your dashboard the moment payment clears</span></li>
+          <li><span class="tick">✓</span><span>A cohort of people learning the same track on the same timeline</span></li>
+        </ul>
 
         {% if cohort.accepting_enrollment %}
           {% if cohort.enrollment_deadline %}

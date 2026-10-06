@@ -96,7 +96,6 @@ window.addEventListener("pagereveal", function (event) {
           <input type="search" name="q" id="nav-search-input" placeholder="Search..." aria-label="Search Code Secure Academy" value="{{ query }}">
         </form>
       </div>
-      <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
       <a href="{% url 'cohorts:track_list' %}" class="{% if request.path|starts_with:'/tracks/' %}active{% endif %}" {% if request.path|starts_with:'/tracks/' %}aria-current="page"{% endif %}>Tracks</a>
       <a href="{% url 'tutorials:category_list' %}" class="{% if request.path|starts_with:'/tutorials/' %}active{% endif %}" {% if request.path|starts_with:'/tutorials/' %}aria-current="page"{% endif %}>Free Tutorials</a>
       <!-- <a href="{% url 'courses:course_list' %}">Courses</a> -->
@@ -169,12 +168,12 @@ window.addEventListener("pagereveal", function (event) {
 
     <div class="footer-links footer-waitlist">
       <h4>Stay in the loop</h4>
-      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.6rem;">Not ready to enroll? Join the waitlist and we'll email you when a track opens.</p>
+      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.6rem;">Get an email when a new track or cohort opens, nothing else.</p>
       <form method="post" action="{% url 'join_general_waitlist' %}" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.path }}">
         <input type="email" name="email" placeholder="you@example.com" required style="flex:1;min-width:140px;">
-        <button type="submit" class="btn btn-primary btn-sm">Join</button>
+        <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
       </form>
     </div>
 

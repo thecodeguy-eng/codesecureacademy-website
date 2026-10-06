@@ -113,6 +113,10 @@ class Cohort(models.Model):
         return f"{self.track.name} — {self.start_date:%b %Y}"
 
     @property
+    def duration_weeks(self):
+        return round((self.end_date - self.start_date).days / 7)
+
+    @property
     def seats_taken(self):
         return self.enrollments.filter(
             status__in=[Enrollment.Status.HELD, Enrollment.Status.CONFIRMED]
