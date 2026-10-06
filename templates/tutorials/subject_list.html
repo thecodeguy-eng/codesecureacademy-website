@@ -5,10 +5,9 @@
 {% block content %}
 
 <section class="hero">
-  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
   <div class="hero-spotlight"></div>
   <div class="container" style="max-width:720px;">
-    {% if category.icon %}<div style="font-size:2rem;">{{ category.icon }}</div>{% endif %}
+    {% include "partials/category_icon.html" %}
     <span class="eyebrow">Free tutorials</span>
     <h1>{{ category.name }}</h1>
     <p class="lead">{{ category.description }}</p>

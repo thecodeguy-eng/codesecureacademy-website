@@ -23,7 +23,7 @@ class Command(BaseCommand):
             {
                 "slug": "frontend",
                 "name": "Frontend Development",
-                "tagline": "Build fast, accessible interfaces with real projects, not just tutorials.",
+                "tagline": "Build fast, accessible interfaces, and ship a real project while you're at it.",
                 "description": (
                     "Every website and app you've ever used started as an idea someone turned into "
                     "pixels on a screen. In this track, you'll do the same, starting from a blank "
@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 ),
                 "highlights": "HTML, CSS & modern JavaScript\nA frontend framework (React)\nResponsive, accessible UI\nGit & deployment workflow\nA portfolio-ready capstone project",
                 "why_join": (
-                    "You'll ship a real, working project, not a tutorial you forget by next week\n"
+                    "You'll ship a real, working project instead of just watching someone else build one\n"
                     "Learn the exact stack most frontend job listings ask for: HTML, CSS, JavaScript, and React\n"
                     "Walk away with something you can put in a portfolio and show off"
                 ),
@@ -46,8 +46,8 @@ class Command(BaseCommand):
                 "description": (
                     "Every app people love is powered by something they never see: the backend. "
                     "In this track, you'll build the APIs, databases, and systems that make frontend "
-                    "interfaces actually work, and learn to think about what happens when real "
-                    "traffic hits your server, not just when it's running on your laptop."
+                    "interfaces actually work, and learn to think about what happens once real "
+                    "traffic hits your server, past the point where it only has to work on your laptop."
                 ),
                 "highlights": "Server-side fundamentals\nRelational databases & queries\nREST API design\nAuthentication & security basics\nDeploying a live API",
                 "why_join": (
@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 "highlights": "Networking & security fundamentals\nCommon web vulnerabilities (OWASP)\nHands-on lab exercises\nSecurity tooling\nIncident response basics",
                 "why_join": (
                     "Learn to spot the vulnerabilities most developers miss\n"
-                    "Hands-on labs, not just slides about hackers\n"
+                    "Hands-on labs where you try the attack yourself, not slideshows about hackers\n"
                     "Understand the OWASP Top 10 well enough to explain it to anyone\n"
                     "Build the habit of asking 'what could go wrong here?' on every project after this"
                 ),
@@ -87,10 +87,10 @@ class Command(BaseCommand):
                 ),
                 "highlights": "Design principles & typography\nIndustry-standard tools\nBrand identity systems\nLayout & visual hierarchy\nA client-brief portfolio piece",
                 "why_join": (
-                    "Work real, client-style briefs, not just 'design a poster' exercises\n"
+                    "Work real, client-style briefs instead of generic 'design a poster' exercises\n"
                     "Learn the industry-standard tools employers actually expect\n"
                     "Build a portfolio piece you'd be proud to show a client\n"
-                    "Understand brand and layout systems, not just how to make one thing look nice"
+                    "Understand the brand and layout systems that hold a design together, not just one graphic"
                 ),
                 "cover_image_url": "https://images.unsplash.com/photo-1716471330463-f475b00f0506?w=1200&q=80&fm=jpg&fit=crop",
             },

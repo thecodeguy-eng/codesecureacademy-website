@@ -5,7 +5,6 @@
 {% block content %}
 
 <section class="hero">
-  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
   <div class="hero-spotlight"></div>
   <div class="container" style="max-width:720px;">
     <span class="eyebrow">100% free, no sign-up needed</span>
@@ -35,7 +34,7 @@
         <a href="{{ category.get_absolute_url }}" class="glass-panel interactive card-media">
           {% include "partials/term_chrome.html" with label=category.slug|add:"/" %}
           <div class="card-body">
-            {% if category.icon %}<div style="font-size:2rem;">{{ category.icon }}</div>{% endif %}
+            {% include "partials/category_icon.html" %}
             <h3>{{ category.name }}</h3>
             <p>{{ category.description|truncatewords:20 }}</p>
             <p style="margin:0;color:var(--text-muted);">{{ category.subjects.count }} subject{{ category.subjects.count|pluralize }}</p>

@@ -76,7 +76,7 @@ def _reminder_variants(deadline_display):
             "subject": "Here's exactly what you get when you enroll",
             "heading": "What's included with every cohort",
             "paragraphs": [
-                "A project-based curriculum, not a video playlist. Direct WhatsApp access to your cohort the moment payment clears. Fixed dates with a real deadline, not a self-paced course you'll never finish.",
+                "A project-based curriculum you work through with your cohort. Lesson access on your dashboard the moment payment clears. Fixed dates with a real deadline, so the course doesn't sit half-finished in a tab somewhere.",
                 "Plus a moderated community, so there's no bad-faith noise, and track-specific tooling, the same tools and workflow used on the job. All for &#8358;5,000, and enrollment is still open right now.",
             ],
             "cta_url": TRACKS_URL,

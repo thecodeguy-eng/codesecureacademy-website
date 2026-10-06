@@ -572,6 +572,22 @@ a { color: var(--blue-400); text-decoration: none; }
 .hero p.lead { font-size: 1.15rem; max-width: 620px; margin: 0 auto var(--space-3); }
 .hero-actions { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; margin-top: var(--space-3); }
 
+/* Split hero variant (homepage only) — text left, a small live-editable
+   demo right, so the "hands-on, try it yourself" promise is visible
+   before a visitor scrolls past the fold instead of several sections down. */
+.hero-split { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--space-5); align-items: center; text-align: left; }
+.hero-split .hero-text .lead { margin-left: 0; }
+.hero-split .hero-actions { justify-content: flex-start; }
+.hero-demo-editor { margin-top: 0; text-align: left; }
+.hero-demo-editor .code-editor-panes,
+.hero-demo-editor .code-editor-input,
+.hero-demo-editor .code-editor-output { min-height: 190px; }
+@media (max-width: 860px) {
+  .hero-split { grid-template-columns: 1fr; text-align: center; }
+  .hero-split .hero-text .lead { margin-left: auto; margin-right: auto; }
+  .hero-split .hero-actions { justify-content: center; }
+}
+
 .track-icon-wrap {
   width: 84px; height: 84px; border-radius: var(--radius-lg); margin: 0 auto var(--space-3);
   display: flex; align-items: center; justify-content: center;
