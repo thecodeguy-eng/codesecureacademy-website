@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% load static currency_tags %}
+{% block title %}Code Secure Academy · Frontend, Backend, Cybersecurity & Design Cohorts{% endblock %}
+{% block meta_description %}Cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design. 8-week cohorts, ₦5,000 per track, hands-on projects, built for Nigeria.{% endblock %}
+{% block og_title %}Code Secure Academy · Frontend, Backend, Cybersecurity & Design Cohorts{% endblock %}
+{% block og_description %}Cohort-based tech training in Frontend, Backend, Cybersecurity, and Graphic Design. 8-week cohorts, ₦5,000 per track, hands-on projects.{% endblock %}
 {% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script>{% endblock %}
 {% block content %}
 
@@ -129,7 +133,7 @@
     <div class="alt-visual">
       {% if track.display_cover_image %}
         <div class="glass-panel product-preview">
-          <img src="{{ track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:260px;object-fit:contain;background:#060a27;display:block;">
+          <img src="{{ track.display_cover_image }}" alt="{{ track.name }} track" loading="lazy" style="width:100%;height:260px;object-fit:contain;background:#060a27;display:block;">
         </div>
       {% endif %}
     </div>

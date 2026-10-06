@@ -2,6 +2,7 @@
 {% load static %}
 {% load tutorial_extras %}
 {% block title %}{{ category.name }} Tutorials · Code Secure Academy{% endblock %}
+{% block meta_description %}{{ category.description|default:category.name|truncatewords:25 }}{% endblock %}
 {% block content %}
 
 <section class="hero">

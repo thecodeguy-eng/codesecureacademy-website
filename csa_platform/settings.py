@@ -291,7 +291,7 @@ PAYOUT_HOLD_HOURS = config("PAYOUT_HOLD_HOURS", default=48, cast=int)
 # Social links (used in templates)
 # --------------------------------------------------------------------------
 
-INSTAGRAM_URL = config("INSTAGRAM_URL", default="https://www.instagram.com/codesecuracademy?igsh=amRhZ2VsNDN3MmF2")
+INSTAGRAM_URL = config("INSTAGRAM_URL", default="https://www.instagram.com/codesecuracademy")
 FACEBOOK_URL = config("FACEBOOK_URL", default="https://www.facebook.com/share/1DVbyQE8Bo/")
 WHATSAPP_CONTACT_NUMBER = config("WHATSAPP_CONTACT_NUMBER", default="2348158983927")
 # The public "chat with us" touchpoints (nav FAB, contact page) link here —

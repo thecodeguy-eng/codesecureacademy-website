@@ -2,6 +2,9 @@
 {% load static currency_tags %}
 {% load tutorial_extras %}
 {% block title %}{{ article.title }} · {{ subject.name }} · Code Secure Academy{% endblock %}
+{% block meta_description %}{{ article.summary|default:article.title }} Free {{ subject.name }} tutorial from Code Secure Academy.{% endblock %}
+{% block og_title %}{{ article.title }} · {{ subject.name }} · Code Secure Academy{% endblock %}
+{% block og_description %}{{ article.summary|default:article.title }}{% endblock %}
 {% block content %}
 
 <section>

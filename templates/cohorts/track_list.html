@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static currency_tags %}
-{% block title %}Tracks · Code Secure Academy{% endblock %}
+{% block title %}All Tracks · Frontend, Backend, Cybersecurity & Design{% endblock %}
+{% block meta_description %}Browse all 4 Code Secure Academy tracks: Frontend Development, Backend Development, Cybersecurity, and Graphic Design. ₦5,000 per 8-week cohort.{% endblock %}
 {% block content %}
 <section class="hero">
   <div class="hero-spotlight"></div>
@@ -16,7 +17,7 @@
       <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
         {% include "partials/term_chrome.html" with label=track.slug|add:".track" %}
         {% if track.display_cover_image %}
-          <img class="card-cover-track" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+          <img class="card-cover-track" src="{{ track.display_cover_image }}" alt="{{ track.name }} track" loading="lazy">
         {% endif %}
         <div class="card-body">
           <h3>{{ track.name }}</h3>

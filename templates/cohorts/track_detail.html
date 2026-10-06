@@ -2,6 +2,7 @@
 {% load static currency_tags %}
 {% load cohort_extras %}
 {% block title %}{{ track.name }} · Code Secure Academy{% endblock %}
+{% block meta_description %}{{ track.tagline|default:track.description|truncatewords:25 }}{% endblock %}
 {% block og_title %}{{ track.name }} · Code Secure Academy{% endblock %}
 {% block og_description %}{{ track.tagline|default:track.description|truncatewords:20 }}{% endblock %}
 {% block content %}
@@ -27,7 +28,7 @@
         <h2>Here's why people register</h2>
         {% if track.display_cover_image %}
           <div class="why-visual-photo">
-            <img src="{{ track.display_cover_image }}" alt="" loading="lazy">
+            <img src="{{ track.display_cover_image }}" alt="{{ track.name }} track" loading="lazy">
           </div>
         {% endif %}
       </div>
@@ -56,7 +57,7 @@
           {% endif %}
         </div>
       {% elif track.display_cover_image %}
-        <img src="{{ track.display_cover_image }}" alt="" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:contain;background:#060a27;border-radius:12px;margin-bottom:1rem;">
+        <img src="{{ track.display_cover_image }}" alt="{{ track.name }} track" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:contain;background:#060a27;border-radius:12px;margin-bottom:1rem;">
       {% endif %}
       <h3>About this track</h3>
       <p>{{ track.description|linebreaks }}</p>
