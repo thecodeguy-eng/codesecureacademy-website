@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load currency_tags %}
 {% block title %}Insights · Code Secure Academy{% endblock %}
 {% block content %}
 <section class="hero" style="text-align:left;padding-bottom:1rem;">
@@ -79,9 +80,9 @@
       </div>
       <div class="glass-panel card">
         <span class="label">Commissions</span>
-        <p>Pending: ₦{{ commission_totals.pending|default:0 }}</p>
-        <p>Approved: ₦{{ commission_totals.approved|default:0 }}</p>
-        <p>Paid: ₦{{ commission_totals.paid|default:0 }}</p>
+        <p>Pending: ₦{{ commission_totals.pending|default:0|naira }}</p>
+        <p>Approved: ₦{{ commission_totals.approved|default:0|naira }}</p>
+        <p>Paid: ₦{{ commission_totals.paid|default:0|naira }}</p>
       </div>
     </div>
 

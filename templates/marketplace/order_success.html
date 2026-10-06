@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load currency_tags %}
 {% block title %}Order confirmed · Code Secure Academy{% endblock %}
 {% block content %}
 <section class="hero">
@@ -7,7 +8,7 @@
       {% if order.status == "paid" %}
         <span class="badge badge-open">Paid</span>
         <h1>Order confirmed</h1>
-        <p>You bought <strong>{{ order.listing.title }}</strong> for ₦{{ order.amount_naira }}. The seller has been notified and will reach out to fulfil it.</p>
+        <p>You bought <strong>{{ order.listing.title }}</strong> for ₦{{ order.amount_naira|naira }}. The seller has been notified and will reach out to fulfil it.</p>
         <p><a href="{% url 'reviews:submit_review' app_label='marketplace' model_name='order' object_id=order.id %}">Leave a review →</a></p>
       {% else %}
         <span class="badge">{{ order.get_status_display }}</span>

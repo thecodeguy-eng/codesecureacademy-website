@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static currency_tags %}
 {% block title %}Courses · Code Secure Academy{% endblock %}
 {% block content %}
 
@@ -38,7 +38,7 @@
             <h3>{{ course.title }}</h3>
             <p>{{ course.description|truncatewords:15 }}</p>
             <p>By {{ course.tutor.full_name }}</p>
-            <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira }} <span class="price-fx"></span></p>
+            <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira|naira }} <span class="price-fx"></span></p>
             {% if course.average_rating %}<p>★ {{ course.average_rating|floatformat:1 }}</p>{% endif %}
           </div>
         </a>

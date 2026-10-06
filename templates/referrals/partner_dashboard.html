@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load currency_tags %}
 {% block title %}Partner dashboard · Code Secure Academy{% endblock %}
 {% block content %}
 <section class="hero" style="text-align:left;padding-bottom:1rem;">
@@ -29,9 +30,9 @@
       </div>
       <div class="glass-panel card">
         <span class="label">Commission totals</span>
-        <p>Pending: ₦{{ totals.pending|default:0 }}</p>
-        <p>Approved: ₦{{ totals.approved|default:0 }}</p>
-        <p>Paid: ₦{{ totals.paid|default:0 }}</p>
+        <p>Pending: ₦{{ totals.pending|default:0|naira }}</p>
+        <p>Approved: ₦{{ totals.approved|default:0|naira }}</p>
+        <p>Paid: ₦{{ totals.paid|default:0|naira }}</p>
       </div>
     </div>
 
@@ -51,7 +52,7 @@
           <tr>
             <td style="padding:0.5rem;">{{ c.created_at|date:"M j, Y" }}</td>
             <td style="padding:0.5rem;">{{ c.get_kind_display }}</td>
-            <td style="padding:0.5rem;">₦{{ c.commission_amount_naira }}</td>
+            <td style="padding:0.5rem;">₦{{ c.commission_amount_naira|naira }}</td>
             <td style="padding:0.5rem;">
               {% if c.status == "paid" %}<span class="badge badge-open">Paid</span>
               {% elif c.status == "approved" %}<span class="badge">Approved</span>

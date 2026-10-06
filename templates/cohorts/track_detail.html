@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static currency_tags %}
 {% load cohort_extras %}
 {% block title %}{{ track.name }} · Code Secure Academy{% endblock %}
 {% block og_title %}{{ track.name }} · Code Secure Academy{% endblock %}
@@ -65,12 +65,14 @@
     <div class="glass-panel card">
       {% if cohort %}
         <h3>Price</h3>
-        <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira }} <span class="price-fx"></span></p>
+        <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></p>
 
         {% if cohort.accepting_enrollment %}
-          <span class="badge badge-open">Active</span>
           {% if cohort.enrollment_deadline %}
+            <span class="badge badge-open">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
             <p style="margin:0.5rem 0 0;font-size:0.9rem;color:var(--text-muted);">Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}</p>
+          {% else %}
+            <span class="badge badge-open">Enrolling now</span>
           {% endif %}
         {% else %}
           <span class="badge badge-full">Not active</span>

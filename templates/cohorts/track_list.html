@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static currency_tags %}
 {% block title %}Tracks · Code Secure Academy{% endblock %}
 {% block content %}
 <section class="hero">
@@ -24,11 +24,12 @@
           <p>{{ track.tagline|default:track.description|truncatewords:24 }}</p>
           {% with cohort=track.next_cohort %}
             {% if cohort %}
-              <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong></p>
+              <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></strong></p>
               {% if cohort.accepting_enrollment %}
-                <span class="badge badge-open">Active</span>
                 {% if cohort.enrollment_deadline %}
-                  <p style="margin:0.4rem 0 0;font-size:0.82rem;color:var(--text-muted);">Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}</p>
+                  <span class="badge badge-open">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
+                {% else %}
+                  <span class="badge badge-open">Enrolling now</span>
                 {% endif %}
               {% else %}
                 <span class="badge badge-full">Not active, join the waitlist</span>

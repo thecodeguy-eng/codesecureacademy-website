@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static currency_tags %}
 {% block title %}Dashboard · Code Secure Academy{% endblock %}
 {% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script>{% endblock %}
 {% block content %}
@@ -112,7 +112,7 @@
       {% for order in orders %}
         <div class="glass-panel card">
           <h3>{{ order.listing.title }}</h3>
-          <p>₦{{ order.amount_naira }}</p>
+          <p>₦{{ order.amount_naira|naira }}</p>
           {% if order.status == "paid" %}
             <span class="badge badge-open">Paid</span>
             <p><a href="{% url 'reviews:submit_review' app_label='marketplace' model_name='order' object_id=order.id %}">Leave a review →</a></p>
@@ -130,7 +130,7 @@
       {% for purchase in course_purchases %}
         <div class="glass-panel card">
           <h3>{{ purchase.course.title }}</h3>
-          <p>₦{{ purchase.amount_naira }}</p>
+          <p>₦{{ purchase.amount_naira|naira }}</p>
           {% if purchase.status == "paid" %}
             <span class="badge badge-open">Paid</span>
             <p><a href="{{ purchase.course.get_absolute_url }}">Start watching →</a></p>

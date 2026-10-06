@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load currency_tags %}
 {% block title %}{{ listing.title }} · CSA Marketplace{% endblock %}
 {% block content %}
 <section>
@@ -12,7 +13,7 @@
       <p>Sold by <strong>{{ listing.seller.business_name }}</strong></p>
     </div>
     <div class="glass-panel card">
-      <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ listing.price_naira }} <span class="price-fx"></span></p>
+      <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ listing.price_naira|naira }} <span class="price-fx"></span></p>
       {% if user.is_authenticated %}
         <form method="post" action="{% url 'marketplace:start_checkout' slug=listing.slug %}">
           {% csrf_token %}

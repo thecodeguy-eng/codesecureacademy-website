@@ -1,4 +1,5 @@
 {% extends "account/email/_base_email.html" %}
+{% load currency_tags %}
 {% block heading %}Payment confirmed, you're enrolled{% endblock %}
 {% block body_html %}
 <p style="margin:0 0 16px;">Hi {{ enrollment.student.get_full_name|default:enrollment.student.username }},</p>
@@ -15,7 +16,7 @@
   </tr>
   <tr>
     <td style="padding:14px 18px;border-bottom:1px solid #eceef4;font-size:13px;color:#8b93a7;">Amount paid</td>
-    <td style="padding:14px 18px;border-bottom:1px solid #eceef4;font-size:14px;color:#0d1224;font-weight:700;text-align:right;">₦{{ enrollment.cohort.price_naira }}</td>
+    <td style="padding:14px 18px;border-bottom:1px solid #eceef4;font-size:14px;color:#0d1224;font-weight:700;text-align:right;">₦{{ enrollment.cohort.price_naira|naira }}</td>
   </tr>
   <tr>
     <td style="padding:14px 18px;font-size:13px;color:#8b93a7;">Date paid</td>

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static currency_tags %}
 {% load tutorial_extras %}
 {% block title %}{{ article.title }} · {{ subject.name }} · Code Secure Academy{% endblock %}
 {% block content %}
@@ -35,7 +35,7 @@
         <h3>Want structured, in-depth {{ subject.name }} training?</h3>
         <p>These free articles cover the basics. Our tutors' paid video courses go much deeper.</p>
         {% for course in related_courses %}
-          <a href="{{ course.get_absolute_url }}" class="btn btn-primary" style="margin:0.25rem;">{{ course.title }}, ₦{{ course.price_naira }}</a>
+          <a href="{{ course.get_absolute_url }}" class="btn btn-primary" style="margin:0.25rem;">{{ course.title }}, ₦{{ course.price_naira|naira }}</a>
         {% endfor %}
       </div>
     {% endif %}

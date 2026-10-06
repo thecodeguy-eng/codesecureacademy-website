@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load currency_tags %}
 {% block title %}{% if query %}Search: {{ query }} ·{% endif %} Code Secure Academy{% endblock %}
 {% block content %}
 
@@ -53,7 +54,7 @@
             <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
               <h3>{{ course.title }}</h3>
               <p>{{ course.description|truncatewords:15 }}</p>
-              <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira }} <span class="price-fx"></span></p>
+              <p class="mono" data-naira="{{ course.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ course.price_naira|naira }} <span class="price-fx"></span></p>
             </a>
           {% endfor %}
         </div>
@@ -66,7 +67,7 @@
             <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
               <h3>{{ listing.title }}</h3>
               <p>{{ listing.description|truncatewords:15 }}</p>
-              <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira }} <span class="price-fx"></span></p>
+              <p class="mono" data-naira="{{ listing.price_naira|stringformat:'d' }}" style="font-weight:700;color:var(--blue-300);">₦{{ listing.price_naira|naira }} <span class="price-fx"></span></p>
             </a>
           {% endfor %}
         </div>

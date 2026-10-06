@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load currency_tags %}
 {% block title %}Tutor dashboard · Code Secure Academy{% endblock %}
 {% block content %}
 <section class="hero" style="text-align:left;padding-bottom:1rem;">
@@ -19,11 +20,11 @@
       <div class="grid grid-3" style="margin-bottom:2rem;">
         <div class="glass-panel card">
           <span class="eyebrow">Paid out</span>
-          <p class="mono" style="font-size:1.5rem;font-weight:700;color:var(--blue-300);">₦{{ total_paid }}</p>
+          <p class="mono" style="font-size:1.5rem;font-weight:700;color:var(--blue-300);">₦{{ total_paid|naira }}</p>
         </div>
         <div class="glass-panel card">
           <span class="eyebrow">Pending payout</span>
-          <p class="mono" style="font-size:1.5rem;font-weight:700;">₦{{ total_pending }}</p>
+          <p class="mono" style="font-size:1.5rem;font-weight:700;">₦{{ total_pending|naira }}</p>
           <p style="color:var(--text-muted);font-size:0.8rem;">Releases automatically after the hold window, or sooner if we push it manually.</p>
         </div>
       </div>
@@ -44,7 +45,7 @@
               {% for payout in payouts %}
                 <tr style="border-top:1px solid var(--glass-border);">
                   <td style="padding:0.5rem;">{{ payout.purchase.course.title }}</td>
-                  <td style="padding:0.5rem;" class="mono">₦{{ payout.amount_naira }}</td>
+                  <td style="padding:0.5rem;" class="mono">₦{{ payout.amount_naira|naira }}</td>
                   <td style="padding:0.5rem;">
                     {% if payout.status == "paid" %}<span class="badge badge-open">Paid</span>
                     {% elif payout.status == "pending" %}<span class="badge">Pending</span>
@@ -65,10 +66,10 @@
             <h3>{{ course.title }}</h3>
             {% if course.is_live %}
               <span class="badge">Virtual</span>
-              <p>₦{{ course.price_naira }} · {{ course.live_sessions.count }} session{{ course.live_sessions.count|pluralize }}</p>
+              <p>₦{{ course.price_naira|naira }} · {{ course.live_sessions.count }} session{{ course.live_sessions.count|pluralize }}</p>
             {% else %}
               <span class="badge">Self-paced</span>
-              <p>₦{{ course.price_naira }} · {{ course.modules.count }} module{{ course.modules.count|pluralize }}</p>
+              <p>₦{{ course.price_naira|naira }} · {{ course.modules.count }} module{{ course.modules.count|pluralize }}</p>
             {% endif %}
             {% if course.status == "active" %}
               <span class="badge badge-open">Live</span>
