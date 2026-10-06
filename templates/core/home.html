@@ -109,7 +109,7 @@
             <strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></strong>
             {% if cohort.accepting_enrollment %}
               {% if cohort.enrollment_deadline %}
-                <span class="badge badge-open">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
+                <span class="badge badge-urgent">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
               {% else %}
                 <span class="badge badge-open">Enrolling now</span>
               {% endif %}

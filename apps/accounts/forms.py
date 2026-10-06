@@ -13,7 +13,10 @@ class CSASignupForm(SignupForm):
 
     first_name = forms.CharField(max_length=150, label="First name")
     last_name = forms.CharField(max_length=150, label="Last name")
-    phone_number = forms.CharField(max_length=20, label="Phone number")
+    phone_number = forms.CharField(
+        max_length=20, label="Phone number",
+        help_text="So we can reach you directly if there's ever an issue with your enrollment or payment.",
+    )
     track_of_interest = forms.ChoiceField(
         choices=[("", "Not sure yet")] + list(TrackChoice.choices),
         required=False,

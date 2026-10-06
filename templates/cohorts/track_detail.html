@@ -75,7 +75,7 @@
 
         {% if cohort.accepting_enrollment %}
           {% if cohort.enrollment_deadline %}
-            <span class="badge badge-open">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
+            <span class="badge badge-urgent">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
             <p style="margin:0.5rem 0 0;font-size:0.9rem;color:var(--text-muted);">Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}</p>
           {% else %}
             <span class="badge badge-open">Enrolling now</span>

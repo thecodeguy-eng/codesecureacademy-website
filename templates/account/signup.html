@@ -1,5 +1,5 @@
 {% extends "account/signup.html" %}
-{% load i18n %}
+{% load i18n static %}
 {% comment %}
 Allauth's own head_title block is indented across multiple lines, which
 lands literal newlines/whitespace inside <title> — harmless in most
@@ -7,3 +7,7 @@ browsers' tab UI (they collapse it) but not guaranteed everywhere, and
 shows up raw in view-source. Single-line override, same text.
 {% endcomment %}
 {% block head_title %}{% trans "Signup" %}{% endblock head_title %}
+{% block extra_body %}
+{{ block.super }}
+<script src="{% static 'js/password-strength.js' %}"></script>
+{% endblock extra_body %}

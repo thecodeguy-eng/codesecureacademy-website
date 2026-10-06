@@ -1,7 +1,8 @@
 {% extends "account/verification_sent.html" %}
 {% block content %}
 {{ block.super }}
-<p style="margin-top:1.5rem;">
+<p style="margin-top:1rem;color:var(--text-muted);font-size:0.9rem;">Don't see it in a minute or two? Check your spam or junk folder, it sometimes lands there on the first email from us.</p>
+<p style="margin-top:0.75rem;">
   <a href="{% url 'accounts_extra:resend_confirmation' %}">Didn't get it? Resend the confirmation email</a>
 </p>
 {% endblock content %}
