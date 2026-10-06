@@ -8,11 +8,12 @@ from apps.core.models import FAQ, SiteSettings
 
 class Command(BaseCommand):
     help = (
-        "Seeds placeholder tracks, cohorts, site stats, and FAQs so the site "
-        "isn't empty locally. All prices/dates/seat counts are placeholders. "
-        "Replace them with real numbers from Victory in the admin before launch. "
-        "Idempotent — safe to rerun any time; tracks, the earliest cohort per "
-        "track, and FAQs are all updated in place rather than duplicated."
+        "Seeds placeholder tracks, site stats, and FAQs so the site isn't "
+        "empty locally, and a placeholder cohort for any track that has none "
+        "yet. Safe to rerun any time — tracks and FAQs are updated in place, "
+        "but an existing cohort is never touched (only created when a track "
+        "has none), so real dates/price/seats set via the admin are never "
+        "reset back to placeholders on a rerun."
     )
 
     def handle(self, *args, **options):
@@ -33,7 +34,7 @@ class Command(BaseCommand):
                 "highlights": "HTML, CSS & modern JavaScript\nA frontend framework (React)\nResponsive, accessible UI\nGit & deployment workflow\nA portfolio-ready capstone project",
                 "why_join": (
                     "You'll ship a real, working project, not a tutorial you forget by next week\n"
-                    "Learn the exact stack (HTML, CSS, JavaScript, React) that's actually hiring right now\n"
+                    "Learn the exact stack most frontend job listings ask for: HTML, CSS, JavaScript, and React\n"
                     "Walk away with something you can put in a portfolio and show off"
                 ),
                 "cover_image_url": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&q=80&fm=jpg&fit=crop",
@@ -101,27 +102,19 @@ class Command(BaseCommand):
             status = "created" if created else "updated"
             self.stdout.write(f"Track '{track.name}' {status}")
 
-            # Update the earliest cohort for this track if one exists, otherwise
-            # create it. Keyed on `track` rather than a unique field, since Cohort
-            # has no natural unique key to update_or_create() against directly —
-            # if a track somehow has more than one cohort, only the earliest is
-            # touched on rerun, so extra cohorts an admin has added aren't clobbered.
-            cohort_defaults = {
-                "start_date": today + datetime.timedelta(days=21),
-                "end_date": today + datetime.timedelta(days=21 + 56),
-                "price_naira": 150000,  # PLACEHOLDER — replace with the real per-track price
-                "seat_count": 25,  # PLACEHOLDER — replace with the real seat count
-            }
-            cohort = track.cohorts.order_by("start_date").first()
-            if cohort:
-                for field, value in cohort_defaults.items():
-                    setattr(cohort, field, value)
-                cohort.save(update_fields=list(cohort_defaults.keys()))
-                cohort_status = "updated"
-            else:
-                cohort = Cohort.objects.create(track=track, **cohort_defaults)
-                cohort_status = "created"
-            self.stdout.write(self.style.WARNING(f"  -> cohort {cohort_status} for {track.name} (PLACEHOLDER price/dates/seats)"))
+            # Only ever CREATES a cohort, and only when the track has none at
+            # all — never touches an existing one. Real cohort dates/price/
+            # seats are admin-managed data, not something a bootstrap script
+            # should ever silently reset back to placeholders on a rerun.
+            if not track.cohorts.exists():
+                Cohort.objects.create(
+                    track=track,
+                    start_date=today + datetime.timedelta(days=21),
+                    end_date=today + datetime.timedelta(days=21 + 56),
+                    price_naira=150000,  # PLACEHOLDER — replace with the real per-track price
+                    seat_count=25,  # PLACEHOLDER — replace with the real seat count
+                )
+                self.stdout.write(self.style.WARNING(f"  -> placeholder cohort created for {track.name}, replace price/dates/seats in the admin"))
 
         # Left at 0 deliberately — these render as real trust stats on the
         # homepage, so they should never ship with made-up numbers. The
@@ -133,6 +126,9 @@ class Command(BaseCommand):
             ("What happens if my cohort fills up?", "Join the waitlist and we'll email you the moment a seat opens for the next cohort."),
             # Paused along with the cohort WhatsApp group feature (see git history) —
             # ("How do I get into the WhatsApp group?", "The moment your payment is confirmed, you'll get the invite link by email and on-screen."),
+            ("How long does a cohort run, and when does it start?", "Each cohort runs for 8 weeks. Exact start dates are shown on each track's page, right next to the price — enrollment closes a few days before the cohort starts."),
+            ("Do I get a certificate?", "No. Every track ends with a real project you shipped instead, something you can actually put in a portfolio, which does more for you than a certificate nobody checks."),
+            ("What exactly do I get for ₦5,000?", "The full project-based curriculum for your track, lesson access on your dashboard the moment payment clears, and a cohort of people learning the same track on the same timeline."),
             ("Do I need prior experience to join a track?", "No. Each track starts from the fundamentals and builds up from there. You just need to be ready to put in the work."),
             ("Do I need my own laptop?", "Yes, you'll need a laptop capable of running the tools for your track. We'll share the specific requirements once you're enrolled."),
             ("What's your refund policy?", "Check our Terms of Service page for the full refund policy."),
