@@ -1,9 +1,13 @@
 {% extends "account/login.html" %}
+{% load i18n %}
+{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}
 {% block content %}
 {{ block.super }}
-<p style="margin-top:1rem;text-align:center;font-size:0.9rem;">
-  <a href="{% url 'account_reset_password' %}">Forgot your password?</a>
-</p>
+{% comment %}
+"Forgot your password?" isn't added here — allauth 65.x already renders
+it as the password field's own help text, right under the field. A
+second copy here used to duplicate it.
+{% endcomment %}
 <p style="margin-top:0.5rem;text-align:center;font-size:0.9rem;">
   <a href="{% url 'accounts_extra:resend_confirmation' %}">Didn't get your confirmation email?</a>
 </p>
