@@ -1,12 +1,12 @@
 (function () {
   "use strict";
 
-  var backdrop = document.getElementById("signup-prompt-backdrop");
-  if (!backdrop) return;
+  var dialog = document.getElementById("signup-prompt-dialog");
+  if (!dialog) return;
 
   var STORAGE_KEY = "csa_signup_prompt_dismissed";
   var INITIAL_DELAY_MS = 15000;
-  var REPEAT_MS = 60000;
+  var REPEAT_MS = 24 * 60 * 60 * 1000; // once a day — a dismissal should actually stick, not nag every minute.
 
   function lastDismissedAt() {
     try {
@@ -23,17 +23,10 @@
     try { localStorage.setItem(STORAGE_KEY, String(Date.now())); } catch (e) { /* private mode etc — will just show again next visit */ }
   }
 
-  function show() { backdrop.classList.add("visible"); }
-
-  // Every dismissal (X, "Maybe later", clicking outside, Escape, or the CTA
-  // itself) reschedules the next appearance a minute out — keeps nagging
-  // once a minute, on this page or the next one they navigate to, until
-  // they actually register or log in (at which point this whole partial
-  // stops rendering server-side, so this script never even loads).
-  function hide() {
-    backdrop.classList.remove("visible");
-    markDismissed();
-    scheduleNext();
+  function show() {
+    if (dialog.open || typeof dialog.showModal !== "function") return;
+    dialog.showModal();
+    document.body.classList.add("modal-open");
   }
 
   function scheduleNext() {
@@ -42,17 +35,23 @@
     setTimeout(show, wait);
   }
 
+  // Fires on every way the dialog closes — the X button, "Maybe later",
+  // clicking the backdrop, or pressing Escape (native `cancel` -> `close`)
+  // — so this is the one place dismissal bookkeeping needs to live.
+  dialog.addEventListener("close", function () {
+    document.body.classList.remove("modal-open");
+    markDismissed();
+    scheduleNext();
+  });
+
   var closeBtn = document.getElementById("signup-prompt-close");
   var laterBtn = document.getElementById("signup-prompt-later");
   var cta = document.getElementById("signup-prompt-cta");
-  if (closeBtn) closeBtn.addEventListener("click", hide);
-  if (laterBtn) laterBtn.addEventListener("click", hide);
+  if (closeBtn) closeBtn.addEventListener("click", function () { dialog.close(); });
+  if (laterBtn) laterBtn.addEventListener("click", function () { dialog.close(); });
   if (cta) cta.addEventListener("click", markDismissed);
-  backdrop.addEventListener("click", function (e) {
-    if (e.target === backdrop) hide();
-  });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && backdrop.classList.contains("visible")) hide();
+  dialog.addEventListener("click", function (e) {
+    if (e.target === dialog) dialog.close();
   });
 
   scheduleNext();

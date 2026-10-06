@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static currency_tags %}
 {% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script>{% endblock %}
 {% block content %}
 
@@ -49,7 +49,7 @@
         <div class="preview-bar"><span></span><span></span><span></span></div>
         <div class="preview-body">
           <div class="mock-track-card">
-            <span class="badge badge-open">Active</span>
+            <span class="badge badge-open">Open</span>
             <div class="mock-title">Cybersecurity</div>
             <div class="mock-row"><span>Enrolling now</span><span class="mock-price">₦5,000</span></div>
           </div>
@@ -87,9 +87,13 @@
       {% with cohort=track.next_cohort %}
         <div style="display:flex;align-items:center;gap:0.75rem;margin-top:var(--space-2);flex-wrap:wrap;">
           {% if cohort %}
-            <strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira }} <span class="price-fx"></span></strong>
+            <strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></strong>
             {% if cohort.accepting_enrollment %}
-              <span class="badge badge-open">Active</span>
+              {% if cohort.enrollment_deadline %}
+                <span class="badge badge-open">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
+              {% else %}
+                <span class="badge badge-open">Enrolling now</span>
+              {% endif %}
             {% else %}
               <span class="badge badge-full">Not active, join the waitlist</span>
             {% endif %}
@@ -161,7 +165,7 @@
       <h2>From sign-up to shipped project</h2>
       <ul class="alt-checklist">
         <li><span class="tick mono">1</span><span><strong>Pick a track & enroll.</strong> Choose your track, pay securely with Paystack, and your seat is locked in.</span></li>
-        {% comment %}<li><span class="tick mono">2</span><span><strong>Join your cohort.</strong> Get your WhatsApp group invite the moment payment clears.</span></li>{% endcomment %}
+        <li><span class="tick mono">2</span><span><strong>Get instant access.</strong> Your track's lessons unlock on your dashboard the moment payment clears.</span></li>
         <li><span class="tick mono">3</span><span><strong>Build something real.</strong> Work through hands-on projects with your cohort.</span></li>
       </ul>
     </div>
@@ -176,15 +180,13 @@
                 <div class="mock-step-sub">Seat locked in</div>
               </div>
             </div>
-            {% comment %}
             <div class="mock-step done">
               <span class="mock-step-num">✓</span>
               <div>
-                <div class="mock-step-title">WhatsApp group joined</div>
-                <div class="mock-step-sub">Straight to your cohort</div>
+                <div class="mock-step-title">Lessons unlocked</div>
+                <div class="mock-step-sub">Straight to your dashboard</div>
               </div>
             </div>
-            {% endcomment %}
             <div class="mock-step">
               <span class="mock-step-num">3</span>
               <div>

@@ -9,8 +9,7 @@
   </div>
 </div>
 
-<div class="cookie-modal-backdrop" id="cookie-modal-backdrop">
-  <div class="glass-panel cookie-modal">
+<dialog class="glass-panel cookie-modal" id="cookie-modal">
     <h3>Cookie preferences</h3>
     <p style="font-size:0.85rem;">Choose what you're comfortable with. You can change this any time from the footer.</p>
 
@@ -51,6 +50,5 @@
       <button type="button" class="btn btn-primary" id="cookie-save-preferences">Save preferences</button>
       <button type="button" class="btn btn-ghost" id="cookie-modal-close">Cancel</button>
     </div>
-  </div>
-</div>
+</dialog>
 <script src="{% static 'js/cookie-consent.js' %}"></script>

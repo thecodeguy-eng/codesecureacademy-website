@@ -7,11 +7,46 @@
    backdrop-blur is GPU-expensive.
    ========================================================= */
 
+/* ---------- Self-hosted fonts ----------
+   Previously loaded from Google Fonts (fonts.googleapis.com /
+   fonts.gstatic.com) — now served locally from static/fonts/ instead, so
+   there's no third-party DNS lookup/connection on first paint. Only the
+   weights/styles actually used in this file are included (latin subset
+   only). Several weights below intentionally share one file — Manrope,
+   Playfair Display's normal styles, and JetBrains Mono's weights are each
+   a single variable-font file covering the whole range; the browser only
+   downloads each file once no matter how many @font-face rules point to
+   it. font-display: swap on every rule so text renders immediately in a
+   fallback font rather than staying invisible while the file loads. */
+@font-face {
+  font-family: 'Manrope'; font-style: normal; font-weight: 400 800; font-display: swap;
+  src: url('../fonts/manrope.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Playfair Display'; font-style: normal; font-weight: 500 900; font-display: swap;
+  src: url('../fonts/playfair-display.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Playfair Display'; font-style: italic; font-weight: 600; font-display: swap;
+  src: url('../fonts/playfair-display-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500 700; font-display: swap;
+  src: url('../fonts/jetbrains-mono.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --navy-950: #04060d;
   --navy-900: #080b17;
   --navy-800: #0d1224;
   --navy-700: #131a33;
+  --blue-700: #1a4bb8; /* white text needs ≥4.5:1 (AA) — blue-500's ~3.8:1 and blue-400's
+  ~2.7:1 both fail that, so white-on-blue buttons/panels use this pair with blue-600 instead
+  (≈5.6:1 and ≈7.7:1), not the lighter end of the scale. */
   --blue-600: #1f5fe0;
   --blue-500: #2f7dff;
   --blue-400: #5b9dff;
@@ -107,6 +142,13 @@
 }
 
 * { box-sizing: border-box; }
+
+/* Form controls don't inherit typography from their surroundings by
+   default (the UA stylesheet gives them their own font), so they visually
+   mismatch the rest of the page unless reset. Low-specificity element
+   selectors here — .btn and the input/select/textarea rule below both
+   still win on font-size/font-weight where they set their own. */
+button, input, select, textarea { font: inherit; }
 
 /* Matches body's own background so mobile Safari's rubber-band overscroll
    (bouncing past the top/bottom while scrolling) reveals this instead of
@@ -408,6 +450,8 @@ a { color: var(--blue-400); text-decoration: none; }
 }
 .main-nav a:not(.btn):hover { color: var(--text-primary); }
 .main-nav a:not(.btn):hover::after { right: 0; }
+.main-nav a:not(.btn).active { color: var(--text-primary); }
+.main-nav a:not(.btn).active::after { right: 0; background: var(--blue-500); }
 
 .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
 .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: var(--transition-fast); }
@@ -418,14 +462,14 @@ a { color: var(--blue-400); text-decoration: none; }
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   padding: 0.8rem 1.6rem; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.92rem;
   letter-spacing: -0.005em;
-  border: 1px solid transparent; cursor: pointer; font-family: inherit;
+  border: 1px solid transparent; cursor: pointer;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast), filter var(--transition-fast);
 }
 .btn:active { transform: scale(0.97); }
 .btn-sm { padding: 0.55rem 1.1rem; font-size: 0.82rem; }
 
 .btn-primary {
-  background: linear-gradient(180deg, var(--blue-400) 0%, var(--blue-600) 100%);
+  background: linear-gradient(180deg, var(--blue-600) 0%, var(--blue-700) 100%);
   color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 20px -4px var(--glow);
 }
@@ -723,7 +767,7 @@ section { padding: var(--space-5) 0; }
    pattern for one high-impact moment, e.g. the closing CTA) ---------- */
 
 .contrast-panel {
-  background: linear-gradient(135deg, var(--blue-500) 0%, var(--blue-600) 55%, #1638a8 100%);
+  background: linear-gradient(135deg, var(--blue-600) 0%, var(--blue-700) 55%, #1638a8 100%);
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 30px 70px -20px var(--glow);
 }
@@ -760,7 +804,7 @@ label { display: block; font-weight: 700; margin-bottom: 0.4rem; font-size: 0.86
 input:not([type="checkbox"]):not([type="radio"]), textarea, select {
   width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-sm);
   border: 1px solid var(--glass-border); background: rgba(255, 255, 255, 0.035); color: var(--text-primary);
-  font-size: 0.98rem; font-family: inherit;
+  font-size: 0.98rem;
   transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 input:focus, textarea:focus, select:focus {
@@ -899,6 +943,11 @@ input[type="checkbox"], input[type="radio"] {
 }
 .legal-doc .disclaimer strong { color: var(--status-amber-text-strong); }
 
+/* Belt-and-suspenders scroll lock for any open <dialog> — toggled by JS
+   alongside showModal()/close(). <dialog> alone doesn't reliably block
+   touch-scroll of the page behind it on mobile Safari. */
+body.modal-open { overflow: hidden; }
+
 /* ---------- Cookie consent ---------- */
 
 .cookie-banner {
@@ -912,17 +961,18 @@ input[type="checkbox"], input[type="radio"] {
 .cookie-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .cookie-actions .btn { width: auto; flex: 1 1 auto; min-width: 0; padding: 0.5rem 0.75rem; font-size: 0.78rem; }
 
-.cookie-modal-backdrop {
-  position: fixed; inset: 0; z-index: 600; background: rgba(4, 6, 13, 0.7); backdrop-filter: blur(6px);
-  display: none; align-items: center; justify-content: center; padding: var(--space-3);
-}
-.cookie-modal-backdrop.visible { display: flex; }
-/* Same fix as .signup-prompt-modal below: sitting on a dark backdrop, the
-   ~4% glass tint isn't opaque enough to read against in light mode. */
+/* Native <dialog> instead of a hand-rolled backdrop div: showModal() gets
+   us scroll-lock (via body.modal-open below — <dialog> alone doesn't
+   reliably stop touch-scroll on mobile Safari) and, just as importantly,
+   top-layer rendering — this backdrop always paints above everything else
+   on the page, cookie banner included, with no z-index bookkeeping. */
 .glass-panel.cookie-modal {
-  width: min(480px, 100%); padding: var(--space-4); max-height: 85vh; overflow-y: auto;
-  background: var(--navy-900);
+  position: relative; border: none; margin: auto;
+  width: min(480px, calc(100% - 2rem)); padding: var(--space-4); max-height: 85vh; overflow-y: auto;
+  background: var(--navy-900); color: var(--text-primary);
 }
+.cookie-modal::backdrop { background: rgba(4, 6, 13, 0.7); backdrop-filter: blur(6px); }
+.cookie-modal[open] { animation: cookie-rise 400ms var(--ease-out-back); }
 .cookie-pref-row {
   display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-2);
   padding: var(--space-2) 0; border-bottom: 1px solid var(--glass-border);
@@ -933,20 +983,18 @@ input[type="checkbox"], input[type="radio"] {
 
 /* ---------- Delayed signup prompt ---------- */
 
-.signup-prompt-backdrop {
-  position: fixed; inset: 0; z-index: 600; background: rgba(4, 6, 13, 0.7); backdrop-filter: blur(6px);
-  display: none; align-items: center; justify-content: center; padding: var(--space-3);
-}
-.signup-prompt-backdrop.visible { display: flex; animation: cookie-rise 400ms var(--ease-out-back); }
 /* .glass-panel's background is a ~4% translucent tint meant to blur the
    page behind it — sitting on this backdrop's dark scrim instead, that
    tint is nowhere near opaque enough to read against, so in light mode
    you get dark theme text on what's effectively still a dark card. Solid
    theme-correct background instead, specific enough to beat .glass-panel. */
 .glass-panel.signup-prompt-modal {
-  position: relative; width: min(440px, 100%); padding: var(--space-4); text-align: center;
-  background: var(--navy-900);
+  position: relative; border: none; margin: auto;
+  width: min(440px, calc(100% - 2rem)); padding: var(--space-4); text-align: center;
+  background: var(--navy-900); color: var(--text-primary);
 }
+.signup-prompt-modal::backdrop { background: rgba(4, 6, 13, 0.7); backdrop-filter: blur(6px); }
+.signup-prompt-modal[open] { animation: cookie-rise 400ms var(--ease-out-back); }
 .signup-prompt-close {
   position: absolute; top: 0.75rem; right: 0.75rem;
   width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--glass-bg);
