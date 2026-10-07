@@ -98,6 +98,7 @@ window.addEventListener("pagereveal", function (event) {
           <input type="search" name="q" id="nav-search-input" placeholder="Search..." aria-label="Search Code Secure Academy" value="{{ query }}">
         </form>
       </div>
+      <a href="{% url 'home' %}" class="{% if request.path|starts_with:'/home/' %}active{% endif %}" {% if request.path|starts_with:'/home/' %}aria-current="page"{% endif %}>Home</a>
       <a href="{% url 'cohorts:track_list' %}" class="{% if request.path|starts_with:'/tracks/' %}active{% endif %}" {% if request.path|starts_with:'/tracks/' %}aria-current="page"{% endif %}>Tracks</a>
       <a href="{% url 'tutorials:category_list' %}" class="{% if request.path|starts_with:'/tutorials/' %}active{% endif %}" {% if request.path|starts_with:'/tutorials/' %}aria-current="page"{% endif %}>Free Tutorials</a>
       <!-- <a href="{% url 'courses:course_list' %}">Courses</a> -->
@@ -142,7 +143,7 @@ window.addEventListener("pagereveal", function (event) {
   <div class="container footer-inner">
     <div class="footer-brand">
       <span class="brand-word"><span class="brand-code">Code</span> Secure Academy</span>
-      <p>Build it. Secure it. Ship it.</p>
+      <p>Build. Secure. Dominate.</p>
       <div class="footer-social">
         <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
           <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2.2.27 3 .58a6 6 0 0 1 2.2 1.4 6 6 0 0 1 1.4 2.2c.3.8.5 1.8.6 3 .1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2.2-.6 3a6 6 0 0 1-1.4 2.2 6 6 0 0 1-2.2 1.4c-.8.3-1.8.5-3 .6-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2.2-.3-3-.6a6 6 0 0 1-2.2-1.4 6 6 0 0 1-1.4-2.2c-.3-.8-.5-1.8-.6-3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2.2.6-3a6 6 0 0 1 1.4-2.2A6 6 0 0 1 6.5 .5c.8-.3 1.8-.5 3-.6C10.8.2 11.2.2 12 .2zm0 1.8c-3.1 0-3.5 0-4.7.07-1 .05-1.6.22-2 .37a3.8 3.8 0 0 0-1.4.9 3.8 3.8 0 0 0-.9 1.4c-.15.4-.32 1-.37 2C2.5 8.5 2.5 8.9 2.5 12s0 3.5.07 4.7c.05 1 .22 1.6.37 2a3.8 3.8 0 0 0 .9 1.4 3.8 3.8 0 0 0 1.4.9c.4.15 1 .32 2 .37 1.2.07 1.6.07 4.7.07s3.5 0 4.7-.07c1-.05 1.6-.22 2-.37a3.8 3.8 0 0 0 1.4-.9 3.8 3.8 0 0 0 .9-1.4c.15-.4.32-1 .37-2 .07-1.2.07-1.6.07-4.7s0-3.5-.07-4.7c-.05-1-.22-1.6-.37-2a3.8 3.8 0 0 0-.9-1.4 3.8 3.8 0 0 0-1.4-.9c-.4-.15-1-.32-2-.37C15.5 2 15.1 2 12 2zm0 4.9a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
@@ -163,6 +164,7 @@ window.addEventListener("pagereveal", function (event) {
       <a href="{% url 'courses:course_list' %}">Courses</a>
       <a href="{% url 'marketplace:listing_list' %}">Marketplace</a>
       <a href="{% url 'faq' %}">FAQ</a>
+      <a href="{% url 'reviews:testimonials' %}">Testimonials</a>
     </div>
 
     <div class="footer-links">

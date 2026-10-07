@@ -7,6 +7,14 @@ from .forms import ReviewForm
 from .models import Review
 
 
+def testimonials(request):
+    """Every real, approved review in one place — never seeded with
+    placeholder content. Renders an honest empty state until real
+    students actually leave one."""
+    reviews = Review.objects.filter(status=Review.Status.APPROVED).select_related("reviewer")
+    return render(request, "reviews/testimonials.html", {"reviews": reviews})
+
+
 def _owns_completed_purchase(user, purchase):
     """Only the Enrollment/Order module knows what "completed" means for
     itself, so we ask the object rather than hard-coding per-model rules
