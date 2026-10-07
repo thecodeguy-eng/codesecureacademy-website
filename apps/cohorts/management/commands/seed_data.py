@@ -37,7 +37,7 @@ class Command(BaseCommand):
                     "Learn the exact stack most frontend job listings ask for: HTML, CSS, JavaScript, and React\n"
                     "Walk away with something you can put in a portfolio and show off"
                 ),
-                "cover_image_url": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&q=80&fm=jpg&fit=crop",
+                "cover_image_url": "/static/img/photos/track-frontend.jpg",
             },
             {
                 "slug": "backend",
@@ -56,7 +56,7 @@ class Command(BaseCommand):
                     "Understand what's really happening behind every app you use\n"
                     "Finish with a live, deployed API you built from scratch"
                 ),
-                "cover_image_url": "https://images.unsplash.com/photo-1561233835-f937539b95b9?w=1200&q=80&fm=jpg&fit=crop",
+                "cover_image_url": "/static/img/photos/track-backend.jpg",
             },
             {
                 "slug": "cybersecurity",
@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     "Understand the OWASP Top 10 well enough to explain it to anyone\n"
                     "Build the habit of asking 'what could go wrong here?' on every project after this"
                 ),
-                "cover_image_url": "https://images.unsplash.com/photo-1633265486064-086b219458ec?w=1200&q=80&fm=jpg&fit=crop",
+                "cover_image_url": "/static/img/photos/track-cybersecurity.jpg",
             },
             {
                 "slug": "graphic_design",
@@ -92,7 +92,7 @@ class Command(BaseCommand):
                     "Build a portfolio piece you'd be proud to show a client\n"
                     "Understand the brand and layout systems that hold a design together, not just one graphic"
                 ),
-                "cover_image_url": "https://images.unsplash.com/photo-1716471330463-f475b00f0506?w=1200&q=80&fm=jpg&fit=crop",
+                "cover_image_url": "/static/img/photos/track-graphic-design.jpg",
             },
         ]
 
