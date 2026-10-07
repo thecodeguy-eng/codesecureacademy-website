@@ -31,7 +31,7 @@ class Command(BaseCommand):
                     "lorem-ipsum practice sites: you'll build the same kind of interface companies "
                     "actually ship, with the same tools frontend developers use every day."
                 ),
-                "highlights": "HTML, CSS & modern JavaScript\nA frontend framework (React)\nResponsive, accessible UI\nGit & deployment workflow\nA portfolio-ready capstone project",
+                "highlights": "HTML, CSS & modern JavaScript\nA frontend framework (React)\nResponsive, accessible UI\nGit & deployment workflow\nCapstone: a responsive, deployed multi-page web app",
                 "why_join": (
                     "You'll ship a real, working project instead of just watching someone else build one\n"
                     "Learn the exact stack most frontend job listings ask for: HTML, CSS, JavaScript, and React\n"
@@ -49,7 +49,7 @@ class Command(BaseCommand):
                     "interfaces actually work, and learn to think about what happens once real "
                     "traffic hits your server, past the point where it only has to work on your laptop."
                 ),
-                "highlights": "Server-side fundamentals\nRelational databases & queries\nREST API design\nAuthentication & security basics\nDeploying a live API",
+                "highlights": "Server-side fundamentals\nRelational databases & queries\nREST API design\nAuthentication & security basics\nCapstone: a deployed REST API with authentication",
                 "why_join": (
                     "Build APIs a real frontend app can actually talk to\n"
                     "Learn databases, authentication, and deployment: the parts most tutorials skip\n"
@@ -67,7 +67,7 @@ class Command(BaseCommand):
                     "track teaches you to think like the people trying to break in, so you can build "
                     "and defend like someone who already knows their next move."
                 ),
-                "highlights": "Networking & security fundamentals\nCommon web vulnerabilities (OWASP)\nHands-on lab exercises\nSecurity tooling\nIncident response basics",
+                "highlights": "Networking & security fundamentals\nCommon web vulnerabilities (OWASP)\nHands-on lab exercises\nSecurity tooling\nCapstone: a documented vulnerability assessment report",
                 "why_join": (
                     "Learn to spot the vulnerabilities most developers miss\n"
                     "Hands-on labs where you try the attack yourself, not slideshows about hackers\n"
@@ -85,10 +85,10 @@ class Command(BaseCommand):
                     "to turn a blank canvas into something that actually says what it's supposed to "
                     "say, using the same tools and process working designers use on real client briefs."
                 ),
-                "highlights": "Design principles & typography\nIndustry-standard tools\nBrand identity systems\nLayout & visual hierarchy\nA client-brief portfolio piece",
+                "highlights": "Design principles & typography\nFigma, Canva, and Adobe Photoshop\nBrand identity systems\nLayout & visual hierarchy\nCapstone: a full brand identity package for a mock client",
                 "why_join": (
                     "Work real, client-style briefs instead of generic 'design a poster' exercises\n"
-                    "Learn the industry-standard tools employers actually expect\n"
+                    "Learn Figma, Canva, and Adobe Photoshop, the tools employers actually expect\n"
                     "Build a portfolio piece you'd be proud to show a client\n"
                     "Understand the brand and layout systems that hold a design together, not just one graphic"
                 ),
@@ -127,6 +127,7 @@ class Command(BaseCommand):
             # Paused along with the cohort WhatsApp group feature (see git history) —
             # ("How do I get into the WhatsApp group?", "The moment your payment is confirmed, you'll get the invite link by email and on-screen."),
             ("How long does a cohort run, and when does it start?", "Each cohort runs for 8 weeks. Exact start dates are shown on each track's page, right next to the price — enrollment closes a few days before the cohort starts."),
+            ("How much time do I need to commit each week?", "Roughly 6-10 hours a week, a mix of live sessions with your cohort and self-paced lessons on your dashboard that you work through between them."),
             ("Do I get a certificate?", "No. Every track ends with a real project you shipped instead, something you can actually put in a portfolio, which does more for you than a certificate nobody checks."),
             ("What exactly do I get for ₦5,000?", "The full project-based curriculum for your track, lesson access on your dashboard the moment payment clears, and a cohort of people learning the same track on the same timeline."),
             ("Do I need prior experience to join a track?", "No. Each track starts from the fundamentals and builds up from there. You just need to be ready to put in the work."),

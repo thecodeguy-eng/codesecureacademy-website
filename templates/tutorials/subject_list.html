@@ -26,7 +26,7 @@
         <a href="{{ subject.get_absolute_url }}" class="glass-panel interactive card-media">
           {% include "partials/term_chrome.html" with label=subject.slug|add:"/" %}
           <div class="card-body">
-            {% if subject.icon %}<div style="font-size:2rem;">{{ subject.icon }}</div>{% endif %}
+            {% include "partials/subject_icon.html" %}
             <h3>{{ subject.name }}</h3>
             <p>{{ subject.description|truncatewords:20 }}</p>
           </div>
