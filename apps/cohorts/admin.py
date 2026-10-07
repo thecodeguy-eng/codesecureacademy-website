@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from apps.core.admin_mixins import BroadcastEmailAdminMixin
+from apps.reviews.admin_mixins import AddTestimonialAdminMixin
 
 from .models import Cohort, Enrollment, Track, Waitlist
 
@@ -30,11 +31,18 @@ class CohortAdmin(admin.ModelAdmin):
 
 
 @admin.register(Enrollment)
-class EnrollmentAdmin(admin.ModelAdmin):
+class EnrollmentAdmin(AddTestimonialAdminMixin, admin.ModelAdmin):
     list_display = ("student", "cohort", "status", "seat_held_at", "grace_extended_until", "confirmed_at")
     list_filter = ("status", "cohort__track")
     search_fields = ("student__username", "student__email")
     readonly_fields = ("created_at",)
+    actions = ["add_testimonial"]
+
+    def get_review_reviewer(self, obj):
+        return obj.student
+
+    def get_review_is_complete(self, obj):
+        return obj.status == Enrollment.Status.CONFIRMED
 
 
 @admin.register(Waitlist)

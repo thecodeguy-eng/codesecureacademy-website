@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils import timezone
 
+from apps.reviews.admin_mixins import AddTestimonialAdminMixin
+
 from . import services
 from .models import Listing, Order, Seller
 
@@ -39,7 +41,14 @@ class ListingAdmin(admin.ModelAdmin):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(AddTestimonialAdminMixin, admin.ModelAdmin):
     list_display = ("buyer", "listing", "amount_naira", "status", "created_at", "paid_at")
     list_filter = ("status",)
     readonly_fields = ("created_at",)
+    actions = ["add_testimonial"]
+
+    def get_review_reviewer(self, obj):
+        return obj.buyer
+
+    def get_review_is_complete(self, obj):
+        return obj.status == Order.Status.PAID

@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<p>Adding a testimonial for <strong>{{ reviewer }}</strong>, attached to their purchase: {{ purchase }}.</p>
+<p>Only use this for something the person actually said, collected by phone, WhatsApp, or in person, then typed
+in here on their behalf. It goes live immediately, no separate approval step.</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% for obj in queryset %}
+    <input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}">
+  {% endfor %}
+  <input type="hidden" name="action" value="add_testimonial">
+  <input type="submit" name="apply" value="Add testimonial" class="default">
+  <a href="." style="margin-left:1em;">Cancel</a>
+</form>
+{% endblock %}
