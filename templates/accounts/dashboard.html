@@ -95,12 +95,15 @@
           <h3>{{ enrollment.cohort.track.name }}</h3>
           {% if enrollment.status == "confirmed" %}
             <span class="badge badge-open">Confirmed</span>
+            <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
+            <p><a href="{% url 'reviews:submit_review' app_label='cohorts' model_name='enrollment' object_id=enrollment.id %}">Leave a review →</a></p>
           {% elif enrollment.status == "held" %}
             <span class="badge">Payment processing</span>
+            <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
           {% else %}
             <span class="badge badge-full">{{ enrollment.get_status_display }}</span>
+            <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
           {% endif %}
-          <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
         </div>
       {% empty %}
         <p>No enrollments yet. <a href="{% url 'cohorts:track_list' %}">Browse tracks →</a></p>
