@@ -16,7 +16,7 @@ from .models import FAQ, EmailOptOut, WaitlistSignup
 
 def home(request):
     tracks = Track.objects.filter(is_active=True)
-    reviews = Review.objects.filter(status=Review.Status.APPROVED).select_related("reviewer")[:6]
+    reviews = Review.objects.filter(status=Review.Status.APPROVED).select_related("reviewer")[:20]
     faqs = FAQ.objects.all()[:5]
     waitlist_form = WaitlistSignupForm()
     return render(
@@ -83,7 +83,8 @@ def search(request):
 
 
 def about(request):
-    return render(request, "core/about.html")
+    reviews = Review.objects.filter(status=Review.Status.APPROVED).select_related("reviewer")[:20]
+    return render(request, "core/about.html", {"reviews": reviews})
 
 
 def faq(request):

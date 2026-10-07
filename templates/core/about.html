@@ -15,15 +15,15 @@
       Backend Development, Cybersecurity, and Graphic Design, built around one goal:
       you finish with something real you actually built.
     </p>
-  </div>
-</section>
-
-<section>
-  <div class="container manifesto">
-    <p data-scroll-reveal>We started this because too much online education ends the
-    same way: a finished playlist, a certificate nobody asks for, and no actual project
-    to show for it. A cohort changes that. Fixed dates, a group of people on the same
-    timeline, and a track that ends with something you built yourself.</p>
+    <p class="lead">
+      We started this because too much online education ends the same way: a finished
+      playlist, a certificate nobody asks for, and no actual project to show for it. A
+      cohort changes that, fixed dates, a group of people on the same timeline, and a
+      track that ends with something you built yourself.
+    </p>
+    <div class="hero-actions">
+      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
+    </div>
   </div>
 </section>
 
@@ -36,17 +36,84 @@
 </section>
 
 <section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Leadership</span>
+      <h2>The people behind it</h2>
+    </div>
+    <div class="grid grid-2" style="max-width:860px;margin:0 auto;align-items:start;">
+      <div class="glass-panel card-media">
+        <img src="{% static 'img/team/founder.jpg' %}" alt="Ugochukwu Victory Emmanuel" loading="lazy" style="width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;display:block;">
+        <div class="card-body">
+          <h3 style="margin-bottom:0.15rem;">Ugochukwu Victory Emmanuel</h3>
+          <p style="margin:0 0 0.75rem;color:var(--text-muted);">Founder and Academy Director</p>
+          <p style="font-size:0.92rem;">Victory is the founder and Academy Director of Code Secure Academy. He studied
+          Information Technology at the Federal University of Technology Owerri, and his focus is ethical hacking
+          and cybersecurity, where he has built and secured many projects. When he was learning tech himself, he
+          noticed that people who had been in the field for years were still relying on gigs or struggling to find
+          work. That led him to ask a question he couldn't leave alone: what next after learning? Code Secure
+          Academy is his answer. It's a place to learn alongside others, build real projects, and leave knowing how
+          to turn your skills into income, with security built into everything you make.</p>
+        </div>
+      </div>
+      <div class="glass-panel card-media">
+        <img src="{% static 'img/team/co-founder.png' %}" alt="Ibeawuchi C.N." loading="lazy" style="width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;display:block;">
+        <div class="card-body">
+          <h3 style="margin-bottom:0.15rem;">Ibeawuchi C.N.</h3>
+          <p style="margin:0 0 0.75rem;color:var(--text-muted);">Co-Founder and Chief Technology Officer</p>
+          <p style="font-size:0.92rem;">Ibeawuchi is a full stack developer, mostly in Django, and the co-founder
+          and CTO of Code Secure Academy. He believes in what CSA is building and owns the technical side of
+          making it work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Code Secure Academy",
+    "alternateName": "CSA",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
+    "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+    "description": "Practical, cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design.",
+    "sameAs": [
+      "{{ INSTAGRAM_URL }}",
+      "{{ FACEBOOK_URL }}",
+      "{{ WHATSAPP_CHANNEL_URL }}"
+    ],
+    "founder": [
+      {
+        "@type": "Person",
+        "name": "Ugochukwu Victory Emmanuel",
+        "jobTitle": "Founder and Academy Director",
+        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/founder.jpg' %}"
+      },
+      {
+        "@type": "Person",
+        "name": "Ibeawuchi C.N.",
+        "jobTitle": "Co-Founder and Chief Technology Officer",
+        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/co-founder.png' %}"
+      }
+    ]
+  }
+  </script>
+</section>
+
+<section>
   <div class="container section-alt">
     <div class="alt-text">
       <span class="eyebrow">How we teach</span>
       <h2>A real curriculum, not a content dump</h2>
-      <p>Every track has a start date, an end date, and a sequence someone already worked
-      out for you. You show up, work through the curriculum with your cohort, and leave
-      with a project you can actually point to.</p>
+      <p>Every track runs as an 8-week cohort with a fixed start and end date, worked
+      through alongside the same group of people from day one to the capstone. You show
+      up, work through the curriculum together, and leave with a portfolio-ready project
+      you built yourself, not a quiz score.</p>
       <ul class="alt-checklist">
-        <li><span class="tick">✓</span><span><strong>Fixed cohort dates.</strong> A real start and end, so the course can't quietly stall out halfway through.</span></li>
+        <li><span class="tick">✓</span><span><strong>8 weeks, fixed dates.</strong> A real start and end, so the course can't quietly stall out halfway through.</span></li>
         <li><span class="tick">✓</span><span><strong>One track at a time.</strong> Depth over a scattershot of unrelated tutorials.</span></li>
-        <li><span class="tick">✓</span><span><strong>A project you built.</strong> The kind of thing that goes in a portfolio, not a quiz score.</span></li>
+        <li><span class="tick">✓</span><span><strong>A capstone project.</strong> The kind of thing that goes in a portfolio, built across the cohort, not a one-off exercise.</span></li>
       </ul>
     </div>
     <div class="alt-visual">
@@ -76,12 +143,6 @@
         <h3>Practical over theoretical</h3>
         <p>Every track is built around a real project, not lecture slides you'll forget by the following week.</p>
       </div>
-      {% comment %}
-      <div class="glass-panel card">
-        <h3>Community that lasts</h3>
-        <p>Every cohort gets a WhatsApp group that keeps going long after the track officially ends.</p>
-      </div>
-      {% endcomment %}
       <div class="glass-panel card">
         <h3>Security-minded by default</h3>
         <p>Even outside the Cybersecurity track, we teach people to ask what could go wrong, not just what should go right.</p>
@@ -90,62 +151,17 @@
   </div>
 </section>
 
+{% if reviews %}
 <section>
   <div class="container">
     <div class="section-head">
-      <span class="eyebrow">Leadership</span>
-      <h2>Who's behind Code Secure Academy</h2>
+      <span class="eyebrow">Proof</span>
+      <h2>What students are saying</h2>
     </div>
-    <div class="grid grid-2" style="max-width:760px;margin:0 auto;">
-      <div class="glass-panel card-media">
-        <img src="{% static 'img/team/founder.jpg' %}" alt="Ugochukwu Victory Emmanuel" loading="lazy" style="width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;display:block;">
-        <div class="card-body" style="text-align:center;">
-          <h3 style="margin-bottom:0.15rem;">Ugochukwu Victory Emmanuel</h3>
-          <p style="margin:0;color:var(--text-muted);">Founder, CEO and Academy Director</p>
-        </div>
-      </div>
-      <div class="glass-panel card-media">
-        <img src="{% static 'img/team/co-founder.png' %}" alt="Ibeawuchi C.N." loading="lazy" style="width:100%;aspect-ratio:4/5;object-fit:cover;object-position:top;display:block;">
-        <div class="card-body" style="text-align:center;">
-          <h3 style="margin-bottom:0.15rem;">Ibeawuchi C.N.</h3>
-          <p style="margin:0;color:var(--text-muted);">Co-Founder and Chief Technology Officer</p>
-        </div>
-      </div>
-    </div>
+    {% include "partials/testimonial_carousel.html" %}
   </div>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Code Secure Academy",
-    "alternateName": "CSA",
-    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
-    "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
-    "description": "Practical, cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design.",
-    "sameAs": [
-      "{{ INSTAGRAM_URL }}",
-      "{{ FACEBOOK_URL }}",
-      "{{ WHATSAPP_CHANNEL_URL }}"
-    ],
-    "founder": [
-      {
-        "@type": "Person",
-        "name": "Ugochukwu Victory Emmanuel",
-        "jobTitle": "Founder, CEO and Academy Director",
-        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/founder.jpg' %}"
-      },
-      {
-        "@type": "Person",
-        "name": "Ibeawuchi C.N.",
-        "jobTitle": "Co-Founder and Chief Technology Officer",
-        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/co-founder.png' %}"
-      }
-    ]
-  }
-  </script>
 </section>
-
+{% endif %}
 
 <section>
   <div class="container" style="max-width:640px;text-align:center;">
