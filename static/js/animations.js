@@ -132,31 +132,16 @@
     }
   });
 
-  // --- Stacked story cards (FAQ page): the stacking itself is plain CSS
-  // position:sticky (see .faq-story-card) with only a few px between each
-  // card's landing spot, so they land almost directly on top of one
-  // another. That alone can read as "cards close together" rather than
-  // "on top of" until something moves — so as each new card arrives, the
-  // one currently underneath it visibly recedes (scales down, dims),
-  // exactly like it's been covered by the card placed on it. Skipped on
-  // narrow viewports, where the CSS drops the sticky positioning
-  // entirely and this becomes a plain static list.
-  if (window.innerWidth >= 640) {
-    var storyCards = document.querySelectorAll(".faq-story-card");
-    storyCards.forEach(function (card, i) {
-      gsap.from(card, {
-        y: 36, scale: 0.95, opacity: 0, duration: 0.5, ease: EASE,
-        scrollTrigger: { trigger: card, start: "top 92%", end: "top 65%", scrub: 0.4 },
-      });
-      var below = storyCards[i - 1];
-      if (below) {
-        gsap.to(below, {
-          scale: 0.94, filter: "brightness(0.55)", duration: 0.5, ease: EASE,
-          scrollTrigger: { trigger: card, start: "top 90%", end: "top 55%", scrub: 0.4 },
-        });
-      }
+  // --- Story cards (FAQ page): simple fade/scale-in as each one scrolls
+  // into view. Used to also dim whichever card was "underneath" it back
+  // when these were a sticky vertical stack — now a plain grid, so
+  // nothing sits underneath anything anymore, that part's gone.
+  document.querySelectorAll(".faq-story-card").forEach(function (card) {
+    gsap.from(card, {
+      y: 36, scale: 0.95, opacity: 0, duration: 0.5, ease: EASE,
+      scrollTrigger: { trigger: card, start: "top 92%", end: "top 65%", scrub: 0.4 },
     });
-  }
+  });
 
   // --- Countdown / stat numbers get a quick count-up instead of just
   // appearing, when they first scroll into view.

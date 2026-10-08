@@ -634,16 +634,11 @@ a { color: var(--blue-400); text-decoration: none; }
   .why-reason { text-align: left; }
 }
 
-/* ---------- Stacked story cards (FAQ page) ----------
-   A classic sticky-stack: each card is position:sticky, landing at
-   almost the exact same spot as the one before it (a few px deeper),
-   so each new card settles nearly directly on top of the last, like
-   laying a card down on an existing pile — not beside it, on it. Pure
-   CSS positioning (no scroll-jacking, no pinning); GSAP in
-   animations.js adds the entrance motion plus a scale/dim on whichever
-   card is currently underneath, so the "on top of" read is unmistakable
-   even though the offset itself is tiny. */
-.faq-story-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+/* ---------- Story cards (FAQ page) ----------
+   A plain responsive grid — 2 per row on desktop so each card has
+   real size, collapsing to 1 on mobile. GSAP in animations.js adds a
+   simple fade/scale-in per card as it scrolls into view. */
+.faq-story-stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
 .faq-story-item { display: flex; justify-content: center; }
 .faq-story-card {
   width: 100%; background: #0a0f24; border-radius: var(--radius-lg); overflow: hidden;
@@ -655,9 +650,6 @@ a { color: var(--blue-400); text-decoration: none; }
 .faq-story-card-body { padding: var(--space-3); }
 .faq-story-caption { color: rgba(255, 255, 255, 0.82); font-size: 0.95rem; line-height: 1.6; margin: 0; }
 
-@media (max-width: 860px) {
-  .faq-story-stack { grid-template-columns: repeat(2, 1fr); }
-}
 @media (max-width: 560px) {
   .faq-story-stack { grid-template-columns: 1fr; }
 }
