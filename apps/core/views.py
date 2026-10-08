@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.core import signing
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -119,6 +120,21 @@ def unsubscribe(request, token):
 
     EmailOptOut.objects.get_or_create(email=email)
     return render(request, "core/unsubscribe.html", {"email": email})
+
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Disallow: /admin/",
+        "Disallow: /dashboard/",
+        "Disallow: /insights/",
+        "Disallow: /accounts/",
+        "Disallow: /pay/",
+        "Disallow: /r/",
+        "",
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
 def error_404(request, exception=None):

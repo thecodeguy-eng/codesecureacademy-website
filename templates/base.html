@@ -60,10 +60,15 @@ window.addEventListener("pagereveal", function (event) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}Code Secure Academy{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}Learn Frontend, Backend, Cybersecurity, or Graphic Design with Code Secure Academy: cohort-based, hands-on, built for Nigeria.{% endblock %}">
+<meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+<link rel="canonical" href="{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}">
+<meta name="keywords" content="{% block meta_keywords %}cohort bootcamp Nigeria, learn to code Nigeria, frontend development course, backend development course, cybersecurity training Nigeria, graphic design course{% endblock %}">
 
 <meta property="og:title" content="{% block og_title %}Code Secure Academy{% endblock %}">
 <meta property="og:description" content="{% block og_description %}Cohort-based tech training: Frontend, Backend, Cybersecurity, Graphic Design.{% endblock %}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Code Secure Academy">
+<meta property="og:locale" content="en_NG">
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% block og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-share.png' %}">{% endblock %}
 <meta property="og:image:width" content="1200">

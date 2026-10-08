@@ -3,8 +3,10 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
 from apps.core.sitemaps import sitemaps
+from apps.core.views import robots_txt
 
 urlpatterns = [
+    path("robots.txt", robots_txt, name="robots_txt"),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path("accounts/", include("apps.accounts.urls")),

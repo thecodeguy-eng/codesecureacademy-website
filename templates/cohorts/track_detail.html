@@ -165,4 +165,31 @@
   </div>
 </section>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "{{ track.name|escapejs }}",
+  "description": "{{ track.description|default:track.tagline|escapejs }}",
+  "provider": {
+    "@type": "Organization",
+    "name": "Code Secure Academy",
+    "sameAs": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}"
+  }{% if cohort %},
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "blended",
+    "startDate": "{{ cohort.start_date|date:'Y-m-d' }}",
+    "endDate": "{{ cohort.end_date|date:'Y-m-d' }}"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ cohort.price_naira }}",
+    "priceCurrency": "NGN",
+    "availability": "{% if cohort.accepting_enrollment %}https://schema.org/InStock{% else %}https://schema.org/SoldOut{% endif %}",
+    "url": "{{ request.build_absolute_uri }}"
+  }{% endif %}
+}
+</script>
+
 {% endblock %}
