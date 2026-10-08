@@ -18,7 +18,7 @@
     <span class="eyebrow">The real story</span>
     <h2>Before the questions, here's why we exist</h2>
   </div>
-  <div class="container" style="max-width:500px;">
+  <div class="container" style="max-width:900px;">
     <div class="faq-story-stack">
       <div class="faq-story-item" style="--i:0;">
         <div class="faq-story-card">
@@ -59,13 +59,34 @@
 <section>
   <div class="container" style="max-width:720px;">
     {% for item in faqs %}
-      <details class="glass-panel faq-item" style="margin-bottom:1rem;">
-        <summary>{{ item.question }}</summary>
-        <p>{{ item.answer }}</p>
-      </details>
+      <div class="glass-panel faq-item" style="margin-bottom:1rem;">
+        <h3 class="faq-question">{{ item.question }}</h3>
+        <p class="faq-answer">{{ item.answer }}</p>
+      </div>
     {% empty %}
       <p>No FAQs added yet.</p>
     {% endfor %}
   </div>
 </section>
+
+{% if faqs %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for item in faqs %}
+    {
+      "@type": "Question",
+      "name": "{{ item.question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ item.answer|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
 {% endblock %}

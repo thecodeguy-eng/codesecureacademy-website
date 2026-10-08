@@ -643,25 +643,23 @@ a { color: var(--blue-400); text-decoration: none; }
    animations.js adds the entrance motion plus a scale/dim on whichever
    card is currently underneath, so the "on top of" read is unmistakable
    even though the offset itself is tiny. */
-.faq-story-stack { display: flex; flex-direction: column; }
-.faq-story-item { min-height: 46vh; display: flex; justify-content: center; }
-.faq-story-item:last-child { min-height: 0; padding-bottom: var(--space-4); }
+.faq-story-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
+.faq-story-item { display: flex; justify-content: center; }
 .faq-story-card {
-  position: sticky; top: calc(84px + var(--i, 0) * 10px);
-  width: 100%; max-width: 400px; align-self: flex-start; transform-origin: top center;
-  background: #0a0f24; border-radius: var(--radius-lg); overflow: hidden;
+  width: 100%; background: #0a0f24; border-radius: var(--radius-lg); overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 40px -24px rgba(0, 0, 0, 0.6);
 }
 .faq-story-card-media { aspect-ratio: 4 / 5; }
 .faq-story-card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .faq-story-card-body { padding: var(--space-3); }
 .faq-story-caption { color: rgba(255, 255, 255, 0.82); font-size: 0.95rem; line-height: 1.6; margin: 0; }
 
-@media (max-width: 640px) {
-  .faq-story-item { min-height: 0; margin-bottom: var(--space-3); }
-  .faq-story-item:last-child { margin-bottom: 0; }
-  .faq-story-card { position: static; max-width: 100%; }
+@media (max-width: 860px) {
+  .faq-story-stack { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .faq-story-stack { grid-template-columns: 1fr; }
 }
 
 .stats-bar { display: flex; justify-content: center; gap: var(--space-5); flex-wrap: wrap; padding: var(--space-4) 0; }
@@ -893,16 +891,11 @@ input[type="checkbox"], input[type="radio"] {
 .alert-success { border-color: #3cdc96; }
 .alert-warning { border-color: #ffb84d; }
 
-/* ---------- FAQ accordion ---------- */
+/* ---------- FAQ list (always expanded, no click needed) ---------- */
 
-.faq-item summary {
-  cursor: pointer; font-weight: 700; padding: var(--space-2); list-style: none;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary::after { content: "+"; color: var(--blue-400); font-size: 1.3rem; transition: transform var(--transition-fast); }
-.faq-item[open] summary::after { transform: rotate(45deg); }
-.faq-item p { padding: 0 var(--space-2) var(--space-2); }
+.faq-item { padding: var(--space-2); }
+.faq-question { font-weight: 700; margin: 0 0 0.35rem; }
+.faq-answer { margin: 0; color: var(--text-secondary); }
 
 /* ---------- Bio read-more (card text, not an accordion header) ---------- */
 

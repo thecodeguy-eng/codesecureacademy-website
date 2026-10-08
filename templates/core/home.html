@@ -288,10 +288,10 @@
   <div class="container" style="max-width:720px;">
     <div class="section-head"><h2>Frequently asked</h2></div>
     {% for item in faqs %}
-      <details class="glass-panel faq-item" style="margin-bottom:1rem;">
-        <summary>{{ item.question }}</summary>
-        <p>{{ item.answer }}</p>
-      </details>
+      <div class="glass-panel faq-item" style="margin-bottom:1rem;">
+        <h3 class="faq-question">{{ item.question }}</h3>
+        <p class="faq-answer">{{ item.answer }}</p>
+      </div>
     {% endfor %}
     <p style="text-align:center;margin-top:1rem;"><a href="{% url 'faq' %}">See all FAQs →</a></p>
   </div>
