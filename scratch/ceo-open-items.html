@@ -1,0 +1,315 @@
+<title>Decisions Needed</title>
+<style>
+/* Layout: vertical report, phase sections as cards, each open item as a row with a status chip, summary strip up top */
+:root {
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --border: #e4ddd0;
+  --text: #211d16;
+  --text-muted: #6b6456;
+  --accent: #2f5fd6;
+  --accent-soft: #e8edfb;
+  --warn: #9a5b00;
+  --warn-soft: #fbead0;
+  --good: #1a7a4c;
+  --good-soft: #e3f3ea;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Source Sans 3", -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15130f;
+    --surface: #1e1b15;
+    --border: #35302633;
+    --border: #3a342a;
+    --text: #f1ece0;
+    --text-muted: #a39b89;
+    --accent: #7fa0f2;
+    --accent-soft: #223156;
+    --warn: #e6b566;
+    --warn-soft: #3a2c10;
+    --good: #7fd3a8;
+    --good-soft: #12301f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15130f;
+  --surface: #1e1b15;
+  --border: #3a342a;
+  --text: #f1ece0;
+  --text-muted: #a39b89;
+  --accent: #7fa0f2;
+  --accent-soft: #223156;
+  --warn: #e6b566;
+  --warn-soft: #3a2c10;
+  --good: #7fd3a8;
+  --good-soft: #12301f;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-body);
+  margin: 0; padding-inline: 20px; padding-block: 40px;
+  line-height: 1.5;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+
+header.page { margin-bottom: 36px; }
+.eyebrow {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--font-display); font-weight: 600; font-size: clamp(1.8rem, 5vw, 2.5rem);
+  margin: 0 0 12px; text-wrap: balance; letter-spacing: -0.01em;
+}
+.dek { color: var(--text-muted); font-size: 1.02rem; max-width: 56ch; margin: 0; }
+
+.progress-strip {
+  background: var(--good-soft); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px; margin: 28px 0 36px;
+}
+.progress-strip h2 {
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; margin: 0 0 10px; color: var(--good);
+}
+.progress-strip ul { margin: 0; padding-left: 1.1em; color: var(--text); }
+.progress-strip li { margin-bottom: 4px; }
+.progress-strip li:last-child { margin-bottom: 0; }
+
+.phase {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 22px 24px; margin-bottom: 18px;
+}
+.phase-head {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.phase-num {
+  font-family: var(--font-display); font-size: 0.85rem; font-weight: 600;
+  color: var(--text-muted); flex-shrink: 0;
+}
+.phase-title { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin: 0; }
+
+.item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+.item:last-child { border-bottom: none; padding-bottom: 0; }
+.item:first-of-type { padding-top: 0; }
+.item-body { flex: 1; min-width: 0; }
+.item-title { font-weight: 600; margin: 0 0 3px; }
+.item-note { color: var(--text-muted); font-size: 0.92rem; margin: 0; }
+.chip {
+  flex-shrink: 0; align-self: flex-start; font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+  white-space: nowrap; margin-top: 1px;
+}
+.chip-fact { background: var(--accent-soft); color: var(--accent); }
+.chip-asset { background: var(--warn-soft); color: var(--warn); }
+.chip-call { background: var(--border); color: var(--text); }
+
+footer.page { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 32px; }
+
+@media (max-width: 480px) {
+  .item { flex-direction: column; gap: 6px; }
+  .chip { align-self: flex-start; }
+}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Source+Sans+3:wght@400;600;700&display=swap">
+
+<div class="wrap">
+  <header class="page">
+    <p class="eyebrow">Code Secure Academy &middot; Site Audit</p>
+    <h1>Decisions Needed</h1>
+    <p class="dek">Everything still open across the 6-phase site audit, after working through your About-page notes. Grouped by what's actually needed: a fact only you know, a real asset, or a judgment call.</p>
+  </header>
+
+  <div class="progress-strip">
+    <h2>Already resolved from your last message</h2>
+    <ul>
+      <li>Title dropped "CEO" everywhere &mdash; now "Founder and Academy Director"</li>
+      <li>About page rebuilt in your order: opening, people, cohort, beliefs, proof, contact, closing CTA</li>
+      <li>Victory's full bio, Ibeawuchi's two-line bio, and the new headshot are live</li>
+      <li>"Certificate for watching videos" trimmed to exactly one mention, sitewide</li>
+      <li>A real "Proof" section is built and live &mdash; it shows nothing until real reviews exist, never placeholders</li>
+    </ul>
+  </div>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">01</span>
+      <h3 class="phase-title">Bugs &amp; behavior</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">"backend.track" / "frontend/" style labels</p>
+        <p class="item-note">Flagged by the audit as a bug, but it's an intentional terminal-chrome design detail used across 5 listing pages. Your call: keep it, or actually remove it now that it's been raised twice.</p>
+      </div>
+      <span class="chip chip-call">Your call</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">02</span>
+      <h3 class="phase-title">Content &amp; structure</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Design tools for the Graphic Design track</p>
+        <p class="item-note">Site currently says "industry-standard tools" with nothing named. Need the real list &mdash; Figma, Adobe, Canva, something else &mdash; to say it plainly.</p>
+      </div>
+      <span class="chip chip-fact">Fact needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Weekly time commitment per cohort</p>
+        <p class="item-note">We know cohorts run 8 fixed weeks. Hours/week expected isn't stated anywhere.</p>
+      </div>
+      <span class="chip chip-fact">Fact needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Live-taught or self-paced?</p>
+        <p class="item-note">Still don't know if instruction is live sessions or self-paced with a cohort community. Didn't want to invent either.</p>
+      </div>
+      <span class="chip chip-fact">Fact needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Cybersecurity tutorial count</p>
+        <p class="item-note">3 free subjects now (added Web App Security), vs Backend's 7. Full parity is a content-writing project, not a one-off fix.</p>
+      </div>
+      <span class="chip chip-asset">Ongoing</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">03</span>
+      <h3 class="phase-title">Trust &amp; proof</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Real student project screenshots, cohort photos</p>
+        <p class="item-note">The Proof section and track pages are ready to show these &mdash; nothing fake was built in their place. Need the actual files.</p>
+      </div>
+      <span class="chip chip-asset">Asset needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Team grid (beyond the two founders)</p>
+        <p class="item-note">Only listing people who've agreed to appear, per your instruction. Who else should go on it, with what photo and role?</p>
+      </div>
+      <span class="chip chip-fact">Fact needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Track advisors section</p>
+        <p class="item-note">Built but intentionally left off the live page, exactly as you said &mdash; add once at least two advisors are confirmed.</p>
+      </div>
+      <span class="chip chip-call">Waiting on you</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Location</p>
+        <p class="item-note">Not listed anywhere on the site. Is there a city/address worth showing, or is CSA fully remote?</p>
+      </div>
+      <span class="chip chip-fact">Fact needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">CAC registration number</p>
+        <p class="item-note">Deliberately withheld until it's actually issued, per your instruction not to claim something unfinished.</p>
+      </div>
+      <span class="chip chip-call">Waiting on CAC</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">04</span>
+      <h3 class="phase-title">Looking less AI-generated</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Stock photos</p>
+        <p class="item-note">Self-hosted now instead of hotlinked from Unsplash &mdash; faster and more reliable &mdash; but still stock, not real CSA photos. Same need as above.</p>
+      </div>
+      <span class="chip chip-asset">Asset needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Tutorial subject icons</p>
+        <p class="item-note">~20 of them (Python, React, Linux, etc.) are still emoji, not the site's line-art icon style. Lower priority, a future pass.</p>
+      </div>
+      <span class="chip chip-asset">Ongoing</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">05</span>
+      <h3 class="phase-title">Visual system</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">New tagline</p>
+        <p class="item-note">Swapped "Build. Secure. Dominate." for "Build it. Secure it. Ship it." &mdash; a suggestion, not a final answer. Needs your sign-off either way.</p>
+      </div>
+      <span class="chip chip-call">Your call</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Blue palette</p>
+        <p class="item-note">Judged the existing blue ramp close enough to "royal blue buttons, electric blue accents" &mdash; didn't repaint a system that already passes contrast checks. If you want a specific different hex, send it.</p>
+      </div>
+      <span class="chip chip-call">Your call</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">06</span>
+      <h3 class="phase-title">Technical</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Instagram link on Render</p>
+        <p class="item-note">Removed the tracking parameter in code. If the link is also set as an environment variable on Render, that copy needs the same fix manually.</p>
+      </div>
+      <span class="chip chip-call">Needs checking</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Lighthouse, real phones, keyboard-only nav</p>
+        <p class="item-note">Skip-link and visible keyboard-focus rings are already built in. Actual device testing and Lighthouse scores need real hardware, can't be done from here.</p>
+      </div>
+      <span class="chip chip-asset">Needs real device</span>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head">
+      <span class="phase-num">&mdash;</span>
+      <h3 class="phase-title">New from the About page rebuild</h3>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">"Week 3 of 8" cohort progress mock</p>
+        <p class="item-note">Still a UI mockup, not a real screenshot. Swap it in once a real cohort dashboard screenshot exists.</p>
+      </div>
+      <span class="chip chip-asset">Asset needed</span>
+    </div>
+    <div class="item">
+      <div class="item-body">
+        <p class="item-title">Capstone project, per track</p>
+        <p class="item-note">Described generically right now ("a capstone project"). Real per-track capstone descriptions would make the cohort section a lot stronger.</p>
+      </div>
+      <span class="chip chip-fact">Fact needed</span>
+    </div>
+  </section>
+
+  <footer class="page">Compiled for discussion between Ibeawuchi and Victory.</footer>
+</div>
