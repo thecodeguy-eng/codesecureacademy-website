@@ -42,13 +42,33 @@ def partner_dashboard(request, code):
 
     from django.db.models import Q, Sum
 
+    from apps.cohorts.models import Enrollment
+    from apps.marketplace.models import Order
+
     commissions = partner.commissions.order_by("-created_at")
     totals = commissions.aggregate(
         pending=Sum("commission_amount_naira", filter=Q(status="pending")),
         approved=Sum("commission_amount_naira", filter=Q(status="approved")),
         paid=Sum("commission_amount_naira", filter=Q(status="paid")),
     )
-    referred_count = partner.referred_users.count()
+    referrals = list(partner.referred_users.select_related("user").order_by("-created_at"))
+    referred_count = len(referrals)
+
+    # Converted = has gone on to actually enroll/buy, not just signed up —
+    # this is what makes the referral list "progress" and not just a count.
+    converted_ids = set(
+        Enrollment.objects.filter(
+            student__referral_attribution__partner=partner,
+            status=Enrollment.Status.CONFIRMED,
+        ).values_list("student_id", flat=True)
+    ) | set(
+        Order.objects.filter(
+            buyer__referral_attribution__partner=partner,
+            status=Order.Status.PAID,
+        ).values_list("buyer_id", flat=True)
+    )
+    for r in referrals:
+        r.converted = r.user_id in converted_ids
 
     return render(
         request,
@@ -56,6 +76,7 @@ def partner_dashboard(request, code):
         {
             "partner": partner,
             "referred_count": referred_count,
+            "referrals": referrals,
             "commissions": commissions[:50],
             "totals": totals,
         },

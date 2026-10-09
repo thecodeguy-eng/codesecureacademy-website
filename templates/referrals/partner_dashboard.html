@@ -36,6 +36,33 @@
       </div>
     </div>
 
+    <h2 style="margin-top:3rem;">Your referrals</h2>
+    <div class="glass-panel card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="text-align:left;">
+            <th style="padding:0.5rem;">Name</th>
+            <th style="padding:0.5rem;">Signed up</th>
+            <th style="padding:0.5rem;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in referrals %}
+          <tr>
+            <td style="padding:0.5rem;">{{ r.user.first_name|default:r.user.email }}</td>
+            <td style="padding:0.5rem;">{{ r.created_at|date:"M j, Y" }}</td>
+            <td style="padding:0.5rem;">
+              {% if r.converted %}<span class="badge badge-open">Enrolled / purchased</span>
+              {% else %}<span class="badge">Signed up, not yet paid</span>{% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td style="padding:0.5rem;" colspan="3">No one has signed up through your link yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
     <h2 style="margin-top:3rem;">Recent commissions</h2>
     <div class="glass-panel card">
       <table style="width:100%;border-collapse:collapse;">
