@@ -1,6 +1,14 @@
+import logging
 from decimal import Decimal
 
+from allauth.account.models import EmailAddress
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.crypto import get_random_string
+
+logger = logging.getLogger(__name__)
 
 
 def attribute_signup(user, referral_code):
@@ -65,3 +73,80 @@ def create_commission_for_order(order):
         source_amount_naira=order.amount_naira,
         percent_field="marketplace_commission_percent",
     )
+
+
+def _unique_username(email):
+    from apps.accounts.models import User
+
+    base = email.split("@")[0] or "partner"
+    username = base
+    suffix = 1
+    while User.objects.filter(username=username).exists():
+        suffix += 1
+        username = f"{base}{suffix}"
+    return username
+
+
+def create_partner_login(partner):
+    """Creates the actual login account for a newly added partner — a
+    plain username/password, not the old signed-link scheme. Email
+    verification is skipped (marked verified outright) since an admin is
+    vouching for this address directly, unlike a public signup."""
+    from apps.accounts.models import User
+
+    password = get_random_string(12)
+    user = User.objects.create_user(
+        username=_unique_username(partner.email),
+        email=partner.email,
+        password=password,
+        first_name=partner.name.split()[0] if partner.name else "",
+    )
+    EmailAddress.objects.create(user=user, email=user.email, verified=True, primary=True)
+    partner.user = user
+    partner.save(update_fields=["user"])
+    return user, password
+
+
+def reset_partner_login_password(partner):
+    """Issues a fresh password for a partner who already has a login —
+    e.g. they lost it. Returns the new plaintext password so the admin can
+    pass it on; it's never retrievable again after this."""
+    password = get_random_string(12)
+    partner.user.set_password(password)
+    partner.user.save(update_fields=["password"])
+    return password
+
+
+def send_partner_login_email(partner, password, *, is_reset=False):
+    """Best-effort — mirrors CSAAccountAdapter's own failure handling, a
+    broken mail provider shouldn't block the admin from creating/resetting
+    the partner in the first place."""
+    login_url = f"{settings.SITE_URL}/accounts/login/"
+    subject = (
+        "Your Code Secure Academy partner login was reset"
+        if is_reset else "Your Code Secure Academy partner dashboard login"
+    )
+    html_body = render_to_string(
+        "emails/partner_login.html",
+        {
+            "partner": partner,
+            "password": password,
+            "login_url": login_url,
+            "is_reset": is_reset,
+        },
+    )
+    plain_body = (
+        f"Hi {partner.name},\n\n"
+        f"{'Your partner dashboard password was just reset.' if is_reset else 'Your partner dashboard is ready.'}\n\n"
+        f"Login: {login_url}\n"
+        f"Email: {partner.email}\n"
+        f"Password: {password}\n\n"
+        f"Your referral link: {partner.referral_url}\n\n"
+        "Code Secure Academy"
+    )
+    msg = EmailMultiAlternatives(subject, plain_body, to=[partner.email], from_email="info@codesecureacademy.com")
+    msg.attach_alternative(html_body, "text/html")
+    try:
+        msg.send()
+    except Exception:
+        logger.exception("Failed to send partner login email to %s", partner.email)

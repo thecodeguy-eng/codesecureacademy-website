@@ -12,6 +12,9 @@ from .forms import ResendConfirmationForm
 
 @login_required
 def dashboard(request):
+    if hasattr(request.user, "partner_profile"):
+        return redirect("partner_dashboard")
+
     enrollments = (
         Enrollment.objects.filter(student=request.user)
         .select_related("cohort", "cohort__track")

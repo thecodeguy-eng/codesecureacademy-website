@@ -28,6 +28,11 @@ class Partner(models.Model):
         help_text="Percent of the order amount paid out when someone they referred buys on the marketplace.",
     )
     is_active = models.BooleanField(default=True, help_text="Turn off to stop crediting new referrals without deleting history.")
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="partner_profile",
+        help_text="Their login for the partner dashboard — created automatically when this partner is added.",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -47,17 +52,6 @@ class Partner(models.Model):
     @property
     def referral_url(self):
         return f"{settings.SITE_URL}/r/{self.referral_code}/"
-
-    @property
-    def dashboard_url(self):
-        """A private, self-serve stats link for the partner — no login
-        needed, same signed-token pattern as the unsubscribe link (see
-        apps.core.services.unsubscribe_url), so it can't be guessed or
-        used for anyone else's stats."""
-        from django.core import signing
-
-        token = signing.dumps(self.referral_code, salt="partner-dashboard")
-        return f"{settings.SITE_URL}/r/{self.referral_code}/dashboard/?t={token}"
 
 
 class ReferralAttribution(models.Model):

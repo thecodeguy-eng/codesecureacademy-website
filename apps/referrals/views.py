@@ -1,4 +1,5 @@
-from django.core import signing
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Partner
@@ -27,19 +28,7 @@ def referral_link(request, code):
     return response
 
 
-def partner_dashboard(request, code):
-    """Read-only, self-serve stats for a partner — reached only via the
-    signed link on Partner.dashboard_url (see that property), not a login.
-    Same verify-then-404 pattern as apps.core.views.unsubscribe."""
-    partner = get_object_or_404(Partner, referral_code=code)
-    token = request.GET.get("t", "")
-    try:
-        verified_code = signing.loads(token, salt="partner-dashboard", max_age=60 * 60 * 24 * 365)
-    except signing.BadSignature:
-        return render(request, "referrals/partner_dashboard.html", {"invalid": True})
-    if verified_code != code:
-        return render(request, "referrals/partner_dashboard.html", {"invalid": True})
-
+def _partner_dashboard_context(partner):
     from django.db.models import Q, Sum
 
     from apps.cohorts.models import Enrollment
@@ -70,14 +59,23 @@ def partner_dashboard(request, code):
     for r in referrals:
         r.converted = r.user_id in converted_ids
 
-    return render(
-        request,
-        "referrals/partner_dashboard.html",
-        {
-            "partner": partner,
-            "referred_count": referred_count,
-            "referrals": referrals,
-            "commissions": commissions[:50],
-            "totals": totals,
-        },
-    )
+    return {
+        "partner": partner,
+        "referred_count": referred_count,
+        "referrals": referrals,
+        "commissions": commissions[:50],
+        "totals": totals,
+    }
+
+
+@login_required
+def partner_dashboard(request):
+    """A partner's own stats — reached by logging in with the credentials
+    created for them when their Partner record was added in admin (see
+    apps.referrals.services.create_partner_login). Anyone without a
+    linked Partner just gets a 404, same as hitting a page that isn't
+    theirs."""
+    partner = getattr(request.user, "partner_profile", None)
+    if partner is None:
+        raise Http404
+    return render(request, "referrals/partner_dashboard.html", _partner_dashboard_context(partner))

@@ -18,3 +18,10 @@ class CSAAccountAdapter(DefaultAccountAdapter):
             super().send_mail(template_prefix, email, context)
         except Exception:
             logger.exception("Failed to send account email (template=%s, to=%s)", template_prefix, email)
+
+    def get_login_redirect_url(self, request):
+        if hasattr(request.user, "partner_profile"):
+            from django.urls import reverse
+
+            return reverse("partner_dashboard")
+        return super().get_login_redirect_url(request)
