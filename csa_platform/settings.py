@@ -101,6 +101,8 @@ INSTALLED_APPS = [
     # Auth
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     # CSA apps
     "apps.accounts",
     "apps.core",
@@ -200,6 +202,25 @@ ACCOUNT_ADAPTER = "apps.accounts.adapters.CSAAccountAdapter"
 # it otherwise falls back to request.is_secure(), which depends on trusting
 # Render's proxy header (SECURE_PROXY_SSL_HEADER, only set when DEBUG=False).
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+# "Continue with Google" signs into the SAME account as normal email+password
+# signup when the email matches (EMAIL_AUTHENTICATION), and remembers that
+# link for next time (AUTO_CONNECT) — safe here since Google verifies the
+# email itself. Password login keeps working untouched for anyone who never
+# connects Google; the two are independent, not either/or.
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": config("GOOGLE_OAUTH_CLIENT_ID", default=""),
+            "secret": config("GOOGLE_OAUTH_CLIENT_SECRET", default=""),
+            "key": "",
+        },
+        "SCOPE": ["profile", "email"],
+    },
+}
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # --------------------------------------------------------------------------
 # Internationalization
