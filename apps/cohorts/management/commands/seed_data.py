@@ -128,7 +128,7 @@ class Command(BaseCommand):
             # ("How do I get into the WhatsApp group?", "The moment your payment is confirmed, you'll get the invite link by email and on-screen."),
             ("How long does a cohort run, and when does it start?", "Each cohort runs for 8 weeks. Exact start dates are shown on each track's page, right next to the price — enrollment closes a few days before the cohort starts."),
             ("How much time do I need to commit each week?", "Roughly 6-10 hours a week, a mix of live sessions with your cohort and self-paced lessons on your dashboard that you work through between them."),
-            ("Do I get a certificate?", "No. Every track ends with a real project you shipped instead, something you can actually put in a portfolio, which does more for you than a certificate nobody checks."),
+            ("Do I get a certificate?", "Yes. Every track ends with a certificate of completion, on top of a real project you shipped that you can put straight into your portfolio."),
             ("What exactly do I get for ₦5,000?", "The full project-based curriculum for your track, lesson access on your dashboard the moment payment clears, and a cohort of people learning the same track on the same timeline."),
             ("Do I need prior experience to join a track?", "No. Each track starts from the fundamentals and builds up from there. You just need to be ready to put in the work."),
             ("Do I need my own laptop?", "Yes, you'll need a laptop capable of running the tools for your track. We'll share the specific requirements once you're enrolled."),
