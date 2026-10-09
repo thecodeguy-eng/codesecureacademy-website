@@ -14,8 +14,9 @@ placeholder/fake testimonials, only real approved reviews.
         <span class="avatar-circle">{{ review.reviewer.get_full_name|default:review.reviewer.username|first|upper }}</span>
         <span class="who">
           <span class="name">{{ review.reviewer.get_full_name|default:review.reviewer.username }}</span>
-          {% if review.display_context %}<span class="context">{{ review.display_context }}</span>{% endif %}
+          <span class="context">{{ review.display_context|default:"Visitor" }}</span>
         </span>
+        {% if review.purchase %}<span class="badge badge-open">Verified</span>{% endif %}
       </div>
     </div>
   {% endfor %}

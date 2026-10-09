@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import ReviewForm
 from .models import Review
+from .services import notify_admin_of_general_review
 
 
 def testimonials(request):
@@ -52,3 +53,32 @@ def submit_review(request, app_label, model_name, object_id):
         form = ReviewForm(instance=existing)
 
     return render(request, "reviews/submit_review.html", {"form": form, "purchase": purchase})
+
+
+@login_required
+def submit_general_review(request):
+    """Open to anyone with an account, not just confirmed buyers — the
+    CEO wants reviews from people who haven't bought anything yet too.
+    These go in the same PENDING queue as purchase-verified reviews, but
+    also email the admin so an unverified review doesn't just sit
+    unnoticed in the queue the way a purchase-linked one might."""
+    existing = Review.objects.filter(reviewer=request.user, content_type__isnull=True).first()
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST, instance=existing)
+        if form.is_valid():
+            is_new = existing is None
+            review = form.save(commit=False)
+            review.reviewer = request.user
+            review.content_type = None
+            review.object_id = None
+            review.status = Review.Status.PENDING
+            review.save()
+            if is_new:
+                notify_admin_of_general_review(review)
+            messages.success(request, "Thanks! Your review is in the queue for approval.")
+            return redirect("reviews:testimonials")
+    else:
+        form = ReviewForm(instance=existing)
+
+    return render(request, "reviews/submit_general_review.html", {"form": form})

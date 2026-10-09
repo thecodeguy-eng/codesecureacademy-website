@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Student Testimonials · Code Secure Academy{% endblock %}
-{% block meta_description %}Real reviews from Code Secure Academy students, in their own words, straight from their completed enrollments and purchases.{% endblock %}
+{% block meta_description %}Real reviews from Code Secure Academy students and visitors, in their own words.{% endblock %}
 {% block content %}
 
 <section class="hero">
@@ -9,9 +9,13 @@
   <div class="hero-spotlight"></div>
   <div class="container" style="max-width:720px;">
     <span class="eyebrow">In their words</span>
-    <h1>What students are <span class="text-gradient">saying</span></h1>
-    <p class="lead">Every review here comes from someone who actually enrolled in a track or bought
-    something on the marketplace, left by them after a completed purchase.</p>
+    <h1>What people are <span class="text-gradient">saying</span></h1>
+    <p class="lead">Real reviews, in their own words — "Verified" means it's from a completed enrollment or
+    purchase; the rest are from people who've interacted with CSA but haven't bought anything yet. Every
+    review is read by our team before it's posted.</p>
+    <div class="hero-actions">
+      <a href="{% url 'reviews:submit_general_review' %}" class="btn btn-primary">Leave a review</a>
+    </div>
   </div>
 </section>
 
@@ -27,8 +31,10 @@
               <span class="avatar-circle">{{ review.reviewer.get_full_name|default:review.reviewer.username|first|upper }}</span>
               <span class="who">
                 <span class="name">{{ review.reviewer.get_full_name|default:review.reviewer.username }}</span>
-                {% if review.display_context %}<span class="context">{{ review.display_context }}</span>{% endif %}
+                {% if review.display_context %}<span class="context">{{ review.display_context }}</span>
+                {% else %}<span class="context">Visitor</span>{% endif %}
               </span>
+              {% if review.purchase %}<span class="badge badge-open" style="margin-left:auto;">Verified</span>{% endif %}
             </div>
           </div>
         {% endfor %}
@@ -36,10 +42,13 @@
     {% else %}
       <div class="glass-panel card" style="max-width:560px;margin:0 auto;text-align:center;padding:var(--space-5) var(--space-3);">
         <h3>No reviews yet, this page is honest about that</h3>
-        <p style="color:var(--text-muted);">We'd rather show nothing than something fake. Real testimonials
-        will appear here as students who've completed a track or a marketplace purchase leave their own
-        review, in their own words.</p>
-        <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary" style="margin-top:0.5rem;">Explore tracks</a>
+        <p style="color:var(--text-muted);">We'd rather show nothing than something fake. Real reviews
+        will appear here once they're left and approved, whether from a completed purchase or just
+        someone who's interacted with CSA.</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-top:0.5rem;">
+          <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
+          <a href="{% url 'reviews:submit_general_review' %}" class="btn btn-outline">Leave a review</a>
+        </div>
       </div>
     {% endif %}
   </div>

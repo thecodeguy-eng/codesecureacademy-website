@@ -6,9 +6,13 @@ from django.db import models
 
 
 class Review(models.Model):
-    """One review per completed purchase (an Enrollment or a marketplace
-    Order) — not one per person total, since a buyer can legitimately
-    complete more than one purchase across the academy + marketplace."""
+    """Usually one review per completed purchase (an Enrollment or a
+    marketplace Order) — not one per person total, since a buyer can
+    legitimately complete more than one purchase across the academy +
+    marketplace. `purchase` is nullable: a review with no purchase behind
+    it is a general review from someone who isn't (yet) a paying
+    customer — still real, just unverified, so it needs a human look
+    before it's public (see apps.reviews.services.notify_admin_of_review)."""
 
     class Status(models.TextChoices):
         PENDING = "pending", "Pending"
@@ -20,8 +24,8 @@ class Review(models.Model):
     body = models.TextField(max_length=2000)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
+    object_id = models.PositiveIntegerField(null=True, blank=True)
     purchase = GenericForeignKey("content_type", "object_id")
 
     created_at = models.DateTimeField(auto_now_add=True)
