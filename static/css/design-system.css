@@ -517,6 +517,18 @@ a { color: var(--blue-400); text-decoration: none; }
 .card-cover-track { width: 100%; height: 160px; object-fit: contain; display: block; background: #060a27; }
 .card-body { padding: var(--space-3); }
 
+/* ---------- Project showcase cards (About page) — browser-chrome framed
+   screenshot with a zoom-on-hover, tech stack as real badge chips, not a
+   plain photo-over-text blog card. ---------- */
+.project-showcase-media { aspect-ratio: 16 / 9; overflow: hidden; }
+.project-showcase-media img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;
+  transition: transform var(--transition-med);
+}
+.project-showcase-card:hover .project-showcase-media img { transform: scale(1.06); }
+.project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: var(--space-2); }
+.project-tags .badge { font-family: var(--font-mono); }
+
 /* Full-width photo band with a caption underneath — used to break up
    text-and-mockup sections with an actual photo. */
 .photo-banner {

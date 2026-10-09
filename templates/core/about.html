@@ -115,58 +115,64 @@
       tracks, by our own CTO. Different idea, same skills, same kind of thing you'd walk away with.</p>
     </div>
     <div class="grid grid-3">
-      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media">
-        <img src="{% static 'img/photos/cto-projects/futo-bme-portal.png' %}" alt="FUTO BME Departmental Portal" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;">
+      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="futobme.vercel.app" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/futo-bme-portal.png' %}" alt="FUTO BME Departmental Portal" loading="lazy"></div>
         <div class="card-body">
           <h3>A departmental portal</h3>
           <p>A full hub for a university department: staff directory, library, timetables, a student portal,
           built because none existed at all.</p>
-          <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">Django · PostgreSQL · REST API</p>
+          <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span><span class="badge">REST API</span></div>
         </div>
       </a>
-      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="glass-panel interactive card-media">
-        <img src="{% static 'img/photos/cto-projects/crestcare.png' %}" alt="CrestCare Medical Centre" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;">
+      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="crestcaremedicalcenter.vercel.app" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/crestcare.png' %}" alt="CrestCare Medical Centre" loading="lazy"></div>
         <div class="card-body">
           <h3>A client website that earns trust</h3>
           <p>A diagnostics clinic's site, built to earn patient trust before they ever book a scan, real
           client, real brief.</p>
-          <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">Web design &amp; build</p>
+          <div class="project-tags"><span class="badge">Web design</span><span class="badge">HTML/CSS</span></div>
         </div>
       </a>
-      <a href="https://ibeawuchicn.vercel.app/work/ahiolu-online-marketplace-service-booking-platform/" target="_blank" rel="noopener" class="glass-panel interactive card-media">
-        <img src="{% static 'img/photos/cto-projects/ahiolu.png' %}" alt="Ahiolu marketplace platform" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;">
+      <a href="https://ibeawuchicn.vercel.app/work/ahiolu-online-marketplace-service-booking-platform/" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="ahiolu · marketplace" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/ahiolu.png' %}" alt="Ahiolu marketplace platform" loading="lazy"></div>
         <div class="card-body">
           <h3>A two-sided marketplace</h3>
           <p>Shop for goods or book local service providers in one platform, with its own admin dashboard
           behind it.</p>
-          <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">Django · PostgreSQL · Paystack</p>
+          <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span><span class="badge">Paystack</span></div>
         </div>
       </a>
-      <a href="https://github.com/AlphaGL/Nabes-bme-election-site" target="_blank" rel="noopener" class="glass-panel interactive card-media">
-        <img src="{% static 'img/photos/cto-projects/voting-system.jpg' %}" alt="Departmental voting system" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;">
+      <a href="https://github.com/AlphaGL/Nabes-bme-election-site" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="bme-election · github" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/voting-system.jpg' %}" alt="Departmental voting system" loading="lazy"></div>
         <div class="card-body">
           <h3>An online voting system</h3>
           <p>One vote per student per position, live results, a reset-protected admin panel, a department's
           first real election site.</p>
-          <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">Django · PostgreSQL</p>
+          <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span></div>
         </div>
       </a>
-      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="glass-panel interactive card-media">
-        <img src="{% static 'img/photos/cto-projects/nextmedia.png' %}" alt="NextMedia news platform" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;">
+      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="nextmediahq.net" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/nextmedia.png' %}" alt="NextMedia news platform" loading="lazy"></div>
         <div class="card-body">
           <h3>A news & media platform</h3>
           <p>Categorized news, a live headline ticker, an admin side for publishing, built to pull several
           beats into one place.</p>
-          <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">Django · REST API</p>
+          <div class="project-tags"><span class="badge">Django</span><span class="badge">REST API</span></div>
         </div>
       </a>
-      <a href="https://princesspurehoney.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media">
-        <img src="{% static 'img/photos/cto-projects/princess-pure-honey.png' %}" alt="Princess Pure Honey website" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block;">
+      <a href="https://princesspurehoney.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="princesspurehoney.vercel.app" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/princess-pure-honey.png' %}" alt="Princess Pure Honey website" loading="lazy"></div>
         <div class="card-body">
           <h3>An online storefront</h3>
           <p>A product brand that used to sell word-of-mouth only, given a real online shop front: slider,
           pricing, testimonials, a blog.</p>
-          <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">HTML · CSS · JavaScript</p>
+          <div class="project-tags"><span class="badge">HTML</span><span class="badge">CSS</span><span class="badge">JavaScript</span></div>
         </div>
       </a>
     </div>
