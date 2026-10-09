@@ -1088,6 +1088,9 @@ body.modal-open { overflow: hidden; }
     display: none;
   }
   .main-nav.open { display: flex; }
+  /* Same intent as the cookie <dialog>'s native scroll lock — the page
+     underneath the open mobile menu shouldn't scroll along with it. */
+  body.nav-scroll-lock { overflow: hidden; }
   .nav-toggle { display: flex; }
   /* Inside the stacked mobile menu there's no space pressure, so skip the
      icon-toggle affordance entirely and just show the input, full width. */

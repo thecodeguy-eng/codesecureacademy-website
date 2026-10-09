@@ -283,6 +283,44 @@
 </section>
 {% endif %}
 
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Real web development</span>
+      <h2>This could be you</h2>
+      <p>Projects from the CSA community — real, shipped work built with the exact stack taught in our
+      Frontend and Backend tracks.</p>
+    </div>
+    <div class="grid grid-3">
+      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="futobme.vercel.app" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/futo-bme-portal.png' %}" alt="FUTO BME Departmental Portal" loading="lazy"></div>
+        <div class="card-body">
+          <h3>A departmental portal</h3>
+          <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span><span class="badge">REST API</span></div>
+        </div>
+      </a>
+      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="crestcaremedicalcenter.vercel.app" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/crestcare.png' %}" alt="CrestCare Medical Centre" loading="lazy"></div>
+        <div class="card-body">
+          <h3>A client website that earns trust</h3>
+          <div class="project-tags"><span class="badge">Web design</span><span class="badge">HTML/CSS</span></div>
+        </div>
+      </a>
+      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+        {% include "partials/term_chrome.html" with label="nextmediahq.net" %}
+        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/nextmedia.png' %}" alt="NextMedia news platform" loading="lazy"></div>
+        <div class="card-body">
+          <h3>A news & media platform</h3>
+          <div class="project-tags"><span class="badge">Django</span><span class="badge">REST API</span></div>
+        </div>
+      </a>
+    </div>
+    <p style="text-align:center;margin-top:var(--space-3);"><a href="{% url 'about' %}#projects">See all projects →</a></p>
+  </div>
+</section>
+
 {% if faqs %}
 <section>
   <div class="container" style="max-width:720px;">

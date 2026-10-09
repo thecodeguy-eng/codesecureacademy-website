@@ -190,6 +190,7 @@
       var applyState = function () {
         nav.classList.toggle("open", open);
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        document.body.classList.toggle("nav-scroll-lock", open);
       };
 
       var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
