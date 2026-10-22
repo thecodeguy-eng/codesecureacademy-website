@@ -105,6 +105,10 @@ class Cohort(models.Model):
     price_naira = models.DecimalField(max_digits=10, decimal_places=2)
     seat_count = models.PositiveIntegerField()
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.OPEN)
+    instructors = models.ManyToManyField(
+        "instructors.Instructor", related_name="cohorts", blank=True,
+        help_text="Who's teaching this specific cohort run.",
+    )
 
     class Meta:
         ordering = ["start_date"]

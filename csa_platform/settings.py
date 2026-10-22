@@ -114,6 +114,7 @@ INSTALLED_APPS = [
     "apps.tutorials",
     "apps.courses",
     "apps.referrals",
+    "apps.instructors",
     "apps.analytics",
     "apps.lessons",
 ]

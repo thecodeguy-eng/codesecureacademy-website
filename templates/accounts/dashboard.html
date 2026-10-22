@@ -97,6 +97,19 @@
             <span class="badge badge-open">Confirmed</span>
             <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
             <p><a href="{% url 'reviews:submit_review' app_label='cohorts' model_name='enrollment' object_id=enrollment.id %}">Leave a review →</a></p>
+            {% if enrollment.tutors %}
+              <p class="helptext">Tutor{{ enrollment.tutors|pluralize }}: {% for t in enrollment.tutors %}{{ t.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            {% endif %}
+            {% if enrollment.scheme_total_count %}
+              <details class="bio-expand">
+                <summary>Scheme of work ({{ enrollment.scheme_covered_count }}/{{ enrollment.scheme_total_count }} covered)</summary>
+                <ul style="margin:0.5rem 0 0;padding-left:1.1rem;">
+                  {% for sr in enrollment.scheme_rows %}
+                    <li style="{% if sr.covered %}color:var(--text-muted);text-decoration:line-through;{% endif %}">{{ sr.topic.title }}</li>
+                  {% endfor %}
+                </ul>
+              </details>
+            {% endif %}
           {% elif enrollment.status == "held" %}
             <span class="badge">Payment processing</span>
             <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>

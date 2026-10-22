@@ -24,6 +24,7 @@ class TrackAdmin(admin.ModelAdmin):
 class CohortAdmin(admin.ModelAdmin):
     list_display = ("track", "start_date", "end_date", "enrollment_deadline", "price_naira", "seat_count", "seats_taken_display", "status")
     list_filter = ("track", "status")
+    filter_horizontal = ("instructors",)
 
     @admin.display(description="Seats taken")
     def seats_taken_display(self, obj):

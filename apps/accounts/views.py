@@ -14,12 +14,31 @@ from .forms import ResendConfirmationForm
 def dashboard(request):
     if hasattr(request.user, "partner_profile"):
         return redirect("partner_dashboard")
+    if hasattr(request.user, "instructor_profile"):
+        return redirect("instructors:dashboard")
 
     enrollments = (
         Enrollment.objects.filter(student=request.user)
         .select_related("cohort", "cohort__track")
+        .prefetch_related("cohort__instructors")
         .order_by("-created_at")
     )
+
+    from apps.instructors.models import TopicProgress
+
+    for enrollment in enrollments:
+        if enrollment.status != Enrollment.Status.CONFIRMED:
+            continue
+        cohort = enrollment.cohort
+        topics = list(cohort.track.scheme_topics.all())
+        covered_ids = set(
+            TopicProgress.objects.filter(cohort=cohort, topic__in=topics).values_list("topic_id", flat=True)
+        )
+        enrollment.tutors = cohort.instructors.all()
+        enrollment.scheme_rows = [{"topic": t, "covered": t.id in covered_ids} for t in topics]
+        enrollment.scheme_covered_count = len(covered_ids)
+        enrollment.scheme_total_count = len(topics)
+
     orders = (
         Order.objects.filter(buyer=request.user)
         .select_related("listing")

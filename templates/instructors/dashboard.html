@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Tutor dashboard · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <span class="eyebrow">Tutor dashboard</span>
+    <h1>{{ instructor.name }}</h1>
+    <p>Your assigned cohorts, their students, and the scheme of work for each.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    {% for row in cohort_data %}
+      <div class="glass-panel card" style="margin-bottom:2rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+          <h2 style="margin:0;">{{ row.cohort.track.name }} — {{ row.cohort.start_date|date:"M Y" }}</h2>
+          <span class="badge">{{ row.covered_count }}/{{ row.total_count }} topics covered</span>
+        </div>
+
+        <h3 style="margin-top:1.5rem;">Students ({{ row.students|length }})</h3>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="text-align:left;">
+              <th style="padding:0.5rem;">Name</th>
+              <th style="padding:0.5rem;">Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in row.students %}
+            <tr>
+              <td style="padding:0.5rem;">{{ e.student.get_full_name|default:e.student.username }}</td>
+              <td style="padding:0.5rem;">{{ e.student.email }}</td>
+            </tr>
+            {% empty %}
+            <tr><td style="padding:0.5rem;" colspan="2">No confirmed students yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <h3 style="margin-top:1.5rem;">Scheme of work</h3>
+        {% if row.topic_rows %}
+        <table style="width:100%;border-collapse:collapse;">
+          <tbody>
+            {% for tr in row.topic_rows %}
+            <tr>
+              <td style="padding:0.5rem;width:2rem;">
+                <form method="post" action="{% url 'instructors:toggle_topic' cohort_id=row.cohort.id topic_id=tr.topic.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm {% if tr.covered %}btn-primary{% else %}btn-outline{% endif %}" aria-label="{% if tr.covered %}Mark not covered{% else %}Mark covered{% endif %}">
+                    {% if tr.covered %}✓{% else %}&nbsp;&nbsp;{% endif %}
+                  </button>
+                </form>
+              </td>
+              <td style="padding:0.5rem;{% if tr.covered %}text-decoration:line-through;color:var(--text-muted);{% endif %}">{{ tr.topic.title }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="helptext">No scheme of work has been added for this track yet — ask an admin to add topics under Scheme topics in the admin.</p>
+        {% endif %}
+      </div>
+    {% empty %}
+      <div class="glass-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
+        <h3>No cohorts assigned yet</h3>
+        <p style="color:var(--text-muted);">Once an admin assigns you to a cohort, it'll show up here.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
