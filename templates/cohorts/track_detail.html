@@ -18,6 +18,24 @@
   </div>
 </section>
 
+{% if cohort and cohort.instructors.all %}
+<section style="padding-top:0;">
+  <div class="container" style="max-width:720px;">
+    <div class="section-head" style="text-align:left;margin-bottom:1rem;">
+      <span class="eyebrow">Who's teaching</span>
+    </div>
+    <div class="grid grid-2">
+      {% for tutor in cohort.instructors.all %}
+        <div class="glass-panel card">
+          <h3 style="margin:0 0 0.4rem;">{{ tutor.name }}</h3>
+          {% if tutor.bio %}<p style="margin:0;color:var(--text-muted);">{{ tutor.bio }}</p>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if track.why_join_list %}
 <section class="why-pin-section">
   <div class="container">

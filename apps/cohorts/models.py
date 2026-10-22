@@ -109,6 +109,10 @@ class Cohort(models.Model):
         "instructors.Instructor", related_name="cohorts", blank=True,
         help_text="Who's teaching this specific cohort run.",
     )
+    announcement = models.TextField(
+        blank=True, help_text="A short note shown on students' dashboards, e.g. a schedule change. Set from the tutor dashboard.",
+    )
+    announcement_updated_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["start_date"]

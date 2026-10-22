@@ -24,8 +24,11 @@ def dashboard(request):
         .order_by("-created_at")
     )
 
+    from django.utils import timezone
+
     from apps.instructors.models import TopicProgress
 
+    now = timezone.now()
     for enrollment in enrollments:
         if enrollment.status != Enrollment.Status.CONFIRMED:
             continue
@@ -38,6 +41,7 @@ def dashboard(request):
         enrollment.scheme_rows = [{"topic": t, "covered": t.id in covered_ids} for t in topics]
         enrollment.scheme_covered_count = len(covered_ids)
         enrollment.scheme_total_count = len(topics)
+        enrollment.next_session = cohort.sessions.filter(starts_at__gte=now).order_by("starts_at").first()
 
     orders = (
         Order.objects.filter(buyer=request.user)

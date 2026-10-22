@@ -100,6 +100,12 @@
             {% if enrollment.tutors %}
               <p class="helptext">Tutor{{ enrollment.tutors|pluralize }}: {% for t in enrollment.tutors %}{{ t.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             {% endif %}
+            {% if enrollment.cohort.announcement %}
+              <div class="cta-banner">{{ enrollment.cohort.announcement }}</div>
+            {% endif %}
+            {% if enrollment.next_session %}
+              <p class="helptext">Next session: {{ enrollment.next_session.starts_at|date:"D, M j, Y g:i A" }}{% if enrollment.next_session.label %} — {{ enrollment.next_session.label }}{% endif %}</p>
+            {% endif %}
             {% if enrollment.scheme_total_count %}
               <details class="bio-expand">
                 <summary>Scheme of work ({{ enrollment.scheme_covered_count }}/{{ enrollment.scheme_total_count }} covered)</summary>

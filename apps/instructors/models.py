@@ -64,3 +64,39 @@ class TopicProgress(models.Model):
 
     def __str__(self):
         return f"{self.cohort} covered {self.topic.title}"
+
+
+class Session(models.Model):
+    """One scheduled live session for a cohort — created by the tutor,
+    ahead of time (to show as the cohort's "next session") or after the
+    fact (to take attendance for it). Doubles as both since a session
+    needs to exist before attendance can be marked for it anyway."""
+
+    cohort = models.ForeignKey("cohorts.Cohort", on_delete=models.CASCADE, related_name="sessions")
+    starts_at = models.DateTimeField()
+    label = models.CharField(max_length=200, blank=True, help_text="e.g. \"Week 3 — React components\". Optional.")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["starts_at"]
+
+    def __str__(self):
+        return f"{self.cohort} — {self.label or self.starts_at.strftime('%b %d, %Y')}"
+
+
+class Attendance(models.Model):
+    """Marks one student present at one Session. Same existence-means-
+    present pattern as TopicProgress — no row means absent/not marked,
+    so nothing needs pre-seeding for the whole roster per session."""
+
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="attendance")
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="session_attendance")
+    marked_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["session", "student"], name="one_attendance_row_per_session_student")
+        ]
+
+    def __str__(self):
+        return f"{self.student} present at {self.session}"

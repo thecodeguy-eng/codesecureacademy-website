@@ -17,6 +17,17 @@
           <h2 style="margin:0;">{{ row.cohort.track.name }} — {{ row.cohort.start_date|date:"M Y" }}</h2>
           <span class="badge">{{ row.covered_count }}/{{ row.total_count }} topics covered</span>
         </div>
+        <p class="helptext" style="margin-top:0.5rem;">
+          {% if row.next_session %}Next session: {{ row.next_session.starts_at|date:"D, M j, Y g:i A" }}{% if row.next_session.label %} — {{ row.next_session.label }}{% endif %}
+          {% else %}No upcoming session scheduled.{% endif %}
+        </p>
+
+        <h3 style="margin-top:1.5rem;">Announcement to students</h3>
+        <form method="post" action="{% url 'instructors:update_announcement' cohort_id=row.cohort.id %}">
+          {% csrf_token %}
+          <textarea name="announcement" rows="2" placeholder="e.g. Next session moved to Friday 6pm" style="width:100%;">{{ row.cohort.announcement }}</textarea>
+          <button type="submit" class="btn btn-sm btn-primary" style="margin-top:0.5rem;">Save announcement</button>
+        </form>
 
         <h3 style="margin-top:1.5rem;">Students ({{ row.students|length }})</h3>
         <table style="width:100%;border-collapse:collapse;">
@@ -60,6 +71,47 @@
         {% else %}
         <p class="helptext">No scheme of work has been added for this track yet — ask an admin to add topics under Scheme topics in the admin.</p>
         {% endif %}
+
+        <h3 style="margin-top:1.5rem;">Sessions &amp; attendance</h3>
+        {% for sr in row.session_rows %}
+          <details style="margin-bottom:0.75rem;">
+            <summary>{{ sr.session.starts_at|date:"D, M j, Y g:i A" }}{% if sr.session.label %} — {{ sr.session.label }}{% endif %} ({{ sr.present_count }}/{{ row.students|length }} present)</summary>
+            <table style="width:100%;border-collapse:collapse;margin-top:0.5rem;">
+              <tbody>
+                {% for r in sr.roster %}
+                <tr>
+                  <td style="padding:0.5rem;width:2rem;">
+                    <form method="post" action="{% url 'instructors:toggle_attendance' session_id=sr.session.id student_id=r.enrollment.student.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm {% if r.present %}btn-primary{% else %}btn-outline{% endif %}" aria-label="{% if r.present %}Mark absent{% else %}Mark present{% endif %}">
+                        {% if r.present %}✓{% else %}&nbsp;&nbsp;{% endif %}
+                      </button>
+                    </form>
+                  </td>
+                  <td style="padding:0.5rem;">{{ r.enrollment.student.get_full_name|default:r.enrollment.student.username }}</td>
+                </tr>
+                {% empty %}
+                <tr><td style="padding:0.5rem;">No confirmed students yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </details>
+        {% empty %}
+          <p class="helptext">No sessions scheduled yet.</p>
+        {% endfor %}
+
+        <form method="post" action="{% url 'instructors:create_session' cohort_id=row.cohort.id %}" style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:flex-end;margin-top:0.75rem;">
+          {% csrf_token %}
+          <div>
+            <label for="starts_at_{{ row.cohort.id }}" class="helptext" style="display:block;">Date &amp; time</label>
+            <input type="datetime-local" name="starts_at" id="starts_at_{{ row.cohort.id }}" required>
+          </div>
+          <div style="flex:1;min-width:160px;">
+            <label for="label_{{ row.cohort.id }}" class="helptext" style="display:block;">Label (optional)</label>
+            <input type="text" name="label" id="label_{{ row.cohort.id }}" placeholder="e.g. Week 3 — React components" style="width:100%;">
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary">Schedule session</button>
+        </form>
       </div>
     {% empty %}
       <div class="glass-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">

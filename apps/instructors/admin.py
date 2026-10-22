@@ -1,6 +1,6 @@
 from django.contrib import admin, messages
 
-from .models import Instructor, SchemeTopic, TopicProgress
+from .models import Attendance, Instructor, SchemeTopic, Session, TopicProgress
 from .services import create_instructor_login, reset_instructor_login_password, send_instructor_login_email
 
 
@@ -55,3 +55,17 @@ class TopicProgressAdmin(admin.ModelAdmin):
     list_display = ("cohort", "topic", "covered_by", "covered_at")
     list_filter = ("cohort__track",)
     readonly_fields = ("cohort", "topic", "covered_by", "covered_at")
+
+
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
+    list_display = ("cohort", "starts_at", "label")
+    list_filter = ("cohort__track",)
+    readonly_fields = ("cohort", "starts_at", "label", "created_at")
+
+
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ("session", "student", "marked_at")
+    list_filter = ("session__cohort__track",)
+    readonly_fields = ("session", "student", "marked_at")
