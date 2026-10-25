@@ -542,6 +542,17 @@ a { color: var(--blue-400); text-decoration: none; }
 .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: var(--space-2); }
 .project-tags .badge { font-family: var(--font-mono); }
 
+/* Design work showcase — deliberately NOT the term-chrome/browser-window
+   treatment the web dev project cards use. That motif reads as "code";
+   these are social graphics, so a plain portrait image card (their real
+   aspect ratio) makes more sense than forcing them into a browser frame. */
+.design-showcase-media { aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius-sm); }
+.design-showcase-media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform var(--transition-med);
+}
+.design-showcase-card:hover .design-showcase-media img { transform: scale(1.05); }
+
 /* Full-width photo band with a caption underneath — used to break up
    text-and-mockup sections with an actual photo. */
 .photo-banner {
