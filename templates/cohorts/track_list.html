@@ -12,7 +12,7 @@
   </div>
 </section>
 <section>
-  <div class="container grid grid-2">
+  <div class="container grid track-grid">
     {% for track in tracks %}
       <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
         {% include "partials/term_chrome.html" with label=track.slug|add:".track" %}

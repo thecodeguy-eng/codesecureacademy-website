@@ -503,6 +503,14 @@ a { color: var(--blue-400); text-decoration: none; }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 
+/* Track list — always exactly 2 columns on desktop (auto-fit's min-width
+   based wrapping let a 3rd card squeeze in here), collapsing to 1 on
+   narrow screens, same breakpoint as the other card grids in this file. */
+.track-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 640px) {
+  .track-grid { grid-template-columns: 1fr; }
+}
+
 /* Card with a cover photo up top — padding lives on .card-body instead of
    the card itself, so the image can run edge-to-edge under the rounded
    corners. */
