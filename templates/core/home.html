@@ -12,7 +12,7 @@
   <div class="hero-spotlight" id="hero-spotlight"></div>
   <div class="container hero-split">
     <div class="hero-text">
-      <span class="eyebrow">Cohort-based tech training</span>
+      <!-- <span class="eyebrow">Cohort-based tech training</span> -->
       <h1>Learn to build and <span class="text-gradient">secure</span> the web, for real.</h1>
       <p class="lead">Frontend, Backend, Cybersecurity, and Graphic Design. Hands-on cohorts, real projects, a cohort of peers on the same timeline as you.</p>
       <div class="hero-actions">
@@ -27,7 +27,7 @@
         </div>
         <div class="code-editor-panes">
           <textarea class="code-editor-input" data-code-input spellcheck="false">&lt;!-- edit this, then hit Run --&gt;
-&lt;h1&gt;Hello, Code Secure Academy&lt;/h1&gt;
+&lt;h1&gt;You can play around with this code&lt;/h1&gt;
 &lt;p&gt;This preview is live. Try changing it.&lt;/p&gt;
 &lt;style&gt;
   body { font-family: sans-serif; color: #2f7dff; text-align: center; padding: 2rem; }
@@ -98,8 +98,9 @@
   <div class="container section-alt{% if forloop.counter|divisibleby:2 %} reverse{% endif %}">
     <div class="alt-text">
       {% include "partials/track_icon.html" %}
-      <span class="eyebrow">{{ track.name }}</span>
-      <h2>{{ track.tagline|default:track.name }}</h2>
+      <!-- <span class="eyebrow">{{ track.name }}</span> -->
+      <!-- <h2>{{ track.tagline|default:track.name }}</h2> -->
+      <h2>{{ track.name }}</h2>
       {% if track.why_join_list %}
         <ul class="alt-checklist">
           {% for reason in track.why_join_list|slice:":3" %}
