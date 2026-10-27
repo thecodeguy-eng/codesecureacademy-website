@@ -134,8 +134,12 @@
     if (!tabs.length || !input || !output) return;
 
     var order = ["frontend", "backend", "cybersecurity", "graphic_design"];
-    var current = "frontend";
-    var autoRotate = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var requestedTab = root.getAttribute("data-initial-tab");
+    var current = order.indexOf(requestedTab) !== -1 ? requestedTab : "frontend";
+    // A dedicated per-track page (data-initial-tab set) is a focused tool
+    // for that one track — it shouldn't auto-rotate away to a different
+    // one. Only the homepage hero's showcase carousel does that.
+    var autoRotate = !requestedTab && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     var paused = false;
     var timer = null;
 

@@ -48,6 +48,15 @@ def track_detail(request, slug):
     )
 
 
+def track_playground(request, slug):
+    """Full-page version of the same track-playground widget on the
+    homepage hero — same exercise, just pre-selected to this track and
+    given the whole page instead of a hero-sized box. See
+    partials/track_playground.html."""
+    track = get_object_or_404(Track, slug=slug, is_active=True)
+    return render(request, "cohorts/track_playground.html", {"track": track})
+
+
 @login_required
 def start_checkout(request, cohort_id):
     cohort = get_object_or_404(Cohort, id=cohort_id)

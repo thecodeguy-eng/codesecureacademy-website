@@ -541,6 +541,12 @@ a { color: var(--blue-400); text-decoration: none; }
 }
 .btn-ghost:hover { border-color: var(--blue-400); background: var(--glass-bg-strong); transform: translateY(-2px); }
 
+/* Generic outline variant — was previously only styled inside .auth-card,
+   so uses elsewhere (testimonials, instructor dashboard) fell back to
+   .btn's bare, borderless base. */
+.btn-outline { background: var(--glass-bg); color: var(--text-primary); border-color: var(--glass-border); box-shadow: none; }
+.btn-outline:hover { border-color: var(--blue-400); background: var(--glass-bg-strong); }
+
 .btn-block { width: 100%; }
 .btn[disabled] { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
@@ -677,6 +683,14 @@ a { color: var(--blue-400); text-decoration: none; }
 .hero-demo-editor .code-editor-panes,
 .hero-demo-editor .code-editor-input,
 .hero-demo-editor .code-editor-output { min-height: 190px; }
+
+/* Full-page per-track playground (cohorts/track_playground.html) — same
+   component, more room since it isn't squeezed into a hero half-column. */
+.track-playground-full .code-editor-panes,
+.track-playground-full .code-editor-input,
+.track-playground-full .code-editor-output,
+.track-playground-full .poster-editor { min-height: 420px; }
+.track-playground-full .poster-canvas { min-height: 100%; }
 @media (max-width: 860px) {
   .hero-split { grid-template-columns: 1fr; text-align: center; }
   .hero-split .hero-text .lead { margin-left: auto; margin-right: auto; }

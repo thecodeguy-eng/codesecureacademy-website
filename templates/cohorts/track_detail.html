@@ -15,6 +15,9 @@
     <span class="eyebrow">Track</span>
     <h1>{{ track.name }}</h1>
     <p class="lead">{{ track.tagline }}</p>
+    <div class="hero-actions">
+      <a href="{% url 'cohorts:track_playground' slug=track.slug %}" class="btn btn-outline">Try it yourself →</a>
+    </div>
   </div>
 </section>
 

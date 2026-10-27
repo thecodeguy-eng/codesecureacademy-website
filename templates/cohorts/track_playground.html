@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Try {{ track.name }} · Code Secure Academy{% endblock %}
+{% block meta_description %}Try {{ track.name }} yourself, right in the browser — no signup needed. A taste of the hands-on work you'd do in the cohort.{% endblock %}
+{% block extra_js %}<script src="{% static 'js/track-playground.js' %}"></script>{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container" style="max-width:720px;">
+    <span class="eyebrow">Try it yourself</span>
+    <h1>{{ track.name }}, right here</h1>
+    <p class="lead">No signup needed — this is a taste of the hands-on work you'd actually do in the cohort. Switch tracks with the tabs below if you want to compare.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container" style="max-width:900px;">
+    {% include "partials/track_playground.html" with extra_class="track-playground-full" initial_tab=track.slug %}
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
+      <h2>Like what you tried?</h2>
+      <p class="lead" style="margin:0 auto var(--space-3);">This is one small piece of what {{ track.name }} actually covers over 8 weeks.</p>
+      <a href="{% url 'cohorts:track_detail' slug=track.slug %}" class="btn btn-primary">See the {{ track.name }} track →</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

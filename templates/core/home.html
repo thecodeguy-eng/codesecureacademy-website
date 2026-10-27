@@ -20,67 +20,7 @@
       </div>
     </div>
     <div class="hero-visual">
-      <div class="track-playground hero-demo-editor" data-track-playground>
-        <div class="track-playground-tabs" role="tablist">
-          <button type="button" class="track-tab" data-track-tab="frontend" role="tab">Frontend</button>
-          <button type="button" class="track-tab" data-track-tab="backend" role="tab">Backend</button>
-          <button type="button" class="track-tab" data-track-tab="cybersecurity" role="tab">Cybersecurity</button>
-          <button type="button" class="track-tab" data-track-tab="graphic_design" role="tab">Graphic Design</button>
-        </div>
-        <p class="track-playground-instruction" data-track-instruction></p>
-
-        <div class="code-editor-panes" data-track-code-panes>
-          <textarea class="code-editor-input" data-track-input spellcheck="false"></textarea>
-          <iframe class="code-editor-output" data-track-output sandbox="allow-scripts" title="Live preview"></iframe>
-        </div>
-        <div class="track-playground-run" data-track-code-panes>
-          <button type="button" class="btn btn-primary btn-sm" data-track-run>Run ▶</button>
-        </div>
-
-        <div class="poster-editor" data-poster-editor hidden>
-          <div class="poster-canvas" data-poster-canvas>
-            <div class="poster-blob" data-poster-blob></div>
-            <h3 class="poster-headline" data-poster-headline contenteditable="true" spellcheck="false">Build What You Touch</h3>
-            <p class="poster-tagline" data-poster-tagline contenteditable="true" spellcheck="false">Free entry. Bring a laptop.</p>
-          </div>
-          <div class="poster-controls">
-            <div class="poster-control-group">
-              <span class="poster-control-label">Colors</span>
-              <div class="poster-swatches" data-poster-swatches>
-                <button type="button" class="poster-swatch" data-palette="0" style="--sw-a:#0d1224;--sw-b:#2f7dff;" aria-label="Electric blue"></button>
-                <button type="button" class="poster-swatch" data-palette="1" style="--sw-a:#06231a;--sw-b:#1fae6e;" aria-label="Forest green"></button>
-                <button type="button" class="poster-swatch" data-palette="2" style="--sw-a:#241206;--sw-b:#ff8a3d;" aria-label="Sunset orange"></button>
-                <button type="button" class="poster-swatch" data-palette="3" style="--sw-a:#240a0a;--sw-b:#ffd84d;" aria-label="Crimson and gold"></button>
-                <button type="button" class="poster-swatch" data-palette="4" style="--sw-a:#140a24;--sw-b:#8f7dff;" aria-label="Violet"></button>
-                <button type="button" class="poster-swatch" data-palette="5" style="--sw-a:#240a1c;--sw-b:#ff5fa8;" aria-label="Rose"></button>
-              </div>
-            </div>
-            <div class="poster-control-group">
-              <span class="poster-control-label">Font</span>
-              <div class="poster-btn-row" data-poster-fonts>
-                <button type="button" class="poster-opt-btn" data-font="serif">Serif</button>
-                <button type="button" class="poster-opt-btn" data-font="sans">Sans</button>
-                <button type="button" class="poster-opt-btn" data-font="mono">Mono</button>
-                <button type="button" class="poster-opt-btn" data-font="bold">Bold</button>
-              </div>
-            </div>
-            <div class="poster-control-group">
-              <span class="poster-control-label">Headline size</span>
-              <input type="range" min="20" max="48" value="32" data-poster-size>
-            </div>
-            <div class="poster-control-group">
-              <span class="poster-control-label">Align</span>
-              <div class="poster-btn-row" data-poster-align>
-                <button type="button" class="poster-opt-btn" data-align="left">Left</button>
-                <button type="button" class="poster-opt-btn" data-align="center">Center</button>
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary btn-sm" data-poster-surprise>Surprise me</button>
-          </div>
-        </div>
-
-        <p class="track-playground-footer" data-track-footer></p>
-      </div>
+      {% include "partials/track_playground.html" with extra_class="hero-demo-editor" %}
     </div>
   </div>
 </section>
