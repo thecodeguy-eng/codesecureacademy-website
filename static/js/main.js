@@ -15,7 +15,7 @@
     document.documentElement.classList.add("lite-mode");
   }
 
-  // --- Theme toggle: light is the default look (see the inline pre-paint
+  // --- Theme toggle: dark is the default look (see the inline pre-paint
   // script in <head> that sets data-theme before first render). Flips the
   // attribute and remembers the choice — never follows OS
   // prefers-color-scheme automatically. Where supported, wraps the switch

@@ -7,9 +7,9 @@
 (function () {
   try {
     var stored = localStorage.getItem("csa_theme");
-    document.documentElement.setAttribute("data-theme", stored === "dark" ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", stored === "light" ? "light" : "dark");
   } catch (e) {
-    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme", "dark");
   }
 })();
 
