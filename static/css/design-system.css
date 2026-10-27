@@ -306,6 +306,58 @@ a { color: var(--blue-400); text-decoration: none; }
 .code-editor-output { border: none; background: #fff; min-height: 260px; }
 [data-theme="light"] .code-editor-input { background: rgba(13, 18, 36, 0.05); }
 
+/* ---------- Homepage hero "try it yourself" track playground ---------- */
+
+.track-playground { margin-top: var(--space-3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; text-align: left; }
+.track-playground-tabs {
+  display: flex; gap: 0.4rem; padding: 0.6rem 0.6rem 0; background: var(--glass-bg-strong);
+  overflow-x: auto; scrollbar-width: none;
+}
+.track-playground-tabs::-webkit-scrollbar { display: none; }
+.track-tab {
+  flex-shrink: 0; padding: 0.5rem 0.85rem; border-radius: 8px 8px 0 0; border: none; cursor: pointer;
+  background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 600;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+.track-tab:hover { color: var(--text-primary); }
+.track-tab.active { background: var(--glass-bg); color: var(--blue-300); }
+.track-playground-instruction {
+  margin: 0; padding: 0.6rem 0.85rem; font-size: 0.82rem; color: var(--text-secondary);
+  background: var(--glass-bg-strong); border-bottom: 1px solid var(--glass-border);
+}
+.track-playground-run { padding: 0.6rem; background: var(--glass-bg-strong); border-top: 1px solid var(--glass-border); }
+.track-playground-footer { margin: 0; padding: 0.5rem 0.85rem; font-size: 0.75rem; color: var(--text-muted); background: var(--glass-bg-strong); }
+
+/* Graphic Design's "build the flyer" drag-and-drop challenge — deliberately
+   not another code box. Pointer Events (not HTML5 drag-and-drop, which is
+   unreliable on touch) drive a floating ghost chip; see track-playground.js. */
+.flyer-challenge { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); min-height: 260px; padding: var(--space-2); }
+@media (max-width: 640px) { .flyer-challenge { grid-template-columns: 1fr; } }
+.flyer-palette { display: flex; flex-direction: column; gap: 0.6rem; }
+.flyer-chip {
+  padding: 0.65rem 0.9rem; border-radius: 8px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+  font-size: 0.82rem; color: var(--text-primary); cursor: grab; user-select: none; touch-action: none;
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast);
+}
+.flyer-chip:active { cursor: grabbing; }
+.flyer-chip.is-placed { opacity: 0.35; text-decoration: line-through; pointer-events: none; }
+.flyer-chip-ghost {
+  position: fixed; z-index: 999; pointer-events: none; padding: 0.65rem 0.9rem; border-radius: 8px;
+  background: var(--blue-600); color: #fff; font-size: 0.82rem; font-weight: 600;
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.4); transform: translate(-50%, -50%) rotate(-2deg);
+}
+.flyer-canvas { display: flex; flex-direction: column; gap: 0.6rem; background: #fff; border-radius: 8px; padding: var(--space-2); color: #0d1224; }
+.flyer-slot {
+  border: 2px dashed #c7ceda; border-radius: 8px; padding: 0.7rem; min-height: 44px;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 0.78rem; color: #8a93a8; transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.flyer-slot.is-hover { border-color: var(--blue-500); background: rgba(47, 125, 255, 0.08); }
+.flyer-slot.is-filled { border-style: solid; border-color: var(--blue-500); background: rgba(47, 125, 255, 0.06); color: #0d1224; font-weight: 600; }
+.flyer-feedback { margin: 0.2rem 0 0; font-size: 0.78rem; line-height: 1.5; min-height: 1.2em; }
+.flyer-feedback.is-good { color: #0a7a3d; }
+.flyer-feedback.is-nudge { color: #b8650a; }
+
 .code-example { margin-top: var(--space-3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; }
 .code-example-toolbar {
   padding: var(--space-1) var(--space-2); background: var(--glass-bg-strong);
