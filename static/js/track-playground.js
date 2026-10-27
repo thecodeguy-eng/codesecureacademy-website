@@ -3,9 +3,9 @@
 // share a code-editor pane (textarea -> sandboxed iframe, same sandboxed
 // model as tutorials/article_detail.html's editor: allow-scripts only, no
 // allow-same-origin, so visitor-written code can never reach the parent
-// page's cookies or CSRF token). Graphic Design swaps that for a real
-// drag-and-drop challenge instead of a text box — design isn't about
-// typing config lines.
+// page's cookies or CSRF token). Graphic Design swaps that for a live
+// poster you edit directly (tap the text, pick colors/font/size) —
+// design isn't something you do by typing config lines or code.
 (function () {
   "use strict";
 
@@ -107,10 +107,19 @@
     },
   };
 
-  var FLYER_LABELS = {
-    headline: "the headline",
-    visual: "the visual",
-    cta: "a clear call-to-action",
+  var PALETTES = [
+    { bg: "#0d1224", text: "#ffffff", tagline: "rgba(255,255,255,.72)", blob: "#2f7dff" },
+    { bg: "#06231a", text: "#ffffff", tagline: "rgba(255,255,255,.72)", blob: "#1fae6e" },
+    { bg: "#241206", text: "#ffffff", tagline: "rgba(255,255,255,.72)", blob: "#ff8a3d" },
+    { bg: "#240a0a", text: "#ffd84d", tagline: "rgba(255,255,255,.78)", blob: "#e23b3b" },
+    { bg: "#140a24", text: "#ffffff", tagline: "rgba(255,255,255,.72)", blob: "#8f7dff" },
+    { bg: "#240a1c", text: "#ffffff", tagline: "rgba(255,255,255,.72)", blob: "#ff5fa8" },
+  ];
+  var FONT_STACKS = {
+    serif: "Georgia, 'Times New Roman', serif",
+    sans: "var(--font-sans)",
+    mono: "var(--font-mono)",
+    bold: "var(--font-sans)",
   };
 
   function initCodePanel(root) {
@@ -121,7 +130,7 @@
     var footer = root.querySelector("[data-track-footer]");
     var runBtn = root.querySelector("[data-track-run]");
     var codePanes = root.querySelectorAll("[data-track-code-panes]");
-    var flyer = root.querySelector("[data-flyer-challenge]");
+    var poster = root.querySelector("[data-poster-editor]");
     if (!tabs.length || !input || !output) return;
 
     var order = ["frontend", "backend", "cybersecurity", "graphic_design"];
@@ -153,10 +162,10 @@
       });
 
       codePanes.forEach(function (el) { el.hidden = isDesign; });
-      if (flyer) flyer.hidden = !isDesign;
+      if (poster) poster.hidden = !isDesign;
 
       if (isDesign) {
-        instruction.textContent = "Instead of code, arrange the real pieces of a flyer. Drag each card to where it belongs.";
+        instruction.textContent = "Tap the words on the poster to type. Pick colors, a font, and a size.";
       } else {
         var track = TRACKS[id];
         instruction.textContent = track.instruction;
@@ -186,108 +195,106 @@
     root.addEventListener("mouseenter", function () { paused = true; });
     root.addEventListener("mouseleave", function () { paused = false; });
     root.addEventListener("pointerdown", function (e) {
-      // A drag on the flyer challenge should stop rotation too, same as
+      // Touching the poster editor should stop rotation too, same as
       // typing/Run does for the code tabs — any real interaction counts.
-      if (e.target.closest("[data-chip]")) stopAutoRotate();
+      if (e.target.closest("[data-poster-editor]")) stopAutoRotate();
+    });
+    root.addEventListener("input", function (e) {
+      if (e.target.closest("[data-poster-editor]")) stopAutoRotate();
     });
 
     selectTrack(current, false);
     footer.textContent = autoRotate
-      ? "Auto-switching between tracks. Tap one, type, or drag to stop it."
+      ? "Auto-switching between tracks. Tap one, type, or edit to stop it."
       : "Auto-switching is off. Pick any track above.";
     if (autoRotate) timer = setInterval(tick, 7000);
   }
 
-  function initFlyerChallenge(root) {
-    var challenge = root.querySelector("[data-flyer-challenge]");
-    if (!challenge) return;
-    var feedback = challenge.querySelector("[data-flyer-feedback]");
-    var slots = challenge.querySelectorAll("[data-slot]");
-    var chips = challenge.querySelectorAll("[data-chip]");
+  function initPosterEditor(root) {
+    var editor = root.querySelector("[data-poster-editor]");
+    if (!editor) return;
+    var canvas = editor.querySelector("[data-poster-canvas]");
+    var blob = editor.querySelector("[data-poster-blob]");
+    var headline = editor.querySelector("[data-poster-headline]");
+    var tagline = editor.querySelector("[data-poster-tagline]");
+    var swatches = editor.querySelectorAll("[data-palette]");
+    var fontBtns = editor.querySelectorAll("[data-font]");
+    var alignBtns = editor.querySelectorAll("[data-align]");
+    var sizeInput = editor.querySelector("[data-poster-size]");
+    var surpriseBtn = editor.querySelector("[data-poster-surprise]");
+    if (!canvas || !headline || !tagline) return;
 
-    var ghost = null;
-    var activeChip = null;
-    var filledCount = 0;
+    var state = { palette: 0, font: "sans", align: "left", size: 32 };
 
-    function setFeedback(text, kind) {
-      feedback.textContent = text || "";
-      feedback.classList.toggle("is-good", kind === "good");
-      feedback.classList.toggle("is-nudge", kind === "nudge");
+    function applyPalette() {
+      var p = PALETTES[state.palette];
+      canvas.style.background = p.bg;
+      headline.style.color = p.text;
+      tagline.style.color = p.tagline;
+      if (blob) blob.style.background = p.blob;
+      swatches.forEach(function (sw, i) { sw.classList.toggle("active", i === state.palette); });
+    }
+    function applyFont() {
+      var stack = FONT_STACKS[state.font];
+      headline.style.fontFamily = stack;
+      headline.style.fontWeight = state.font === "bold" ? "900" : "700";
+      headline.style.textTransform = state.font === "bold" ? "uppercase" : "none";
+      fontBtns.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-font") === state.font); });
+    }
+    function applyAlign() {
+      canvas.classList.toggle("is-centered", state.align === "center");
+      alignBtns.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-align") === state.align); });
+    }
+    function applySize() {
+      headline.style.fontSize = state.size + "px";
     }
 
-    function slotUnder(x, y) {
-      var el = document.elementFromPoint(x, y);
-      return el ? el.closest("[data-slot]") : null;
+    swatches.forEach(function (sw, i) {
+      sw.addEventListener("click", function () { state.palette = i; applyPalette(); });
+    });
+    fontBtns.forEach(function (b) {
+      b.addEventListener("click", function () { state.font = b.getAttribute("data-font"); applyFont(); });
+    });
+    alignBtns.forEach(function (b) {
+      b.addEventListener("click", function () { state.align = b.getAttribute("data-align"); applyAlign(); });
+    });
+    if (sizeInput) {
+      sizeInput.addEventListener("input", function () {
+        state.size = parseInt(sizeInput.value, 10) || 32;
+        applySize();
+      });
+    }
+    if (surpriseBtn) {
+      surpriseBtn.addEventListener("click", function () {
+        state.palette = Math.floor(Math.random() * PALETTES.length);
+        var fonts = Object.keys(FONT_STACKS);
+        state.font = fonts[Math.floor(Math.random() * fonts.length)];
+        applyPalette();
+        applyFont();
+      });
     }
 
-    function onPointerMove(e) {
-      if (!ghost) return;
-      ghost.style.left = e.clientX + "px";
-      ghost.style.top = e.clientY + "px";
-      slots.forEach(function (s) { s.classList.remove("is-hover"); });
-      var target = slotUnder(e.clientX, e.clientY);
-      if (target && !target.classList.contains("is-filled")) target.classList.add("is-hover");
-    }
-
-    function onPointerUp(e) {
-      if (!ghost) return;
-      var target = slotUnder(e.clientX, e.clientY);
-      slots.forEach(function (s) { s.classList.remove("is-hover"); });
-      document.removeEventListener("pointermove", onPointerMove);
-      document.removeEventListener("pointerup", onPointerUp);
-      ghost.remove();
-      ghost = null;
-
-      var chipId = activeChip.getAttribute("data-chip");
-      var activeChipLabel = activeChip.textContent;
-      activeChip.style.visibility = "";
-      activeChip = null;
-
-      if (!target || target.classList.contains("is-filled")) return;
-
-      var slotId = target.getAttribute("data-slot");
-      if (slotId === chipId) {
-        target.textContent = "✓ " + activeChipLabel;
-        target.classList.add("is-filled");
-        var chipEl = challenge.querySelector('[data-chip="' + chipId + '"]');
-        if (chipEl) chipEl.classList.add("is-placed");
-        filledCount += 1;
-        if (filledCount === slots.length) {
-          setFeedback("That's a flyer. Headline + visual + one clear action — the same formula behind every piece in our design showcase.", "good");
-        } else {
-          setFeedback("");
-        }
-      } else if (chipId === "finePrint") {
-        setFeedback("A wall of fine print doesn't belong on a flyer — keep it to one clear message.", "nudge");
-      } else {
-        setFeedback("Not quite that slot — try " + (FLYER_LABELS[chipId] || "a different one") + ".", "nudge");
-      }
-    }
-
-    chips.forEach(function (chip) {
-      chip.addEventListener("pointerdown", function (e) {
-        if (chip.classList.contains("is-placed")) return;
+    [headline, tagline].forEach(function (el) {
+      el.addEventListener("paste", function (e) {
         e.preventDefault();
-        activeChip = chip;
-        var rect = chip.getBoundingClientRect();
-        ghost = document.createElement("div");
-        ghost.className = "flyer-chip-ghost";
-        ghost.textContent = chip.textContent;
-        ghost.style.left = e.clientX + "px";
-        ghost.style.top = e.clientY + "px";
-        ghost.style.width = rect.width + "px";
-        document.body.appendChild(ghost);
-        chip.style.visibility = "hidden";
-        document.addEventListener("pointermove", onPointerMove);
-        document.addEventListener("pointerup", onPointerUp);
+        var text = (e.clipboardData || window.clipboardData).getData("text/plain");
+        document.execCommand("insertText", false, text);
+      });
+      el.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") e.preventDefault();
       });
     });
+
+    applyPalette();
+    applyFont();
+    applyAlign();
+    applySize();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("[data-track-playground]").forEach(function (root) {
       initCodePanel(root);
-      initFlyerChallenge(root);
+      initPosterEditor(root);
     });
   });
 })();

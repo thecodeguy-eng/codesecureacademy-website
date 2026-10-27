@@ -298,7 +298,7 @@ a { color: var(--blue-400); text-decoration: none; }
 /* ---------- Homepage hero "try it yourself" track playground ---------- */
 
 .track-playground { margin-top: var(--space-3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; text-align: left; }
-/* [hidden] ties in specificity with .code-editor-panes/.flyer-challenge's
+/* [hidden] ties in specificity with .code-editor-panes/.poster-editor's
    own `display: grid` (both are 0,1,0), and the later rule wins the
    cascade — so the plain attribute alone doesn't actually hide either
    one. Force it explicitly. */
@@ -322,35 +322,44 @@ a { color: var(--blue-400); text-decoration: none; }
 .track-playground-run { padding: 0.6rem; background: var(--glass-bg-strong); border-top: 1px solid var(--glass-border); }
 .track-playground-footer { margin: 0; padding: 0.5rem 0.85rem; font-size: 0.75rem; color: var(--text-muted); background: var(--glass-bg-strong); }
 
-/* Graphic Design's "build the flyer" drag-and-drop challenge — deliberately
-   not another code box. Pointer Events (not HTML5 drag-and-drop, which is
-   unreliable on touch) drive a floating ghost chip; see track-playground.js. */
-.flyer-challenge { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); min-height: 260px; padding: var(--space-2); }
-@media (max-width: 640px) { .flyer-challenge { grid-template-columns: 1fr; } }
-.flyer-palette { display: flex; flex-direction: column; gap: 0.6rem; }
-.flyer-chip {
-  padding: 0.65rem 0.9rem; border-radius: 8px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-  font-size: 0.82rem; color: var(--text-primary); cursor: grab; user-select: none; touch-action: none;
-  transition: box-shadow var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast);
+/* Graphic Design's live poster editor — not a code box or a puzzle, just
+   direct manipulation: tap the text on the poster and type, pick a color
+   set, a font, a size. See track-playground.js for the state/binding. */
+.poster-editor { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); min-height: 260px; padding: var(--space-2); }
+@media (max-width: 640px) { .poster-editor { grid-template-columns: 1fr; } }
+.poster-canvas {
+  position: relative; overflow: hidden; border-radius: 10px; padding: var(--space-3) var(--space-2);
+  display: flex; flex-direction: column; justify-content: center; gap: 0.4rem; min-height: 220px;
+  transition: background var(--transition-med);
 }
-.flyer-chip:active { cursor: grabbing; }
-.flyer-chip.is-placed { opacity: 0.35; text-decoration: line-through; pointer-events: none; }
-.flyer-chip-ghost {
-  position: fixed; z-index: 999; pointer-events: none; padding: 0.65rem 0.9rem; border-radius: 8px;
-  background: var(--blue-600); color: #fff; font-size: 0.82rem; font-weight: 600;
-  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.4); transform: translate(-50%, -50%) rotate(-2deg);
+.poster-canvas.is-centered { align-items: center; text-align: center; }
+.poster-blob {
+  position: absolute; top: -20%; right: -15%; width: 55%; aspect-ratio: 1; border-radius: 42% 58% 61% 39% / 47% 45% 55% 53%;
+  opacity: 0.9; transition: background var(--transition-med); z-index: 0;
 }
-.flyer-canvas { display: flex; flex-direction: column; gap: 0.6rem; background: #fff; border-radius: 8px; padding: var(--space-2); color: #0d1224; }
-.flyer-slot {
-  border: 2px dashed #c7ceda; border-radius: 8px; padding: 0.7rem; min-height: 44px;
-  display: flex; align-items: center; justify-content: center; text-align: center;
-  font-size: 0.78rem; color: #8a93a8; transition: border-color var(--transition-fast), background var(--transition-fast);
+.poster-headline, .poster-tagline { position: relative; z-index: 1; margin: 0; outline: none; cursor: text; }
+.poster-headline { font-weight: 700; line-height: 1.15; }
+.poster-headline:focus, .poster-tagline:focus { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4); border-radius: 4px; }
+.poster-tagline { font-size: 0.95rem; }
+.poster-controls { display: flex; flex-direction: column; gap: 0.9rem; }
+.poster-control-label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+.poster-swatches { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.poster-swatch {
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0;
+  background: linear-gradient(135deg, var(--sw-a) 50%, var(--sw-b) 50%);
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
 }
-.flyer-slot.is-hover { border-color: var(--blue-500); background: rgba(47, 125, 255, 0.08); }
-.flyer-slot.is-filled { border-style: solid; border-color: var(--blue-500); background: rgba(47, 125, 255, 0.06); color: #0d1224; font-weight: 600; }
-.flyer-feedback { margin: 0.2rem 0 0; font-size: 0.78rem; line-height: 1.5; min-height: 1.2em; }
-.flyer-feedback.is-good { color: #0a7a3d; }
-.flyer-feedback.is-nudge { color: #b8650a; }
+.poster-swatch:hover { transform: scale(1.1); }
+.poster-swatch.active { border-color: var(--blue-300); }
+.poster-btn-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.poster-opt-btn {
+  padding: 0.4rem 0.75rem; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--glass-bg);
+  color: var(--text-secondary); font-size: 0.78rem; cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+.poster-opt-btn:hover { color: var(--text-primary); }
+.poster-opt-btn.active { border-color: var(--blue-500); color: var(--blue-300); background: rgba(47, 125, 255, 0.1); }
+.poster-controls input[type="range"] { width: 100%; accent-color: var(--blue-500); }
 
 .code-example { margin-top: var(--space-3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); overflow: hidden; }
 .code-example-toolbar {
