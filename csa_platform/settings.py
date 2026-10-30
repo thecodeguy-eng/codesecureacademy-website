@@ -276,7 +276,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="Code Secure Academy <no-reply@codesecureacademy.com>")
 # Used to build absolute URLs (e.g. in emails) from contexts with no request
 # object available, like a Paystack webhook or a model method.
-SITE_URL = config("SITE_URL", default="https://codesecureacademy.com")
+SITE_URL = config("SITE_URL", default="https://www.codesecureacademy.com")
 # Used by apps.core.email_backend.BrevoAPIEmailBackend — sends over Brevo's
 # HTTPS REST API instead of SMTP. This is a different credential than
 # EMAIL_HOST_PASSWORD above (Brevo dashboard -> SMTP & API -> API Keys tab,
