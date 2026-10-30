@@ -6,7 +6,7 @@ from .models import FAQ, SiteSettings, WaitlistSignup
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
-    list_display = ("students_trained", "cohorts_run", "hiring_partners")
+    list_display = ("students_trained", "cohorts_run", "hiring_partners", "announcement_enabled")
 
     def has_add_permission(self, request):
         return not SiteSettings.objects.exists()

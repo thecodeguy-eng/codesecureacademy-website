@@ -44,6 +44,18 @@ class SiteSettings(models.Model):
         "(signup confirmations, receipts, password resets). Queue/progress is left untouched, so "
         "unchecking resumes exactly where the campaign left off.",
     )
+    announcement_enabled = models.BooleanField(
+        default=False, help_text="Show the popup announcement (below) to every visitor, site-wide.",
+    )
+    announcement_title = models.CharField(max_length=200, blank=True, help_text="e.g. \"Our first cohort is free\".")
+    announcement_body = models.TextField(
+        blank=True, help_text="Short message — what it is, what to expect. Shown under the title.",
+    )
+    announcement_version = models.PositiveIntegerField(
+        default=1,
+        help_text="Bump this number to show the announcement again to visitors who already dismissed it "
+        "(e.g. after editing the text, or for a new announcement).",
+    )
 
     def save(self, *args, **kwargs):
         self.pk = 1

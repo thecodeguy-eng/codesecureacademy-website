@@ -25,6 +25,12 @@
 
   function show() {
     if (dialog.open || typeof dialog.showModal !== "function") return;
+    // Another modal (e.g. the announcement popup) is already up — don't
+    // stack dialogs on top of each other, just try again shortly.
+    if (document.body.classList.contains("modal-open")) {
+      setTimeout(show, 2000);
+      return;
+    }
     dialog.showModal();
     document.body.classList.add("modal-open");
   }

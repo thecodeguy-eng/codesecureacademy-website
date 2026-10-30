@@ -1,0 +1,14 @@
+{% load static %}
+{% if site_settings.announcement_enabled and site_settings.announcement_title %}
+<dialog class="glass-panel signup-prompt-modal" id="announcement-dialog" data-version="{{ site_settings.announcement_version }}">
+  <button type="button" class="signup-prompt-close" id="announcement-close" aria-label="Close">&times;</button>
+  <span class="eyebrow">New</span>
+  <h2>{{ site_settings.announcement_title }}</h2>
+  <p>{{ site_settings.announcement_body|linebreaksbr }}</p>
+  <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem;justify-content:center;">
+    <a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener" class="btn btn-primary" id="announcement-cta">Join our WhatsApp channel</a>
+    <button type="button" class="btn btn-ghost" id="announcement-later">Maybe later</button>
+  </div>
+</dialog>
+<script src="{% static 'js/announcement-prompt.js' %}"></script>
+{% endif %}
