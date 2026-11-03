@@ -724,6 +724,12 @@ a { color: var(--blue-400); text-decoration: none; }
    demo right, so the "hands-on, try it yourself" promise is visible
    before a visitor scrolls past the fold instead of several sections down. */
 .hero-split { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--space-5); align-items: center; text-align: left; }
+/* Without this, a grid item defaults to min-width:auto — it won't shrink
+   below its content's intrinsic width. One wide child (e.g. the track tabs
+   not wrapping) then forces the whole column wider than the viewport,
+   clipping everything else in the hero on narrow screens instead of letting
+   that child's own overflow-x:auto handle it. */
+.hero-split > * { min-width: 0; }
 .hero-split .hero-text .lead { margin-left: 0; }
 .hero-split .hero-actions { justify-content: flex-start; }
 .hero-demo-editor { margin-top: 0; text-align: left; }
