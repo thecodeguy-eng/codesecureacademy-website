@@ -139,16 +139,51 @@
     // A dedicated per-track page (data-initial-tab set) is a focused tool
     // for that one track — it shouldn't auto-rotate away to a different
     // one. Only the homepage hero's showcase carousel does that.
-    var autoRotate = !requestedTab && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var autoRotate = !requestedTab && !reducedMotion;
     var paused = false;
     var timer = null;
+    var typingToken = 0;
 
     function render() {
       var track = TRACKS[current];
       if (track) output.srcdoc = track.run(input.value);
     }
 
+    function flashOutput() {
+      output.classList.remove("just-ran");
+      void output.offsetWidth; // restart the CSS animation on repeat triggers
+      output.classList.add("just-ran");
+    }
+
+    // Writes the starter code in character by character instead of dumping
+    // it in instantly — the whole point of this demo is "watch real code
+    // run", and a live-typing reveal sells that far better than a static
+    // code dump that happens to be followed by a Run button.
+    function typeInto(text, onDone) {
+      var myToken = ++typingToken;
+      if (reducedMotion) {
+        input.value = text;
+        if (onDone) onDone();
+        return;
+      }
+      input.value = "";
+      var i = 0;
+      function step() {
+        if (myToken !== typingToken) return; // superseded by a newer call
+        i++;
+        input.value = text.slice(0, i);
+        if (i < text.length) {
+          setTimeout(step, 11 + Math.random() * 14);
+        } else if (onDone) {
+          onDone();
+        }
+      }
+      step();
+    }
+
     function stopAutoRotate() {
+      typingToken++; // cancel any in-flight auto-typing so it can't fight real keystrokes
       if (!autoRotate) return;
       autoRotate = false;
       if (timer) clearInterval(timer);
@@ -156,6 +191,12 @@
     }
 
     function selectTrack(id, userInitiated) {
+      // Must happen before typeInto() below claims a fresh token — stopAutoRotate()
+      // also bumps typingToken, and calling it afterward would immediately
+      // invalidate the typing animation this same call is about to start,
+      // freezing it after one character.
+      if (userInitiated) stopAutoRotate();
+
       current = id;
       var isDesign = id === "graphic_design";
 
@@ -173,11 +214,11 @@
       } else {
         var track = TRACKS[id];
         instruction.textContent = track.instruction;
-        input.value = track.starter;
-        render();
+        typeInto(track.starter, function () {
+          render();
+          flashOutput();
+        });
       }
-
-      if (userInitiated) stopAutoRotate();
     }
 
     function tick() {
@@ -194,7 +235,7 @@
 
     input.addEventListener("input", function () { stopAutoRotate(); });
     input.addEventListener("focus", stopAutoRotate);
-    if (runBtn) runBtn.addEventListener("click", function () { render(); stopAutoRotate(); });
+    if (runBtn) runBtn.addEventListener("click", function () { render(); flashOutput(); stopAutoRotate(); });
 
     root.addEventListener("mouseenter", function () { paused = true; });
     root.addEventListener("mouseleave", function () { paused = false; });
@@ -211,7 +252,7 @@
     footer.textContent = autoRotate
       ? "Auto-switching between tracks. Tap one, type, or edit to stop it."
       : "Auto-switching is off. Pick any track above.";
-    if (autoRotate) timer = setInterval(tick, 7000);
+    if (autoRotate) timer = setInterval(tick, 9000);
   }
 
   function initPosterEditor(root) {

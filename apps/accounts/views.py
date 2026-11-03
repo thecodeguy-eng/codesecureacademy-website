@@ -83,6 +83,13 @@ def dashboard(request):
         if not recommended_track:
             other_tracks = Track.objects.filter(is_active=True)
 
+    confirmed_enrollments_count = sum(1 for e in enrollments if e.status == Enrollment.Status.CONFIRMED)
+    paid_orders_count = sum(1 for o in orders if o.status == "paid")
+    paid_courses_count = sum(1 for p in course_purchases if p.status == "paid")
+    progress_done = sum(row["done"] for row in learning_progress)
+    progress_total = sum(row["total"] for row in learning_progress)
+    overall_progress_percent = round(progress_done / progress_total * 100) if progress_total else None
+
     return render(
         request,
         "accounts/dashboard.html",
@@ -93,6 +100,10 @@ def dashboard(request):
             "recommended_track": recommended_track,
             "other_tracks": other_tracks,
             "learning_progress": learning_progress,
+            "confirmed_enrollments_count": confirmed_enrollments_count,
+            "paid_orders_count": paid_orders_count,
+            "paid_courses_count": paid_courses_count,
+            "overall_progress_percent": overall_progress_percent,
         },
     )
 

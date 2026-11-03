@@ -1,198 +1,272 @@
 {% extends "base.html" %}
 {% load static currency_tags %}
 {% block title %}Dashboard · Code Secure Academy{% endblock %}
-{% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script>{% endblock %}
+{% block extra_js %}<script src="{% static 'js/dashboard.js' %}" defer></script>{% endblock %}
 {% block content %}
-<section class="hero" style="text-align:left;padding-bottom:1rem;">
+<section style="padding-bottom: var(--space-5);">
   <div class="container">
-    <h1>Welcome back, {{ user.first_name|default:user.username }}</h1>
-  </div>
-</section>
+    <div class="dashboard-shell">
 
-{% if next_enrollment_deadline %}
-<section style="padding-top:0;">
-  <div class="container">
-    <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
-      <div>
-        <span class="eyebrow">Enrollment deadline</span>
-        <p style="margin:0.25rem 0 0;">Spots for the current cohorts close on <strong>{{ next_enrollment_deadline|date:"F j, Y" }}</strong>. Enroll before then to lock in your seat.</p>
-      </div>
-      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">View tracks</a>
-    </div>
-  </div>
-</section>
-{% endif %}
-
-<section style="padding-top:0;">
-  {% include "partials/tutorials_teaser.html" %}
-</section>
-
-{% if recommended_track %}
-<section style="padding-top:0;">
-  <div class="container">
-    <div class="glass-panel card-media" style="display:grid;grid-template-columns:1fr 1.4fr;overflow:hidden;">
-      {% if recommended_track.display_cover_image %}
-        <img src="{{ recommended_track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;background:#060a27;min-height:180px;">
-      {% endif %}
-      <div class="card-body">
-        <span class="eyebrow">Based on what you told us at signup</span>
-        <h2 style="margin-bottom:0.5rem;">{{ recommended_track.name }}</h2>
-        <p>{{ recommended_track.tagline }}</p>
-        <a href="{{ recommended_track.get_absolute_url }}" class="btn btn-primary">Enroll in {{ recommended_track.name }}</a>
-      </div>
-    </div>
-  </div>
-</section>
-{% elif other_tracks %}
-<section style="padding-top:0;">
-  <div class="container">
-    <div class="section-head" style="text-align:left;margin-bottom:1rem;">
-      <span class="eyebrow">Ready when you are</span>
-      <h2>Pick a track to get started</h2>
-    </div>
-    <div class="grid grid-2">
-      {% for track in other_tracks %}
-        <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
-          {% if track.display_cover_image %}
-            <img class="card-cover-track" src="{{ track.display_cover_image }}" alt="" loading="lazy">
-          {% endif %}
-          <div class="card-body">
-            <h3>{{ track.name }}</h3>
-            <p>{{ track.tagline|truncatewords:14 }}</p>
+      <aside class="dashboard-sidebar glass-panel">
+        <div class="dashboard-sidebar-identity">
+          <span class="dashboard-avatar">{{ user.first_name|default:user.username|first|upper }}</span>
+          <div>
+            <strong>{{ user.first_name|default:user.username }}</strong>
+            <span>Student</span>
           </div>
+        </div>
+        <a href="#overview" class="dashboard-nav-link" data-dash-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          Overview
         </a>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
+        <a href="#enrollments" class="dashboard-nav-link" data-dash-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>
+          Enrollments
+        </a>
+        <a href="#marketplace" class="dashboard-nav-link" data-dash-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-1.4 12.3A2 2 0 0 1 17.6 21H6.4a2 2 0 0 1-2-1.7L3 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+          Marketplace
+        </a>
+        <a href="#courses" class="dashboard-nav-link" data-dash-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16"/></svg>
+          My courses
+        </a>
+        <a href="#become" class="dashboard-nav-link" data-dash-link>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 11 3.83V3H3v8h.83l9.58 9.59a2 2 0 0 0 2.83 0l4.35-4.35a2 2 0 0 0 0-2.83Z"/><circle cx="6.5" cy="6.5" r="1"/></svg>
+          Sell or teach
+        </a>
+      </aside>
 
-{% if learning_progress %}
-<section style="padding-top:0;">
-  <div class="container">
-    <h2>Continue learning</h2>
-    <div class="grid grid-2">
-      {% for row in learning_progress %}
-        <a href="{% url 'lessons:track_lessons' track_slug=row.track.slug %}" class="glass-panel interactive card">
-          <h3>{{ row.track.name }}</h3>
-          <p>{{ row.done }} of {{ row.total }} lessons complete</p>
-          <div style="background:rgba(127,127,127,0.2);border-radius:999px;height:8px;overflow:hidden;margin-top:0.5rem;">
-            <div style="background:var(--accent, #2f7dff);height:100%;width:{{ row.percent }}%;"></div>
+      <div class="dashboard-main">
+
+        <div id="overview" class="dashboard-section">
+          <h1 style="margin-bottom: 0.2rem;">Welcome back, {{ user.first_name|default:user.username }}</h1>
+          <p style="color: var(--text-muted); margin-bottom: var(--space-3);">Here's where things stand.</p>
+
+          {% if next_enrollment_deadline %}
+          <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:var(--space-3);">
+            <div>
+              <span class="eyebrow">Enrollment deadline</span>
+              <p style="margin:0.25rem 0 0;">Spots for the current cohorts close on <strong>{{ next_enrollment_deadline|date:"F j, Y" }}</strong>. Enroll before then to lock in your seat.</p>
+            </div>
+            <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">View tracks</a>
           </div>
-        </a>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
+          {% endif %}
 
-<section style="padding-top:0;">
-  <div class="container">
-    <h2>Your enrollments</h2>
-    <div class="grid grid-2">
-      {% for enrollment in enrollments %}
-        <div class="glass-panel card">
-          <h3>{{ enrollment.cohort.track.name }}</h3>
-          {% if enrollment.status == "confirmed" %}
-            <span class="badge badge-open">Confirmed</span>
-            <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
-            <p><a href="{% url 'reviews:submit_review' app_label='cohorts' model_name='enrollment' object_id=enrollment.id %}">Leave a review →</a></p>
-            {% if enrollment.tutors %}
-              <p class="helptext">Tutor{{ enrollment.tutors|pluralize }}: {% for t in enrollment.tutors %}{{ t.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+          <div class="stat-row">
+            <div class="stat-card glass-panel">
+              <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div>
+              <div class="stat-card-value">{{ confirmed_enrollments_count }}</div>
+              <div class="stat-card-label">Active enrollment{{ confirmed_enrollments_count|pluralize }}</div>
+            </div>
+            <div class="stat-card glass-panel">
+              <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
+              <div class="stat-card-value">{% if overall_progress_percent is not None %}{{ overall_progress_percent }}%{% else %}—{% endif %}</div>
+              <div class="stat-card-label">Overall progress</div>
+            </div>
+            <div class="stat-card glass-panel">
+              <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-1.4 12.3A2 2 0 0 1 17.6 21H6.4a2 2 0 0 1-2-1.7L3 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg></div>
+              <div class="stat-card-value">{{ paid_orders_count }}</div>
+              <div class="stat-card-label">Marketplace order{{ paid_orders_count|pluralize }}</div>
+            </div>
+            <div class="stat-card glass-panel">
+              <div class="stat-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16"/></svg></div>
+              <div class="stat-card-value">{{ paid_courses_count }}</div>
+              <div class="stat-card-label">Course{{ paid_courses_count|pluralize }} owned</div>
+            </div>
+          </div>
+
+          {% if recommended_track %}
+          <div class="glass-panel card-media" style="display:grid;grid-template-columns:1fr 1.4fr;overflow:hidden;margin-top:var(--space-3);">
+            {% if recommended_track.display_cover_image %}
+              <img src="{{ recommended_track.display_cover_image }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;background:#060a27;min-height:180px;">
             {% endif %}
-            {% if enrollment.cohort.announcement %}
-              <div class="cta-banner">{{ enrollment.cohort.announcement }}</div>
-            {% endif %}
-            {% if enrollment.next_session %}
-              <p class="helptext">Next session: {{ enrollment.next_session.starts_at|date:"D, M j, Y g:i A" }}{% if enrollment.next_session.label %} — {{ enrollment.next_session.label }}{% endif %}</p>
-            {% endif %}
-            {% if enrollment.scheme_total_count %}
-              <details class="bio-expand">
-                <summary>Scheme of work ({{ enrollment.scheme_covered_count }}/{{ enrollment.scheme_total_count }} covered)</summary>
-                <ul style="margin:0.5rem 0 0;padding-left:1.1rem;">
-                  {% for sr in enrollment.scheme_rows %}
-                    <li style="{% if sr.covered %}color:var(--text-muted);text-decoration:line-through;{% endif %}">{{ sr.topic.title }}</li>
-                  {% endfor %}
-                </ul>
-              </details>
-            {% endif %}
-          {% elif enrollment.status == "held" %}
-            <span class="badge">Payment processing</span>
-            <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
-          {% else %}
-            <span class="badge badge-full">{{ enrollment.get_status_display }}</span>
-            <p><a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a></p>
+            <div class="card-body">
+              <span class="eyebrow">Based on what you told us at signup</span>
+              <h2 style="margin-bottom:0.5rem;">{{ recommended_track.name }}</h2>
+              <p>{{ recommended_track.tagline }}</p>
+              <a href="{{ recommended_track.get_absolute_url }}" class="btn btn-primary">Enroll in {{ recommended_track.name }}</a>
+            </div>
+          </div>
+          {% elif other_tracks %}
+          <div style="margin-top:var(--space-4);">
+            <div class="dashboard-section-head"><h2>Pick a track to get started</h2></div>
+            <div class="grid grid-2">
+              {% for track in other_tracks %}
+                <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
+                  {% if track.display_cover_image %}
+                    <img class="card-cover-track" src="{{ track.display_cover_image }}" alt="" loading="lazy">
+                  {% endif %}
+                  <div class="card-body">
+                    <h3>{{ track.name }}</h3>
+                    <p>{{ track.tagline|truncatewords:14 }}</p>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if learning_progress %}
+          <div style="margin-top:var(--space-4);">
+            <div class="dashboard-section-head"><h2>Continue learning</h2></div>
+            <div class="grid grid-2">
+              {% for row in learning_progress %}
+                <a href="{% url 'lessons:track_lessons' track_slug=row.track.slug %}" class="glass-panel interactive card">
+                  <h3>{{ row.track.name }}</h3>
+                  <p>{{ row.done }} of {{ row.total }} lessons complete</p>
+                  <div class="progress-bar-track"><div class="progress-bar-fill" style="width:{{ row.percent }}%;"></div></div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
           {% endif %}
         </div>
-      {% empty %}
-        <p>No enrollments yet. <a href="{% url 'cohorts:track_list' %}">Browse tracks →</a></p>
-      {% endfor %}
-    </div>
 
-    <h2 style="margin-top:3rem;">Your marketplace orders</h2>
-    <div class="grid grid-2">
-      {% for order in orders %}
-        <div class="glass-panel card">
-          <h3>{{ order.listing.title }}</h3>
-          <p>₦{{ order.amount_naira|naira }}</p>
-          {% if order.status == "paid" %}
-            <span class="badge badge-open">Paid</span>
-            <p><a href="{% url 'reviews:submit_review' app_label='marketplace' model_name='order' object_id=order.id %}">Leave a review →</a></p>
-          {% else %}
-            <span class="badge">{{ order.get_status_display }}</span>
-          {% endif %}
+        <div id="enrollments" class="dashboard-section">
+          <div class="dashboard-section-head">
+            <h2>Your enrollments</h2>
+            <span class="dashboard-section-count">{{ enrollments|length }} total</span>
+          </div>
+          <div class="dash-list glass-panel">
+            {% for enrollment in enrollments %}
+              <div class="dash-row" style="flex-direction:column;align-items:stretch;">
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <div class="dash-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div>
+                  <div class="dash-row-main">
+                    <div class="dash-row-title">{{ enrollment.cohort.track.name }}</div>
+                    {% if enrollment.status == "confirmed" and enrollment.tutors %}
+                      <div class="dash-row-sub">Tutor{{ enrollment.tutors|pluralize }}: {% for t in enrollment.tutors %}{{ t.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if enrollment.next_session %} · Next: {{ enrollment.next_session.starts_at|date:"M j, g:i A" }}{% endif %}</div>
+                    {% endif %}
+                  </div>
+                  <div class="dash-row-end">
+                    {% if enrollment.status == "confirmed" %}
+                      <span class="badge badge-open">Confirmed</span>
+                    {% elif enrollment.status == "held" %}
+                      <span class="badge">Processing</span>
+                    {% else %}
+                      <span class="badge badge-full">{{ enrollment.get_status_display }}</span>
+                    {% endif %}
+                    <a href="{% url 'cohorts:enrollment_success' enrollment_id=enrollment.id %}">View →</a>
+                  </div>
+                </div>
+                {% if enrollment.status == "confirmed" %}
+                  {% if enrollment.cohort.announcement %}
+                    <div class="cta-banner" style="margin-top:0.85rem;">{{ enrollment.cohort.announcement }}</div>
+                  {% endif %}
+                  <div style="margin-top:0.65rem;display:flex;gap:1.25rem;flex-wrap:wrap;font-size:0.85rem;padding-left:3.15rem;">
+                    <a href="{% url 'reviews:submit_review' app_label='cohorts' model_name='enrollment' object_id=enrollment.id %}">Leave a review →</a>
+                    {% if enrollment.scheme_total_count %}
+                      <details class="bio-expand">
+                        <summary>Scheme of work ({{ enrollment.scheme_covered_count }}/{{ enrollment.scheme_total_count }} covered)</summary>
+                        <ul style="margin:0.5rem 0 0;padding-left:1.1rem;">
+                          {% for sr in enrollment.scheme_rows %}
+                            <li style="{% if sr.covered %}color:var(--text-muted);text-decoration:line-through;{% endif %}">{{ sr.topic.title }}</li>
+                          {% endfor %}
+                        </ul>
+                      </details>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            {% empty %}
+              <div class="dash-empty">No enrollments yet. <a href="{% url 'cohorts:track_list' %}">Browse tracks →</a></div>
+            {% endfor %}
+          </div>
         </div>
-      {% empty %}
-        <p>No marketplace orders yet. <a href="{% url 'marketplace:listing_list' %}">Browse the marketplace →</a></p>
-      {% endfor %}
-    </div>
 
-    <h2 style="margin-top:3rem;">Your courses</h2>
-    <div class="grid grid-2">
-      {% for purchase in course_purchases %}
-        <div class="glass-panel card">
-          <h3>{{ purchase.course.title }}</h3>
-          <p>₦{{ purchase.amount_naira|naira }}</p>
-          {% if purchase.status == "paid" %}
-            <span class="badge badge-open">Paid</span>
-            <p><a href="{{ purchase.course.get_absolute_url }}">Start watching →</a></p>
-            <p><a href="{% url 'reviews:submit_review' app_label='courses' model_name='purchase' object_id=purchase.id %}">Leave a review →</a></p>
-          {% else %}
-            <span class="badge">{{ purchase.get_status_display }}</span>
-          {% endif %}
+        <div id="marketplace" class="dashboard-section">
+          <div class="dashboard-section-head">
+            <h2>Your marketplace orders</h2>
+            <span class="dashboard-section-count">{{ orders|length }} total</span>
+          </div>
+          <div class="dash-list glass-panel">
+            {% for order in orders %}
+              <div class="dash-row">
+                <div class="dash-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-1.4 12.3A2 2 0 0 1 17.6 21H6.4a2 2 0 0 1-2-1.7L3 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg></div>
+                <div class="dash-row-main">
+                  <div class="dash-row-title">{{ order.listing.title }}</div>
+                  <div class="dash-row-sub">₦{{ order.amount_naira|naira }}</div>
+                </div>
+                <div class="dash-row-end">
+                  {% if order.status == "paid" %}
+                    <span class="badge badge-open">Paid</span>
+                    <a href="{% url 'reviews:submit_review' app_label='marketplace' model_name='order' object_id=order.id %}">Review →</a>
+                  {% else %}
+                    <span class="badge">{{ order.get_status_display }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% empty %}
+              <div class="dash-empty">No marketplace orders yet. <a href="{% url 'marketplace:listing_list' %}">Browse the marketplace →</a></div>
+            {% endfor %}
+          </div>
         </div>
-      {% empty %}
-        <p>No course purchases yet. <a href="{% url 'courses:course_list' %}">Browse courses →</a></p>
-      {% endfor %}
+
+        <div id="courses" class="dashboard-section">
+          <div class="dashboard-section-head">
+            <h2>Your courses</h2>
+            <span class="dashboard-section-count">{{ course_purchases|length }} total</span>
+          </div>
+          <div class="dash-list glass-panel">
+            {% for purchase in course_purchases %}
+              <div class="dash-row">
+                <div class="dash-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16"/></svg></div>
+                <div class="dash-row-main">
+                  <div class="dash-row-title">{{ purchase.course.title }}</div>
+                  <div class="dash-row-sub">₦{{ purchase.amount_naira|naira }}</div>
+                </div>
+                <div class="dash-row-end">
+                  {% if purchase.status == "paid" %}
+                    <span class="badge badge-open">Paid</span>
+                    <a href="{{ purchase.course.get_absolute_url }}">Watch →</a>
+                    <a href="{% url 'reviews:submit_review' app_label='courses' model_name='purchase' object_id=purchase.id %}">Review →</a>
+                  {% else %}
+                    <span class="badge">{{ purchase.get_status_display }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            {% empty %}
+              <div class="dash-empty">No course purchases yet. <a href="{% url 'courses:course_list' %}">Browse courses →</a></div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div id="become" class="dashboard-section">
+          <div class="dashboard-section-head"><h2>Sell or teach on CSA</h2></div>
+          <div class="grid grid-2">
+            {% if not user.seller_profile %}
+              <div class="glass-panel card">
+                <h3>Want to sell on CSA Marketplace?</h3>
+                <p>Apply as a seller. Once approved, you can list digital products, tech services, or CSA merch.</p>
+                <a href="{% url 'marketplace:apply_seller' %}" class="btn btn-primary">Apply to sell</a>
+              </div>
+            {% else %}
+              <div class="glass-panel card">
+                <h3>Seller dashboard</h3>
+                <p>Status: <strong>{{ user.seller_profile.get_status_display }}</strong></p>
+                <a href="{% url 'marketplace:seller_dashboard' %}" class="btn btn-ghost">Manage your listings</a>
+              </div>
+            {% endif %}
+
+            {% if not user.tutor_profile %}
+              <div class="glass-panel card">
+                <h3>Want to teach on Code Secure Academy?</h3>
+                <p>Apply as a tutor. Once approved, you can publish paid video courses and earn 90% of every sale.</p>
+                <a href="{% url 'courses:apply_tutor' %}" class="btn btn-primary">Apply to teach</a>
+              </div>
+            {% else %}
+              <div class="glass-panel card">
+                <h3>Tutor dashboard</h3>
+                <p>Status: <strong>{{ user.tutor_profile.get_status_display }}</strong></p>
+                <a href="{% url 'courses:tutor_dashboard' %}" class="btn btn-ghost">Manage your courses</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
     </div>
-
-    {% if not user.seller_profile %}
-      <div class="glass-panel card" style="margin-top:3rem;">
-        <h3>Want to sell on CSA Marketplace?</h3>
-        <p>Apply as a seller. Once approved, you can list digital products, tech services, or CSA merch.</p>
-        <a href="{% url 'marketplace:apply_seller' %}" class="btn btn-primary">Apply to sell</a>
-      </div>
-    {% else %}
-      <div class="glass-panel card" style="margin-top:3rem;">
-        <h3>Seller dashboard</h3>
-        <p>Status: <strong>{{ user.seller_profile.get_status_display }}</strong></p>
-        <a href="{% url 'marketplace:seller_dashboard' %}" class="btn btn-ghost">Manage your listings</a>
-      </div>
-    {% endif %}
-
-    {% if not user.tutor_profile %}
-      <div class="glass-panel card" style="margin-top:1.5rem;">
-        <h3>Want to teach on Code Secure Academy?</h3>
-        <p>Apply as a tutor. Once approved, you can publish paid video courses and earn 90% of every sale.</p>
-        <a href="{% url 'courses:apply_tutor' %}" class="btn btn-primary">Apply to teach</a>
-      </div>
-    {% else %}
-      <div class="glass-panel card" style="margin-top:1.5rem;">
-        <h3>Tutor dashboard</h3>
-        <p>Status: <strong>{{ user.tutor_profile.get_status_display }}</strong></p>
-        <a href="{% url 'courses:tutor_dashboard' %}" class="btn btn-ghost">Manage your courses</a>
-      </div>
-    {% endif %}
   </div>
 </section>
 {% endblock %}

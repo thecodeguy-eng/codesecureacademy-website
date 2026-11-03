@@ -88,6 +88,10 @@ def about(request):
     return render(request, "core/about.html", {"reviews": reviews})
 
 
+def bug_hunt(request):
+    return render(request, "core/bug_hunt.html")
+
+
 def faq(request):
     faqs = FAQ.objects.all()
     return render(request, "core/faq.html", {"faqs": faqs})

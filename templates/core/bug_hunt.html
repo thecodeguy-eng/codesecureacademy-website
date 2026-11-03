@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Spot the Bug · Code Secure Academy{% endblock %}
+{% block meta_description %}8 real code snippets, each hiding one real security mistake. Click the vulnerable line. Built by Code Secure Academy's Cybersecurity track.{% endblock %}
+{% block og_title %}Spot the Bug · Code Secure Academy{% endblock %}
+{% block og_description %}Can you spot the security bug in 8 real code snippets? Play it, then see if you're ready for the Cybersecurity track.{% endblock %}
+{% block extra_js %}<script src="{% static 'js/bug-hunt.js' %}" defer></script>{% endblock %}
+{% block content %}
+
+<section class="hero" style="padding-bottom:0;">
+  <div class="hero-spotlight"></div>
+  <div class="container" style="max-width:700px;">
+    <span class="eyebrow">A Code Secure Academy mini-game</span>
+    <h1>Spot the <span class="text-gradient">bug</span>.</h1>
+    <p class="lead">8 real code snippets. Each one hides one real security mistake. Click the line you think is the problem.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:700px;">
+    <div class="bug-hunt-stage glass-panel" id="bug-hunt-stage" data-tracks-url="{% url 'cohorts:track_list' %}"></div>
+  </div>
+</section>
+
+{% endblock %}

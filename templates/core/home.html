@@ -4,7 +4,7 @@
 {% block meta_description %}Cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design. 8-week cohorts, ₦5,000 per track, hands-on projects, built for Nigeria.{% endblock %}
 {% block og_title %}Code Secure Academy · Frontend, Backend, Cybersecurity & Design Cohorts{% endblock %}
 {% block og_description %}Cohort-based tech training in Frontend, Backend, Cybersecurity, and Graphic Design. 8-week cohorts, ₦5,000 per track, hands-on projects.{% endblock %}
-{% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script><script src="{% static 'js/track-playground.js' %}"></script>{% endblock %}
+{% block extra_js %}<script src="{% static 'js/code-editor.js' %}"></script><script src="{% static 'js/track-playground.js' %}"></script><script src="{% static 'js/hero-typewriter.js' %}" defer></script>{% endblock %}
 {% block content %}
 
 <section class="hero" id="hero">
@@ -12,8 +12,11 @@
   <div class="hero-spotlight" id="hero-spotlight"></div>
   <div class="container hero-split">
     <div class="hero-text">
-      <!-- <span class="eyebrow">Cohort-based tech training</span> -->
-      <h1>Learn to build, design, and <span class="text-gradient">secure</span> the web, for real.</h1>
+      {% include "partials/urgency_banner.html" %}
+      <h1>
+        <span class="sr-only">Learn to build, design, and secure the web, for real.</span>
+        <span aria-hidden="true">Learn to <span class="text-gradient" id="hero-verb">build</span><span class="hero-verb-cursor" aria-hidden="true">&nbsp;</span> the web, for real.</span>
+      </h1>
       <p class="lead">Frontend, Backend, Cybersecurity, and Graphic Design. Hands-on cohorts, real projects, a cohort of peers on the same timeline as you.</p>
       <div class="hero-actions">
         <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
@@ -25,13 +28,17 @@
   </div>
 </section>
 
-{% if site_settings.students_trained or site_settings.cohorts_run or site_settings.hiring_partners %}
+{% if site_settings.students_trained or site_siettings.cohorts_run or site_settings.hiring_partners %}
 <section class="stats-bar container">
   {% if site_settings.students_trained %}<div class="stat"><span class="num mono">{{ site_settings.students_trained }}+</span><span class="label">Students trained</span></div>{% endif %}
   {% if site_settings.cohorts_run %}<div class="stat"><span class="num mono">{{ site_settings.cohorts_run }}+</span><span class="label">Cohorts run</span></div>{% endif %}
   {% if site_settings.hiring_partners %}<div class="stat"><span class="num mono">{{ site_settings.hiring_partners }}+</span><span class="label">Hiring partners</span></div>{% endif %}
 </section>
 {% endif %}
+
+<section class="container">
+  {% include "partials/press_mentions.html" %}
+</section>
 
 <section>
   <div class="container manifesto">
@@ -371,7 +378,8 @@
     "{{ INSTAGRAM_URL }}",
     "{{ FACEBOOK_URL }}",
     "{{ X_URL }}",
-    "{{ WHATSAPP_CHANNEL_URL }}"
+    "{{ WHATSAPP_CHANNEL_URL }}",
+    "https://www.watchdogng.com/2026/10/code-secure-tech-academy-opens-first-cohort-for-young-learners/"
   ],
   "founder": [
     {

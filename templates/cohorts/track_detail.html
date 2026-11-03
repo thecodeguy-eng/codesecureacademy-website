@@ -250,6 +250,21 @@
 </section>
 {% endif %}
 
+{% if track.slug == "cybersecurity" %}
+<section>
+  <div class="container">
+    <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;">
+      <div>
+        <span class="eyebrow">Try it before you enroll</span>
+        <h2 style="margin-bottom:0.4rem;">Can you spot the bug?</h2>
+        <p style="margin:0;max-width:52ch;">8 real code snippets, each hiding one real security mistake. This is the exact kind of thinking the track builds.</p>
+      </div>
+      <a href="{% url 'bug_hunt' %}" class="btn btn-primary">Play Spot the Bug →</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <section>
   <div class="container">
     <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">

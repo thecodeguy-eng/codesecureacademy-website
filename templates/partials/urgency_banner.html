@@ -1,0 +1,15 @@
+{% comment %}
+Founding Cohort deadline + price, made impossible to miss at the top of a
+hero. Pulls the deadline from the same next_enrollment_deadline context
+processor used on the dashboard/announcement popup, so it never drifts out
+of sync with the real Cohort.enrollment_deadline in the database.
+{% endcomment %}
+{% if next_enrollment_deadline %}
+<div class="urgency-banner-wrap">
+  <a href="{% url 'cohorts:track_list' %}" class="urgency-banner">
+    <span class="urgency-banner-dot"></span>
+    <span><strong>Founding Cohort 1.0</strong> &middot; ₦5,000 per track &middot; Enrollment closes {{ next_enrollment_deadline|date:"F j, Y" }}</span>
+    <span class="urgency-banner-arrow">&rarr;</span>
+  </a>
+</div>
+{% endif %}

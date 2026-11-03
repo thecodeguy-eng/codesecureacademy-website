@@ -8,6 +8,7 @@ urlpatterns = [
     path("waitlist/join/", views.join_general_waitlist, name="join_general_waitlist"),
     path("unsubscribe/<str:token>/", views.unsubscribe, name="unsubscribe"),
     path("about/", views.about, name="about"),
+    path("play/bug-hunt/", views.bug_hunt, name="bug_hunt"),
     path("faq/", views.faq, name="faq"),
     path("contact/", views.contact, name="contact"),
     path("privacy-policy/", views.privacy_policy, name="privacy_policy"),
