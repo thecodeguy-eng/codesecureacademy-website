@@ -16,8 +16,9 @@ class WaitlistSignupForm(forms.ModelForm):
 class BlastEmailForm(forms.Form):
     campaign_name = forms.CharField(
         max_length=100,
-        help_text="A short label for this email (e.g. \"Nov update\"). Come back and send again with "
-        "the exact same name later to reach whoever's left — it never double-emails anyone.",
+        widget=forms.TextInput(attrs={"list": "campaign-options", "autocomplete": "off"}),
+        help_text="A short label for this email (e.g. \"Nov update\"). Pick an existing one from the "
+        "dropdown to resume it exactly — typing a new name always starts a fresh campaign.",
     )
     audience = forms.ChoiceField(choices=BLAST_AUDIENCE_CHOICES, initial="both")
     limit = forms.IntegerField(

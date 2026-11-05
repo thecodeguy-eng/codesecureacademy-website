@@ -15,10 +15,48 @@
     <div class="glass-panel card">
       <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+        <p>
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<br><small style="color:var(--text-muted,#8b93a7);">{{ field.help_text }}</small>{% endif %}
+          {{ field.errors }}
+        </p>
+        {% if field.name == "campaign_name" %}
+        <p id="campaign-remaining-hint" style="margin-top:-0.75rem;font-size:0.85rem;color:var(--blue-400,#2f7dff);"></p>
+        <datalist id="campaign-options">
+          {% for c in recent_campaigns %}<option value="{{ c.blast_key }}">{{ c.remaining }} left, {{ c.sent }} sent</option>{% endfor %}
+        </datalist>
+        {% endif %}
+        {% endfor %}
         <button type="submit" class="btn btn-primary btn-block">Send</button>
       </form>
     </div>
+    <script>
+    (function () {
+      var remainingByKey = {
+        {% for c in recent_campaigns %}"{{ c.blast_key }}": {{ c.remaining }}{% if not forloop.last %},{% endif %}{% endfor %}
+      };
+      var input = document.getElementById("id_campaign_name");
+      var hint = document.getElementById("campaign-remaining-hint");
+      if (!input || !hint) return;
+      function slugify(value) {
+        return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      }
+      function update() {
+        var raw = input.value.trim();
+        if (!raw) { hint.textContent = ""; return; }
+        var key = slugify(raw);
+        if (Object.prototype.hasOwnProperty.call(remainingByKey, key)) {
+          hint.textContent = "Existing campaign — " + remainingByKey[key] + " recipient(s) still left to send to.";
+        } else {
+          hint.textContent = "New campaign name — will queue everyone in the chosen audience from scratch.";
+        }
+      }
+      input.addEventListener("input", update);
+      update();
+    })();
+    </script>
 
     {% if recent_campaigns %}
     <h2 style="margin-top:2.5rem;">Past &amp; in-progress campaigns</h2>
