@@ -32,6 +32,7 @@
         {% endif %}
         <p>Sent today: {{ site_settings.reminder_sent_today }}</p>
         <p>Queued, not yet sent: {{ reminder_queue_remaining }}</p>
+        <p><a href="{% url 'analytics:send_blast' %}">Send announcement email →</a></p>
       </div>
       <div class="glass-panel card">
         <span class="label">Push started</span>

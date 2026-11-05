@@ -1,8 +1,10 @@
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import TruncDate
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.utils.text import slugify
 
 from .models import AnalyticsEvent
 
@@ -64,3 +66,50 @@ def insights(request):
         "reminder_queue_remaining": ReminderQueueItem.objects.count(),
     }
     return render(request, "analytics/insights.html", context)
+
+
+@staff_member_required
+def send_blast_view(request):
+    from apps.core.forms import BlastEmailForm
+    from apps.core.models import BlastRecipient
+    from apps.core.services import send_blast
+
+    if request.method == "POST":
+        form = BlastEmailForm(request.POST)
+        if form.is_valid():
+            blast_key = slugify(form.cleaned_data["campaign_name"])[:100]
+            result = send_blast(
+                blast_key,
+                form.cleaned_data["subject"],
+                form.cleaned_data["body"],
+                cta_label=form.cleaned_data["cta_label"] or None,
+                cta_url=form.cleaned_data["cta_url"] or None,
+                audience=form.cleaned_data["audience"],
+                batch_size=form.cleaned_data["limit"],
+            )
+            if result["sent"] or result["failed"]:
+                messages.success(
+                    request,
+                    f"Sent {result['sent']} (failed: {result['failed']}). "
+                    f"{result['remaining']} left for \"{form.cleaned_data['campaign_name']}\" — "
+                    f"come back and send again with the same campaign name to reach them." if result["remaining"]
+                    else f"Sent {result['sent']} (failed: {result['failed']}). That was everyone — campaign complete.",
+                )
+            else:
+                messages.info(request, f"Nothing to send — everyone in this audience already has \"{form.cleaned_data['campaign_name']}\".")
+            return redirect("analytics:send_blast")
+    else:
+        form = BlastEmailForm()
+
+    recent_campaigns = (
+        BlastRecipient.objects.values("blast_key")
+        .annotate(
+            total=Count("id"),
+            sent=Count("id", filter=Q(sent_at__isnull=False, failed=False)),
+            failed=Count("id", filter=Q(failed=True)),
+            remaining=Count("id", filter=Q(sent_at__isnull=True)),
+        )
+        .order_by("blast_key")
+    )
+
+    return render(request, "analytics/send_blast.html", {"form": form, "recent_campaigns": recent_campaigns})

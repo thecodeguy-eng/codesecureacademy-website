@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Send announcement email · Code Secure Academy{% endblock %}
+{% block content %}
+<section class="hero" style="text-align:left;padding-bottom:1rem;">
+  <div class="container">
+    <span class="eyebrow">Staff only</span>
+    <h1>Send announcement email</h1>
+    <p class="lead">Pick an audience and how many to send to right now, write the subject and body, and send.
+    Come back later with the same campaign name to reach whoever's left — it never double-emails anyone.</p>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container" style="max-width:640px;">
+    <div class="glass-panel card">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Send</button>
+      </form>
+    </div>
+
+    {% if recent_campaigns %}
+    <h2 style="margin-top:2.5rem;">Past &amp; in-progress campaigns</h2>
+    <div class="glass-panel card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="text-align:left;">
+            <th style="padding:6px 8px;">Campaign</th>
+            <th style="padding:6px 8px;">Sent</th>
+            <th style="padding:6px 8px;">Failed</th>
+            <th style="padding:6px 8px;">Remaining</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in recent_campaigns %}
+          <tr>
+            <td style="padding:6px 8px;">{{ c.blast_key }}</td>
+            <td style="padding:6px 8px;">{{ c.sent }}</td>
+            <td style="padding:6px 8px;">{{ c.failed }}</td>
+            <td style="padding:6px 8px;">
+              {% if c.remaining %}<span class="badge badge-open">{{ c.remaining }} left</span>{% else %}<span class="badge badge-full">Done</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <p style="margin-top:1.5rem;"><a href="{% url 'analytics:insights' %}">← Back to Insights</a></p>
+  </div>
+</section>
+{% endblock %}

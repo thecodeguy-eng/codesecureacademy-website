@@ -208,43 +208,131 @@ def _deadline_reminder_recipients():
     return sorted(e for e in all_emails if e and e.lower() not in excluded)
 
 
-def blast_recipients():
-    """Full recipient list for a one-off announcement blast (see the
-    send_blast command) — every registered user first (oldest signup
-    first), then everyone waitlist-only (oldest signup first), each email
-    appearing once. Unlike _deadline_reminder_recipients, this does NOT
-    exclude confirmed/paid students — an announcement isn't a "come pay"
-    nag, paying students still want to hear about site updates. Still
-    excludes anyone who's unsubscribed or whom Brevo has already blocked."""
+BLAST_AUDIENCE_CHOICES = [
+    ("both", "Registered users + waitlist (everyone)"),
+    ("registered", "Only registered users"),
+    ("waitlist", "Only waitlist (never registered)"),
+    ("staff_admin", "Only staff/admin accounts"),
+    ("tutors", "Only tutors/instructors"),
+]
+BLAST_DEFAULT_CTA_LABEL = "Visit Code Secure Academy"
+BLAST_DEFAULT_CTA_URL = "https://codesecureacademy.com/"
+
+
+def blast_recipients(audience="both"):
+    """Recipient list for a one-off announcement blast (see send_blast),
+    for one of BLAST_AUDIENCE_CHOICES. "both"/"registered" are ordered
+    oldest-signup-first; "waitlist" means people who never actually
+    registered an account, so any email that IS a registered user's is
+    excluded from it. Always excludes anyone who's unsubscribed or whom
+    Brevo has already blocked. Unlike _deadline_reminder_recipients, this
+    does NOT exclude confirmed/paid students for "both"/"registered" — an
+    announcement isn't a "come pay" nag, paying students still want to
+    hear about site updates."""
     from django.contrib.auth import get_user_model
+    from django.db.models import Q
 
     from apps.core.models import EmailOptOut, WaitlistSignup
+    from apps.instructors.models import Instructor
 
     User = get_user_model()
     excluded = {e.lower() for e in EmailOptOut.objects.values_list("email", flat=True)} | _brevo_blocked_emails()
+    if audience == "waitlist":
+        excluded |= {e.lower() for e in User.objects.exclude(email="").values_list("email", flat=True)}
 
-    user_rows = (
-        User.objects.filter(is_staff=False, is_superuser=False)
-        .exclude(email="")
-        .order_by("date_joined")
-        .values_list("email", flat=True)
-    )
-    seen = set()
-    ordered = []
-    for email in user_rows:
+    seen, ordered = set(), []
+
+    def add(email):
         key = email.lower()
-        if key not in seen and key not in excluded:
+        if email and key not in seen and key not in excluded:
             seen.add(key)
             ordered.append(email)
 
-    waitlist_rows = WaitlistSignup.objects.order_by("joined_at").values_list("email", flat=True)
-    for email in waitlist_rows:
-        key = email.lower()
-        if key not in seen and key not in excluded:
-            seen.add(key)
-            ordered.append(email)
+    if audience == "staff_admin":
+        qs = User.objects.filter(Q(is_staff=True) | Q(is_superuser=True)).exclude(email="").order_by("date_joined")
+        for email in qs.values_list("email", flat=True):
+            add(email)
+    elif audience == "tutors":
+        qs = Instructor.objects.filter(is_active=True).exclude(email="").order_by("name")
+        for email in qs.values_list("email", flat=True):
+            add(email)
+    else:
+        if audience in ("both", "registered"):
+            qs = User.objects.filter(is_staff=False, is_superuser=False).exclude(email="").order_by("date_joined")
+            for email in qs.values_list("email", flat=True):
+                add(email)
+        if audience in ("both", "waitlist"):
+            for email in WaitlistSignup.objects.order_by("joined_at").values_list("email", flat=True):
+                add(email)
 
     return ordered
+
+
+def send_blast(blast_key, subject, raw_paragraphs, cta_label=None, cta_url=None, audience="both", batch_size=None):
+    """Queues (on first call for this blast_key) and sends the next batch
+    of a one-off announcement blast — used by both the send_blast
+    management command and the staff "Send announcement email" dashboard
+    page. Call again later with the same blast_key to resume, skipping
+    anyone already attempted; batch_size=None sends to everyone still
+    queued. Returns {"sent", "failed", "remaining", "queued_total"}."""
+    from apps.core.models import BlastRecipient
+
+    cta_label = cta_label or BLAST_DEFAULT_CTA_LABEL
+    cta_url = cta_url or BLAST_DEFAULT_CTA_URL
+
+    queued_total = BlastRecipient.objects.filter(blast_key=blast_key).count()
+    if queued_total == 0:
+        emails = blast_recipients(audience)
+        BlastRecipient.objects.bulk_create(
+            BlastRecipient(blast_key=blast_key, email=email, position=i) for i, email in enumerate(emails)
+        )
+        queued_total = len(emails)
+
+    pending = BlastRecipient.objects.filter(blast_key=blast_key, sent_at__isnull=True).order_by("position")
+    total_remaining = pending.count()
+    batch = list(pending[:batch_size]) if batch_size else list(pending)
+
+    sent, failed = 0, 0
+    if batch:
+        from django.utils.html import escape
+        from django.utils.safestring import mark_safe
+
+        html_paragraphs = [mark_safe(escape(p).replace("\n", "<br>")) for p in raw_paragraphs]
+        connection = get_connection(fail_silently=True)
+        connection.open()
+        try:
+            for recipient in batch:
+                html_body = render_to_string(
+                    "emails/campaign_email.html",
+                    {
+                        "heading": subject,
+                        "paragraphs": html_paragraphs,
+                        "cta_url": cta_url,
+                        "cta_label": cta_label,
+                        "unsubscribe_url": unsubscribe_url(recipient.email),
+                        "days_left_display": None,
+                    },
+                )
+                plain_body = "\n\n".join(
+                    raw_paragraphs
+                    + [f"{cta_label}: {cta_url}", "Code Secure Academy", f"Unsubscribe: {unsubscribe_url(recipient.email)}"]
+                )
+                msg = EmailMultiAlternatives(subject, plain_body, to=[recipient.email])
+                msg.attach_alternative(html_body, "text/html")
+                msg.connection = connection
+                ok = msg.send(fail_silently=True)
+                recipient.sent_at = timezone.now()
+                recipient.failed = not ok
+                recipient.save(update_fields=["sent_at", "failed"])
+                if ok:
+                    sent += 1
+                else:
+                    failed += 1
+        finally:
+            connection.close()
+
+    remaining_after = total_remaining - len(batch)
+    return {"sent": sent, "failed": failed, "remaining": remaining_after, "queued_total": queued_total}
 
 
 def _days_left_display(deadline):

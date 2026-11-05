@@ -114,7 +114,7 @@ window.addEventListener("pagereveal", function (event) {
       {% if user.is_authenticated %}
         <a href="{% url 'dashboard' %}" class="{% if request.path|starts_with:'/dashboard/' %}active{% endif %}" {% if request.path|starts_with:'/dashboard/' %}aria-current="page"{% endif %}>Dashboard</a>
         <a href="{% url 'lessons:my_learning' %}" class="{% if request.path|starts_with:'/learn/' %}active{% endif %}" {% if request.path|starts_with:'/learn/' %}aria-current="page"{% endif %}>My Learning</a>
-        {% if user.is_staff %}<a href="{% url 'insights' %}" class="{% if request.path|starts_with:'/insights/' %}active{% endif %}" {% if request.path|starts_with:'/insights/' %}aria-current="page"{% endif %}>Insights</a>{% endif %}
+        {% if user.is_staff %}<a href="{% url 'analytics:insights' %}" class="{% if request.path|starts_with:'/insights/' %}active{% endif %}" {% if request.path|starts_with:'/insights/' %}aria-current="page"{% endif %}>Insights</a>{% endif %}
         <a href="{% url 'account_logout' %}">Log out</a>
       {% else %}
         <a href="{% url 'account_login' %}">Log in</a>
