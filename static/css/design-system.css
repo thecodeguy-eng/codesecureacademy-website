@@ -1308,19 +1308,30 @@ body.modal-open { overflow: hidden; }
 .bug-result .verdict { max-width: 46ch; margin: 0 auto var(--space-3); color: var(--text-secondary); }
 .bug-result .result-actions { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
 
-/* ---------- Press mentions strip ("as featured in") ---------- */
-.press-strip {
-  display: flex; align-items: center; justify-content: center; gap: 0.9rem; flex-wrap: wrap;
-  padding: var(--space-2) 0; margin: var(--space-2) 0;
+/* ---------- Press mentions — WhatsApp/Twitter-style link-preview embeds ---------- */
+.press-embed-grid { margin-top: var(--space-2); }
+.press-embed-card { color: inherit; }
+.press-embed-media {
+  aspect-ratio: 1.91 / 1; /* the standard og:image ratio every real link-preview renderer assumes */
+  overflow: hidden; background: var(--glass-bg-strong);
 }
-.press-strip-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-.press-strip-links { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-.press-strip-links a {
-  font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); text-decoration: none;
-  padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--glass-bg);
-  transition: border-color var(--transition-fast), color var(--transition-fast);
+.press-embed-media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform var(--transition-med);
 }
-.press-strip-links a:hover { border-color: var(--blue-400); color: var(--text-primary); }
+.press-embed-card:hover .press-embed-media img { transform: scale(1.05); }
+.press-embed-source {
+  display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 0.3rem;
+}
+.press-embed-title { font-size: 0.98rem; line-height: 1.35; margin: 0; color: var(--text-primary); }
+/* No confirmed image for this one (the site blocks automated fetches) —
+   same honest fallback a real link-preview shows: source + headline, no
+   thumbnail, instead of faking one. */
+.press-embed-card-noimg .card-body {
+  min-height: 100%; display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(165deg, var(--glass-bg-strong) 0%, var(--glass-bg) 100%);
+}
 
 /* ---------- Footer ---------- */
 

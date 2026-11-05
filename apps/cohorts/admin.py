@@ -15,7 +15,8 @@ class CohortInline(admin.TabularInline):
 
 @admin.register(Track)
 class TrackAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug", "is_active")
+    list_display = ("name", "slug", "display_order", "is_active")
+    list_editable = ("display_order",)
     prepopulated_fields = {"slug": ("name",)}
     inlines = [CohortInline]
 

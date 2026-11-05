@@ -133,9 +133,9 @@
     var poster = root.querySelector("[data-poster-editor]");
     if (!tabs.length || !input || !output) return;
 
-    var order = ["frontend", "backend", "cybersecurity", "graphic_design"];
+    var order = ["graphic_design", "frontend", "backend", "cybersecurity"];
     var requestedTab = root.getAttribute("data-initial-tab");
-    var current = order.indexOf(requestedTab) !== -1 ? requestedTab : "frontend";
+    var current = order.indexOf(requestedTab) !== -1 ? requestedTab : "graphic_design";
     // A dedicated per-track page (data-initial-tab set) is a focused tool
     // for that one track — it shouldn't auto-rotate away to a different
     // one. Only the homepage hero's showcase carousel does that.

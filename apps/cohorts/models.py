@@ -6,10 +6,10 @@ from django.utils import timezone
 
 class Track(models.Model):
     SLUG_CHOICES = [
+        ("graphic_design", "Graphic Design"),
         ("frontend", "Frontend Development"),
         ("backend", "Backend Development"),
         ("cybersecurity", "Cybersecurity"),
-        ("graphic_design", "Graphic Design"),
     ]
 
     slug = models.SlugField(unique=True, choices=SLUG_CHOICES)
@@ -39,9 +39,12 @@ class Track(models.Model):
         "Shown as the scroll-driven 'why register' story section on the track page.",
     )
     is_active = models.BooleanField(default=True)
+    display_order = models.PositiveSmallIntegerField(
+        default=0, help_text="Lower numbers show first across the site (tabs, track grids, etc.)."
+    )
 
     class Meta:
-        ordering = ["name"]
+        ordering = ["display_order", "name"]
 
     def __str__(self):
         return self.name
