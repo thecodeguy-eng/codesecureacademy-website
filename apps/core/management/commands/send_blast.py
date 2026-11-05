@@ -55,6 +55,14 @@ class Command(BaseCommand):
             audience=options["audience"], batch_size=options["batch_size"],
         )
         self.stdout.write(self.style.SUCCESS(f"Sent {result['sent']}, {result['failed']} failed, this run."))
+        if result["quota_note"]:
+            self.stdout.write(self.style.WARNING(result["quota_note"]))
+        if result["failed"]:
+            from apps.core.models import BlastRecipient
+
+            failed_emails = BlastRecipient.objects.filter(blast_key=blast_key, failed=True).order_by("position").values_list("email", flat=True)
+            for email in failed_emails:
+                self.stdout.write(self.style.WARNING(f"  FAILED: {email}"))
         if result["remaining"] > 0:
             self.stdout.write(
                 f"{result['remaining']} recipients left — run the exact same command again "

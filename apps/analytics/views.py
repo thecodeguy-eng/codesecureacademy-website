@@ -88,13 +88,31 @@ def send_blast_view(request):
                 batch_size=form.cleaned_data["limit"],
             )
             if result["sent"] or result["failed"]:
-                messages.success(
-                    request,
+                status_line = (
                     f"Sent {result['sent']} (failed: {result['failed']}). "
                     f"{result['remaining']} left for \"{form.cleaned_data['campaign_name']}\" — "
                     f"come back and send again with the same campaign name to reach them." if result["remaining"]
-                    else f"Sent {result['sent']} (failed: {result['failed']}). That was everyone — campaign complete.",
+                    else f"Sent {result['sent']} (failed: {result['failed']}). That was everyone — campaign complete."
                 )
+                if result["failed"]:
+                    failed_emails = list(
+                        BlastRecipient.objects.filter(blast_key=blast_key, failed=True)
+                        .order_by("position").values_list("email", flat=True)
+                    )
+                    status_line += " Failed: " + ", ".join(failed_emails[:20])
+                    if len(failed_emails) > 20:
+                        status_line += f", and {len(failed_emails) - 20} more"
+                if result["quota_note"]:
+                    status_line += " " + result["quota_note"]
+                messages.success(request, status_line)
+            elif result["remaining"]:
+                # Nothing sent this run, but recipients are still waiting — almost always
+                # because today's Brevo quota is already gone (see quota_note), not because
+                # the campaign is actually finished.
+                messages.warning(request, result["quota_note"] or (
+                    f"Nothing sent this run. {result['remaining']} still left for "
+                    f"\"{form.cleaned_data['campaign_name']}\" — try again shortly."
+                ))
             else:
                 messages.info(request, f"Nothing to send — everyone in this audience already has \"{form.cleaned_data['campaign_name']}\".")
             return redirect("analytics:send_blast")

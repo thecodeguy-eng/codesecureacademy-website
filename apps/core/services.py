@@ -268,13 +268,22 @@ def blast_recipients(audience="both"):
     return ordered
 
 
+BLAST_QUOTA_BUFFER = 20  # held back from Brevo's live remaining-credits figure for transactional email
+# (signup confirmations, receipts, password resets) that share the same daily cap.
+
+
 def send_blast(blast_key, subject, raw_paragraphs, cta_label=None, cta_url=None, audience="both", batch_size=None):
     """Queues (on first call for this blast_key) and sends the next batch
     of a one-off announcement blast — used by both the send_blast
     management command and the staff "Send announcement email" dashboard
     page. Call again later with the same blast_key to resume, skipping
-    anyone already attempted; batch_size=None sends to everyone still
-    queued. Returns {"sent", "failed", "remaining", "queued_total"}."""
+    anyone already attempted; batch_size=None asks for everyone still
+    queued, but the actual batch sent is still capped to whatever Brevo's
+    account API says is safely left today (see BLAST_QUOTA_BUFFER) — so
+    leaving the limit blank, or asking for more than the day's quota
+    allows, can never blow through the free-plan daily send cap and get
+    the rest wrongly marked failed. Returns {"sent", "failed",
+    "remaining", "queued_total", "quota_note"}."""
     from apps.core.models import BlastRecipient
 
     cta_label = cta_label or BLAST_DEFAULT_CTA_LABEL
@@ -290,7 +299,21 @@ def send_blast(blast_key, subject, raw_paragraphs, cta_label=None, cta_url=None,
 
     pending = BlastRecipient.objects.filter(blast_key=blast_key, sent_at__isnull=True).order_by("position")
     total_remaining = pending.count()
-    batch = list(pending[:batch_size]) if batch_size else list(pending)
+    requested = batch_size if batch_size else total_remaining
+
+    quota_note = None
+    status = brevo_account_status()
+    if status and status.get("credits_remaining") is not None:
+        safe_quota = max(status["credits_remaining"] - BLAST_QUOTA_BUFFER, 0)
+        if safe_quota < requested:
+            quota_note = (
+                f"Capped to {safe_quota} this run to stay under today's Brevo quota "
+                f"({status['credits_remaining']} credits left, {BLAST_QUOTA_BUFFER} held back for "
+                f"transactional email). Come back after the quota resets to send the rest."
+            )
+            requested = safe_quota
+
+    batch = list(pending[:requested]) if requested else []
 
     sent, failed = 0, 0
     if batch:
@@ -332,7 +355,10 @@ def send_blast(blast_key, subject, raw_paragraphs, cta_label=None, cta_url=None,
             connection.close()
 
     remaining_after = total_remaining - len(batch)
-    return {"sent": sent, "failed": failed, "remaining": remaining_after, "queued_total": queued_total}
+    return {
+        "sent": sent, "failed": failed, "remaining": remaining_after,
+        "queued_total": queued_total, "quota_note": quota_note,
+    }
 
 
 def _days_left_display(deadline):
