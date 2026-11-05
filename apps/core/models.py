@@ -134,6 +134,12 @@ class BlastRecipient(models.Model):
     position = models.PositiveIntegerField()
     sent_at = models.DateTimeField(null=True, blank=True)
     failed = models.BooleanField(default=False)
+    audience = models.CharField(
+        max_length=20, blank=True,
+        help_text="Which audience choice this campaign was first queued with — recorded so a later "
+        "resume with a *different* audience selected can be caught and flagged instead of silently "
+        "continuing to drain the original list.",
+    )
 
     class Meta:
         unique_together = ("blast_key", "email")

@@ -55,6 +55,8 @@ class Command(BaseCommand):
             audience=options["audience"], batch_size=options["batch_size"],
         )
         self.stdout.write(self.style.SUCCESS(f"Sent {result['sent']}, {result['failed']} failed, this run."))
+        if result["audience_note"]:
+            self.stdout.write(self.style.WARNING(result["audience_note"]))
         if result["quota_note"]:
             self.stdout.write(self.style.WARNING(result["quota_note"]))
         if result["failed"]:

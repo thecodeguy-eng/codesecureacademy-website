@@ -104,6 +104,8 @@ def send_blast_view(request):
                         status_line += f", and {len(failed_emails) - 20} more"
                 if result["quota_note"]:
                     status_line += " " + result["quota_note"]
+                if result["audience_note"]:
+                    messages.warning(request, result["audience_note"])
                 messages.success(request, status_line)
             elif result["remaining"]:
                 # Nothing sent this run, but recipients are still waiting — almost always

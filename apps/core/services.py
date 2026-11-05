@@ -282,20 +282,38 @@ def send_blast(blast_key, subject, raw_paragraphs, cta_label=None, cta_url=None,
     account API says is safely left today (see BLAST_QUOTA_BUFFER) — so
     leaving the limit blank, or asking for more than the day's quota
     allows, can never blow through the free-plan daily send cap and get
-    the rest wrongly marked failed. Returns {"sent", "failed",
-    "remaining", "queued_total", "quota_note"}."""
+    the rest wrongly marked failed. If blast_key already exists and was
+    first queued with a *different* audience, that original audience is
+    what actually gets drained (switching audience on a repeat send of the
+    same campaign name has no effect — the recipient list was already
+    fixed on the first send) — this is reported back via audience_note
+    instead of silently happening. Returns {"sent", "failed", "remaining",
+    "queued_total", "quota_note", "audience_note"}."""
     from apps.core.models import BlastRecipient
 
     cta_label = cta_label or BLAST_DEFAULT_CTA_LABEL
     cta_url = cta_url or BLAST_DEFAULT_CTA_URL
+    audience_choices = dict(BLAST_AUDIENCE_CHOICES)
 
     queued_total = BlastRecipient.objects.filter(blast_key=blast_key).count()
+    audience_note = None
     if queued_total == 0:
         emails = blast_recipients(audience)
         BlastRecipient.objects.bulk_create(
-            BlastRecipient(blast_key=blast_key, email=email, position=i) for i, email in enumerate(emails)
+            BlastRecipient(blast_key=blast_key, email=email, position=i, audience=audience)
+            for i, email in enumerate(emails)
         )
         queued_total = len(emails)
+    else:
+        original_audience = (
+            BlastRecipient.objects.filter(blast_key=blast_key).exclude(audience="").values_list("audience", flat=True).first()
+        )
+        if original_audience and original_audience != audience:
+            audience_note = (
+                f"This campaign was already queued for \"{audience_choices.get(original_audience, original_audience)}\" "
+                f"on its first send — your \"{audience_choices.get(audience, audience)}\" choice this time was ignored; "
+                f"it's still sending to the original list. Use a new campaign name to target a different audience."
+            )
 
     pending = BlastRecipient.objects.filter(blast_key=blast_key, sent_at__isnull=True).order_by("position")
     total_remaining = pending.count()
@@ -357,7 +375,7 @@ def send_blast(blast_key, subject, raw_paragraphs, cta_label=None, cta_url=None,
     remaining_after = total_remaining - len(batch)
     return {
         "sent": sent, "failed": failed, "remaining": remaining_after,
-        "queued_total": queued_total, "quota_note": quota_note,
+        "queued_total": queued_total, "quota_note": quota_note, "audience_note": audience_note,
     }
 
 
