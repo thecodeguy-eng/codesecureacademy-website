@@ -208,6 +208,45 @@ def _deadline_reminder_recipients():
     return sorted(e for e in all_emails if e and e.lower() not in excluded)
 
 
+def blast_recipients():
+    """Full recipient list for a one-off announcement blast (see the
+    send_blast command) — every registered user first (oldest signup
+    first), then everyone waitlist-only (oldest signup first), each email
+    appearing once. Unlike _deadline_reminder_recipients, this does NOT
+    exclude confirmed/paid students — an announcement isn't a "come pay"
+    nag, paying students still want to hear about site updates. Still
+    excludes anyone who's unsubscribed or whom Brevo has already blocked."""
+    from django.contrib.auth import get_user_model
+
+    from apps.core.models import EmailOptOut, WaitlistSignup
+
+    User = get_user_model()
+    excluded = {e.lower() for e in EmailOptOut.objects.values_list("email", flat=True)} | _brevo_blocked_emails()
+
+    user_rows = (
+        User.objects.filter(is_staff=False, is_superuser=False)
+        .exclude(email="")
+        .order_by("date_joined")
+        .values_list("email", flat=True)
+    )
+    seen = set()
+    ordered = []
+    for email in user_rows:
+        key = email.lower()
+        if key not in seen and key not in excluded:
+            seen.add(key)
+            ordered.append(email)
+
+    waitlist_rows = WaitlistSignup.objects.order_by("joined_at").values_list("email", flat=True)
+    for email in waitlist_rows:
+        key = email.lower()
+        if key not in seen and key not in excluded:
+            seen.add(key)
+            ordered.append(email)
+
+    return ordered
+
+
 def _days_left_display(deadline):
     if not deadline:
         return None

@@ -119,6 +119,30 @@ class EmailOptOut(models.Model):
         return self.email
 
 
+class BlastRecipient(models.Model):
+    """Queue + send-log for one-off manual email blasts (see the send_blast
+    management command) — separate from ReminderQueueItem's automatic
+    deadline-reminder campaign. Recipients for a given blast_key are queued
+    once, in a fixed order (registered users first, then waitlist-only
+    emails), then drained a capped batch at a time across however many
+    times the command is re-run, so a single run can never trip Brevo's
+    daily send limit. Re-running the same command with the same blast_key
+    just sends the next untouched batch — already-sent rows are skipped."""
+
+    blast_key = models.SlugField(max_length=100)
+    email = models.EmailField()
+    position = models.PositiveIntegerField()
+    sent_at = models.DateTimeField(null=True, blank=True)
+    failed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("blast_key", "email")
+        ordering = ["position"]
+
+    def __str__(self):
+        return f"{self.blast_key}: {self.email}"
+
+
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
