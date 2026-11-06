@@ -3,6 +3,7 @@
 {% block title %}Dashboard · Code Secure Academy{% endblock %}
 {% block extra_js %}<script src="{% static 'js/dashboard.js' %}" defer></script>{% endblock %}
 {% block content %}
+{% include "partials/live_session_popup.html" %}
 <section style="padding-bottom: var(--space-5);">
   <div class="container">
     <div class="dashboard-shell">

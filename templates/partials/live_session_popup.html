@@ -1,0 +1,18 @@
+{% load static %}
+{% comment %}
+One-off popup for the free Frontend live session — dashboard-only (so only
+logged-in students see it), shown once per browser via localStorage, and
+the JS self-expires after the session ends so nothing needs to be removed
+by hand afterward.
+{% endcomment %}
+<dialog class="glass-panel signup-prompt-modal" id="live-session-dialog">
+  <button type="button" class="signup-prompt-close" id="live-session-close" aria-label="Close">&times;</button>
+  <span class="eyebrow">Free live session</span>
+  <h2>Frontend — Saturday, Nov 7 &middot; 8:00&ndash;9:00 PM</h2>
+  <p>Join us live on Google Meet — free to attend, no enrollment required.</p>
+  <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem;justify-content:center;">
+    <a href="https://meet.google.com/wkh-vrsq-ohp" target="_blank" rel="noopener" class="btn btn-primary" id="live-session-cta">Join the session</a>
+    <button type="button" class="btn btn-ghost" id="live-session-later">Maybe later</button>
+  </div>
+</dialog>
+<script src="{% static 'js/live-session-popup.js' %}"></script>
