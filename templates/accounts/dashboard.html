@@ -44,6 +44,22 @@
           <h1 style="margin-bottom: 0.2rem;">Welcome back, {{ user.first_name|default:user.username }}</h1>
           <p style="color: var(--text-muted); margin-bottom: var(--space-3);">Here's where things stand.</p>
 
+          <div class="glass-panel card" id="live-session-banner" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:var(--space-3);border-color:var(--blue-400);">
+            <div>
+              <span class="eyebrow">Free live session</span>
+              <p style="margin:0.25rem 0 0;">Frontend &middot; Saturday, Nov 7 &middot; <strong>8:00&ndash;9:00 PM</strong>. Join us live on Google Meet, free to attend.</p>
+            </div>
+            <a href="https://meet.google.com/wkh-vrsq-ohp" target="_blank" rel="noopener" class="btn btn-primary">Join the session</a>
+          </div>
+          <script>
+            (function () {
+              if (new Date() > new Date("2026-11-07T21:00:00+01:00")) {
+                var el = document.getElementById("live-session-banner");
+                if (el) el.remove();
+              }
+            })();
+          </script>
+
           {% if next_enrollment_deadline %}
           <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:var(--space-3);">
             <div>
