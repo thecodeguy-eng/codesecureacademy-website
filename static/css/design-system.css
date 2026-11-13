@@ -50,6 +50,17 @@
   --glow: rgba(47, 125, 255, 0.4);
   --glow-soft: rgba(47, 125, 255, 0.16);
 
+  /* Electric lime accent — Master Specification 2.1 §5.2/§42. Blue stays the
+  dominant brand color; this is a restrained accent only (a badge, a focus
+  ring, an icon detail), never a large fill or body text color. Not yet used
+  anywhere — this token exists so the Phase 1 prototype has something real to
+  reference, pending founder approval per §21/§42.4 before any live page uses
+  it. --on-lime is fixed dark navy (not theme-linked) since lime needs the
+  same dark text on top of it regardless of whether the site itself is in
+  light or dark mode: #0d1224-on-#c7f36b is ~11.9:1, well past AAA. */
+  --lime-500: #c7f36b;
+  --on-lime: #0d1224;
+
   --text-primary: #f6f8ff;
   --text-secondary: #a6b0cf;
   --text-muted: #626c8c;
