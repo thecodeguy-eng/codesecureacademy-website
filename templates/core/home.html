@@ -28,61 +28,6 @@
   </div>
 </section>
 
-{% if site_settings.students_trained or site_siettings.cohorts_run or site_settings.hiring_partners %}
-<section class="stats-bar container">
-  {% if site_settings.students_trained %}<div class="stat"><span class="num mono">{{ site_settings.students_trained }}+</span><span class="label">Students trained</span></div>{% endif %}
-  {% if site_settings.cohorts_run %}<div class="stat"><span class="num mono">{{ site_settings.cohorts_run }}+</span><span class="label">Cohorts run</span></div>{% endif %}
-  {% if site_settings.hiring_partners %}<div class="stat"><span class="num mono">{{ site_settings.hiring_partners }}+</span><span class="label">Hiring partners</span></div>{% endif %}
-</section>
-{% endif %}
-
-<section class="container">
-  {% include "partials/press_mentions.html" %}
-</section>
-
-<section class="container" style="padding-top:0;">
-  {% include "partials/live_session_recap.html" %}
-</section>
-
-<section>
-  <div class="container manifesto">
-    <p data-scroll-reveal>Code Secure Academy exists to turn beginners into developers who ship real projects, think about security by default, and never stop learning once the cohort ends.</p>
-  </div>
-</section>
-
-<section>
-  <div class="container section-alt">
-    <div class="alt-text">
-      <span class="eyebrow">Why CSA</span>
-      <h2>Built to get you actually building</h2>
-      <p>Most bootcamps sell you a video library. We sell you a seat in a cohort that
-      ships real, working things, with people doing it alongside you.</p>
-      <ul class="alt-checklist">
-        <li><span class="tick">✓</span><span><strong>Project-first.</strong> You finish each track with something you actually built, ready to put in a portfolio.</span></li>
-        <li><span class="tick">✓</span><span><strong>One flat price.</strong> ₦5,000 per track, no hidden fees, no surprise upsells partway through.</span></li>
-        <li><span class="tick">✓</span><span><strong>8 weeks, start to finish.</strong> Fixed dates keep the whole cohort moving at the same pace.</span></li>
-        <li><span class="tick">✓</span><span><strong>Security-minded by default.</strong> Even outside the Cybersecurity track, we build the habit of asking what could go wrong.</span></li>
-      </ul>
-    </div>
-    <div class="alt-visual">
-      <div class="glass-panel product-preview">
-        <div class="preview-bar"><span></span><span></span><span></span></div>
-        <div class="preview-body">
-          <div class="mock-track-card">
-            <span class="badge badge-open">Open</span>
-            <div class="mock-title">Cybersecurity</div>
-            <div class="mock-row"><span>Enrolling now</span><span class="mock-price">₦5,000</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  {% include "partials/tutorials_teaser.html" %}
-</section>
-
 <section>
   <div class="container manifesto">
     <span class="eyebrow" style="display:block;text-align:center;">Pick your track</span>
@@ -130,7 +75,7 @@
     </div>
     <div class="alt-visual">
       {% if track.display_cover_image %}
-        <div class="glass-panel product-preview">
+        <div class="panel card-media">
           <img src="{{ track.display_cover_image }}" alt="{{ track.name }} track" loading="lazy" style="width:100%;height:260px;object-fit:contain;background:#060a27;display:block;">
         </div>
       {% endif %}
@@ -144,40 +89,6 @@
   </div>
 </section>
 {% endfor %}
-
-<section>
-  <div class="container" style="max-width:560px;">
-    <div class="glass-panel card" style="text-align:center;">
-      <h3>Not ready to pick yet?</h3>
-      <p style="color:var(--text-muted);">Join the waitlist and we'll email you the moment a track you like opens for enrollment.</p>
-      <form method="post" action="{% url 'join_general_waitlist' %}" style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;">
-        {% csrf_token %}
-        <input type="email" name="email" placeholder="you@example.com" required style="flex:1;min-width:220px;">
-        <button type="submit" class="btn btn-primary">Join the waitlist</button>
-      </form>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Tools & tech you'll work with</p>
-    <div class="pill-bar" style="margin-top:var(--space-2);">
-      <span class="tech-pill">HTML</span>
-      <span class="tech-pill">CSS</span>
-      <span class="tech-pill">JavaScript</span>
-      <span class="tech-pill">React</span>
-      <span class="tech-pill">Python</span>
-      <span class="tech-pill">Django</span>
-      <span class="tech-pill">PostgreSQL</span>
-      <span class="tech-pill">Git &amp; GitHub</span>
-      <span class="tech-pill">Figma</span>
-      <span class="tech-pill">OWASP Top 10</span>
-      <span class="tech-pill">REST APIs</span>
-      <span class="tech-pill">Network Security</span>
-    </div>
-  </div>
-</section>
 
 <section>
   <div class="container section-alt reverse">
@@ -228,7 +139,7 @@
       <span class="eyebrow">What's included</span>
       <h2>Every cohort, no matter the track</h2>
     </div>
-    <div class="glass-panel feature-panel">
+    <div class="panel feature-panel">
       <div class="feature-panel-header">
         <h3>Included with every enrollment</h3>
       </div>
@@ -268,6 +179,59 @@
   </div>
 </section>
 
+<section>
+  <div class="container section-alt">
+    <div class="alt-text">
+      <span class="eyebrow">Why CSA</span>
+      <h2>Built to get you actually building</h2>
+      <p>Most bootcamps sell you a video library. We sell you a seat in a cohort that
+      ships real, working things, with people doing it alongside you.</p>
+      <ul class="alt-checklist">
+        <li><span class="tick">✓</span><span><strong>Project-first.</strong> You finish each track with something you actually built, ready to put in a portfolio.</span></li>
+        <li><span class="tick">✓</span><span><strong>One flat price.</strong> ₦5,000 per track, no hidden fees, no surprise upsells partway through.</span></li>
+        <li><span class="tick">✓</span><span><strong>8 weeks, start to finish.</strong> Fixed dates keep the whole cohort moving at the same pace.</span></li>
+        <li><span class="tick">✓</span><span><strong>Security-minded by default.</strong> Even outside the Cybersecurity track, we build the habit of asking what could go wrong.</span></li>
+      </ul>
+    </div>
+    <div class="alt-visual">
+      <div class="glass-panel product-preview">
+        <div class="preview-bar"><span></span><span></span><span></span></div>
+        <div class="preview-body">
+          <div class="mock-track-card">
+            <span class="badge badge-open">Open</span>
+            <div class="mock-title">Cybersecurity</div>
+            <div class="mock-row"><span>Enrolling now</span><span class="mock-price">₦5,000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Tools & tech you'll work with</p>
+    <div class="pill-bar" style="margin-top:var(--space-2);">
+      <span class="tech-pill">HTML</span>
+      <span class="tech-pill">CSS</span>
+      <span class="tech-pill">JavaScript</span>
+      <span class="tech-pill">React</span>
+      <span class="tech-pill">Python</span>
+      <span class="tech-pill">Django</span>
+      <span class="tech-pill">PostgreSQL</span>
+      <span class="tech-pill">Git &amp; GitHub</span>
+      <span class="tech-pill">Figma</span>
+      <span class="tech-pill">OWASP Top 10</span>
+      <span class="tech-pill">REST APIs</span>
+      <span class="tech-pill">Network Security</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  {% include "partials/tutorials_teaser.html" %}
+</section>
+
 {% if reviews %}
 <section>
   <div class="container">
@@ -284,13 +248,40 @@
 <section>
   <div class="container">
     <div class="section-head">
+      <span class="eyebrow">Beyond the cohort</span>
+      <h2>Community and opportunities</h2>
+      <p>CSA isn't just the 8 weeks. A few things we're building out alongside the cohorts:</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="panel card">
+        <h3>WhatsApp community</h3>
+        <p style="color:var(--text-muted);">Announcements, peer support, and a place to ask questions between lessons.</p>
+        <a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener" class="btn btn-ghost" style="margin-top:var(--space-2);">Join the channel →</a>
+      </div>
+      <div class="panel card">
+        <h3>Marketplace</h3>
+        <p style="color:var(--text-muted);">Students and alumni can list skills and services for other students. Live and still filling up as more sellers join.</p>
+        <a href="{% url 'marketplace:listing_list' %}" class="btn btn-ghost" style="margin-top:var(--space-2);">Browse the marketplace →</a>
+      </div>
+      <div class="panel card">
+        <h3>Courses</h3>
+        <p style="color:var(--text-muted);">Any tutor on the platform can publish a paid course. Open now, with new listings arriving as tutors onboard.</p>
+        <a href="{% url 'courses:course_list' %}" class="btn btn-ghost" style="margin-top:var(--space-2);">See what's up →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
       <span class="eyebrow">Real web development</span>
       <h2>This could be you</h2>
       <p>Projects from the CSA community — real, shipped work built with the exact stack taught in our
       Frontend and Backend tracks.</p>
     </div>
     <div class="grid grid-3">
-      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
         {% include "partials/term_chrome.html" with label="futobme.vercel.app" %}
         <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/futo-bme-portal.png' %}" alt="FUTO BME Departmental Portal" loading="lazy"></div>
         <div class="card-body">
@@ -298,7 +289,7 @@
           <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span><span class="badge">REST API</span></div>
         </div>
       </a>
-      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
         {% include "partials/term_chrome.html" with label="crestcaremedicalcenter.vercel.app" %}
         <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/crestcare.png' %}" alt="CrestCare Medical Centre" loading="lazy"></div>
         <div class="card-body">
@@ -306,7 +297,7 @@
           <div class="project-tags"><span class="badge">Web design</span><span class="badge">HTML/CSS</span></div>
         </div>
       </a>
-      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
         {% include "partials/term_chrome.html" with label="nextmediahq.net" %}
         <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/nextmedia.png' %}" alt="NextMedia news platform" loading="lazy"></div>
         <div class="card-body">
@@ -327,15 +318,15 @@
       <p>Real campaign graphics from our own launch — the kind of work the Graphic Design track teaches.</p>
     </div>
     <div class="grid grid-3">
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/track-overview.jpg' %}" alt="Join Code Secure Academy — the four tracks, explained" loading="lazy"></div>
         <div class="card-body"><h3>Program overview flyer</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/founding-cohort-flyer.jpg' %}" alt="Founding Cohort 1.0 registration flyer" loading="lazy"></div>
         <div class="card-body"><h3>Registration flyer</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/in-two-months.jpg' %}" alt="In 2 months, you could... social post" loading="lazy"></div>
         <div class="card-body"><h3>Outcome-focused post</h3></div>
       </div>
@@ -344,12 +335,26 @@
   </div>
 </section>
 
+<section>
+  <div class="container" style="max-width:560px;">
+    <div class="panel card" style="text-align:center;">
+      <h3>Not ready to pick yet?</h3>
+      <p style="color:var(--text-muted);">Join the waitlist and we'll email you the moment a track you like opens for enrollment.</p>
+      <form method="post" action="{% url 'join_general_waitlist' %}" style="display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="you@example.com" required style="flex:1;min-width:220px;">
+        <button type="submit" class="btn btn-primary">Join the waitlist</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 {% if faqs %}
 <section>
   <div class="container" style="max-width:720px;">
     <div class="section-head"><h2>Frequently asked</h2></div>
     {% for item in faqs %}
-      <div class="glass-panel faq-item" style="margin-bottom:1rem;">
+      <div class="panel faq-item" style="margin-bottom:1rem;">
         <h3 class="faq-question">{{ item.question }}</h3>
         <p class="faq-answer">{{ item.answer }}</p>
       </div>
@@ -359,9 +364,25 @@
 </section>
 {% endif %}
 
+{% if site_settings.students_trained or site_settings.cohorts_run or site_settings.hiring_partners %}
+<section class="stats-bar container">
+  {% if site_settings.students_trained %}<div class="stat"><span class="num mono">{{ site_settings.students_trained }}+</span><span class="label">Students trained</span></div>{% endif %}
+  {% if site_settings.cohorts_run %}<div class="stat"><span class="num mono">{{ site_settings.cohorts_run }}+</span><span class="label">Cohorts run</span></div>{% endif %}
+  {% if site_settings.hiring_partners %}<div class="stat"><span class="num mono">{{ site_settings.hiring_partners }}+</span><span class="label">Hiring partners</span></div>{% endif %}
+</section>
+{% endif %}
+
+<section class="container">
+  {% include "partials/press_mentions.html" %}
+</section>
+
+<section class="container" style="padding-top:0;">
+  {% include "partials/live_session_recap.html" %}
+</section>
+
 <section>
   <div class="container">
-    <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
+    <div class="panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
       <h2>Ready to start building?</h2>
       <p class="lead" style="margin:0 auto var(--space-3);">Pick a track, lock in your seat, and get to work.</p>
       <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>

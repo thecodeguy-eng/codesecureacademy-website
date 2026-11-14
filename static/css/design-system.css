@@ -454,6 +454,27 @@ a { color: var(--blue-400); text-decoration: none; }
     0 0 44px var(--glow-soft);
 }
 
+/* ---------- Tonal panel utility (Master Specification 2.1 §5.5/§27.2) —
+   crisp border, solid tonal fill, no blur. This is the default for
+   ordinary cards; .glass-panel stays reserved for the couple of
+   deliberate "floating UI mockup" moments rather than every card on the
+   page. ---------- */
+.panel {
+  position: relative;
+  background: var(--navy-800);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 36px -20px rgba(0, 0, 0, 0.55);
+  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
+}
+
+.panel.interactive:hover,
+.panel.interactive:focus-within {
+  transform: translateY(-6px) scale(1.015);
+  border-color: rgba(91, 157, 255, 0.4);
+  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--glow);
+}
+
 /* ---------- Header ---------- */
 
 .site-header {
