@@ -8,6 +8,11 @@ class SiteSettings(models.Model):
     students_trained = models.PositiveIntegerField(default=0)
     cohorts_run = models.PositiveIntegerField(default=0)
     hiring_partners = models.PositiveIntegerField(default=0)
+    stats_as_of = models.DateField(
+        null=True, blank=True,
+        help_text="When the three stats above were last verified true. Shown next to them on the "
+        "homepage so published numbers never read as live/evergreen when they're a point-in-time count.",
+    )
     last_deadline_reminder_sent_at = models.DateTimeField(
         null=True, blank=True,
         help_text="When the enrollment-reminder campaign last sent an email. "
