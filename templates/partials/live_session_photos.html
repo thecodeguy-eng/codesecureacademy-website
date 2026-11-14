@@ -1,0 +1,30 @@
+{% load static %}
+{% comment %}
+Real evidence from the Nov 7 2026 Frontend live session, not a generic
+photo gallery. Cropped from actual Meet screenshots to the shared-screen
+demo and the presenter's own video tile only — every other attendee,
+the chat panel, and the meeting URL/code were cut out, so nothing here
+needs a consent check beyond the two people who run CSA and chose to
+be shown.
+{% endcomment %}
+<div class="section-head">
+  <span class="eyebrow">From the session</span>
+  <h2>Learning in action</h2>
+  <p>Straight from the Nov 7 Frontend session — the actual demo, live on screen.</p>
+</div>
+<div class="grid grid-2">
+  <div class="panel card-media">
+    <img src="{% static 'img/photos/session-nov7/live-demo.png' %}" alt="Live coding demo on the Code Secure Academy Free Tutorials platform, shown on screen during the session" loading="lazy" style="width:100%;display:block;">
+    <div class="card-body">
+      <h3>The actual demo</h3>
+      <p style="color:var(--text-muted);">Live-coded on our own Free Tutorials platform, not slides.</p>
+    </div>
+  </div>
+  <div class="panel card-media">
+    <img src="{% static 'img/photos/session-nov7/presenter.png' %}" alt="Ugochukwu Victory Emmanuel presenting on the Nov 7 Google Meet call" loading="lazy" style="width:100%;display:block;">
+    <div class="card-body">
+      <h3>Opened live by our Founder</h3>
+      <p style="color:var(--text-muted);">Ugochukwu Victory Emmanuel, Founder and Academy Director.</p>
+    </div>
+  </div>
+</div>
