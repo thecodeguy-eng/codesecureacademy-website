@@ -246,28 +246,16 @@
 {% endif %}
 
 <section>
-  <div class="container">
+  <div class="container" style="max-width:720px;">
     <div class="section-head">
       <span class="eyebrow">Beyond the cohort</span>
       <h2>Community and opportunities</h2>
-      <p>CSA isn't just the 8 weeks. A few things we're building out alongside the cohorts:</p>
+      <p>Your relationship with CSA doesn't have to end when the 8 weeks are up. Right now, that means staying connected through our WhatsApp community &mdash; announcements, peer support, and a place to ask questions between cohorts. As the ecosystem grows, that will extend into project showcases, opportunities, and resources for graduates &mdash; we'll only link to those once they're actually real.</p>
     </div>
-    <div class="grid grid-3">
-      <div class="panel card">
-        <h3>WhatsApp community</h3>
-        <p style="color:var(--text-muted);">Announcements, peer support, and a place to ask questions between lessons.</p>
-        <a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener" class="btn btn-ghost" style="margin-top:var(--space-2);">Join the channel →</a>
-      </div>
-      <div class="panel card">
-        <h3>Marketplace</h3>
-        <p style="color:var(--text-muted);">Students and alumni can list skills and services for other students. Live and still filling up as more sellers join.</p>
-        <a href="{% url 'marketplace:listing_list' %}" class="btn btn-ghost" style="margin-top:var(--space-2);">Browse the marketplace →</a>
-      </div>
-      <div class="panel card">
-        <h3>Courses</h3>
-        <p style="color:var(--text-muted);">Any tutor on the platform can publish a paid course. Open now, with new listings arriving as tutors onboard.</p>
-        <a href="{% url 'courses:course_list' %}" class="btn btn-ghost" style="margin-top:var(--space-2);">See what's up →</a>
-      </div>
+    <div class="panel card" style="text-align:center;">
+      <h3>WhatsApp community</h3>
+      <p style="color:var(--text-muted);">Announcements, peer support, and a place to ask questions between lessons.</p>
+      <a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener" class="btn btn-ghost" style="margin-top:var(--space-2);">Join the channel →</a>
     </div>
   </div>
 </section>
