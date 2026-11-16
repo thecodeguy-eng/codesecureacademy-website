@@ -50,16 +50,22 @@
   --glow: rgba(47, 125, 255, 0.4);
   --glow-soft: rgba(47, 125, 255, 0.16);
 
-  /* Electric lime accent — Master Specification 2.1 §5.2/§42. Blue stays the
-  dominant brand color; this is a restrained accent only (a badge, a focus
-  ring, an icon detail), never a large fill or body text color. Not yet used
-  anywhere — this token exists so the Phase 1 prototype has something real to
-  reference, pending founder approval per §21/§42.4 before any live page uses
-  it. --on-lime is fixed dark navy (not theme-linked) since lime needs the
-  same dark text on top of it regardless of whether the site itself is in
-  light or dark mode: #0d1224-on-#c7f36b is ~11.9:1, well past AAA. */
+  /* Electric lime accent — Master Specification 2.1 §5.2/§42, Frontend
+  Pack Phase 1. Blue stays the dominant brand color; this is a restrained
+  accent only (the urgency banner fill, the input focus ring), never a
+  large fill or body text color. --on-lime is fixed dark navy (not
+  theme-linked) since lime needs the same dark text on top of it
+  regardless of theme: #0d1224-on-#c7f36b measures 14.58:1 (WCAG formula),
+  well past AAA. */
   --lime-500: #c7f36b;
   --on-lime: #0d1224;
+  /* Focus-ring-safe lime: bright lime-500 only passes WCAG 1.4.11's 3:1
+  non-text-contrast minimum against a DARK page (15.87:1 here). Against the
+  light theme's near-white page it measures ~1.21:1 — effectively
+  invisible. This darker value (3.97:1 against #f7f9fc) is what the
+  focus ring actually uses in light mode; see the [data-theme="light"]
+  override below. */
+  --lime-focus: var(--lime-500);
 
   --text-primary: #f6f8ff;
   --text-secondary: #a6b0cf;
@@ -104,8 +110,8 @@
 
 /* =========================================================
    Light theme — same brand (navy text / electric blue accent), inverted
-   surfaces. Light is the default (set by the inline pre-paint script in
-   base.html); dark is an explicit opt-in via the header toggle, not tied
+   surfaces. Dark is the default (set by the inline pre-paint script in
+   base.html); light is an explicit opt-in via the header toggle, not tied
    to OS preference, so the site's look doesn't change under someone
    without asking. Because almost everything below is built on these
    custom properties, overriding them here is enough to re-theme the whole
@@ -135,6 +141,10 @@
   --glass-bg-strong: rgba(13, 18, 36, 0.06);
   --glass-border: rgba(13, 18, 36, 0.10);
   --glass-highlight: rgba(255, 255, 255, 0.7);
+
+  /* See the --lime-focus definition in :root for why light theme needs
+     its own darker value here. */
+  --lime-focus: #6b8528;
 
   --header-bg: rgba(255, 255, 255, 0.72);
   --mobile-nav-bg: rgba(255, 255, 255, 0.97);
@@ -727,7 +737,7 @@ a { color: var(--blue-400); text-decoration: none; }
    — the site's one lime-accent "badge/pill fill" moment (Master
    Specification 2.1 §5.2/§42), reviewed as a prototype and approved. Solid
    fill, not a tint, same as the approved mockup; --on-lime is the fixed
-   dark text that keeps ~11.9:1 contrast regardless of theme. ---------- */
+   dark text that keeps 14.58:1 contrast regardless of theme. ---------- */
 .urgency-banner-wrap { display: block; }
 .urgency-banner {
   display: inline-flex; align-items: center; gap: 0.6rem;
@@ -1015,10 +1025,13 @@ input:not([type="checkbox"]):not([type="radio"]), textarea, select {
    approved as a prototype) — the site's one "keyboard focus ring" lime
    moment. Scoped to form fields only, not the global :focus-visible rule
    every link/button/card uses, so it stays restrained rather than putting
-   lime on every interactive element site-wide. */
+   lime on every interactive element site-wide. Solid --lime-focus, not a
+   translucent tint — a 35%-opacity ring measured well under WCAG 1.4.11's
+   3:1 non-text-contrast minimum once blended with the light theme's page
+   color, which a solid fill avoids regardless of theme. */
 input:focus, textarea:focus, select:focus {
-  outline: none; border-color: var(--lime-500); background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 3px rgba(199, 243, 107, 0.35);
+  outline: none; border-color: var(--lime-focus); background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px var(--lime-focus);
 }
 .field { margin-bottom: var(--space-2); }
 .helptext { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.3rem; }
