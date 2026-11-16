@@ -21,7 +21,7 @@
 
     {% tutorial_cta_banner category %}
 
-    <div class="grid grid-3">
+    <div class="grid grid-center grid-3">
       {% for subject in subjects %}
         <a href="{{ subject.get_absolute_url }}" class="glass-panel interactive card-media">
           {% include "partials/term_chrome.html" with label=subject.slug|add:"/" %}

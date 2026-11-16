@@ -24,7 +24,7 @@
 
       {% if tracks %}
         <div class="section-head"><h2>Tracks</h2></div>
-        <div class="grid grid-3" style="margin-bottom:2rem;">
+        <div class="grid grid-center grid-3" style="margin-bottom:2rem;">
           {% for track in tracks %}
             <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
               <h3>{{ track.name }}</h3>
@@ -36,7 +36,7 @@
 
       {% if articles %}
         <div class="section-head"><h2>Free tutorials</h2></div>
-        <div class="grid grid-3" style="margin-bottom:2rem;">
+        <div class="grid grid-center grid-3" style="margin-bottom:2rem;">
           {% for article in articles %}
             <a href="{{ article.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
               <span class="eyebrow">{{ article.subject.name }}</span>
@@ -49,7 +49,7 @@
 
       {% if courses %}
         <div class="section-head"><h2>Courses</h2></div>
-        <div class="grid grid-3" style="margin-bottom:2rem;">
+        <div class="grid grid-center grid-3" style="margin-bottom:2rem;">
           {% for course in courses %}
             <a href="{{ course.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
               <h3>{{ course.title }}</h3>
@@ -62,7 +62,7 @@
 
       {% if listings %}
         <div class="section-head"><h2>Marketplace</h2></div>
-        <div class="grid grid-3" style="margin-bottom:2rem;">
+        <div class="grid grid-center grid-3" style="margin-bottom:2rem;">
           {% for listing in listings %}
             <a href="{{ listing.get_absolute_url }}" class="glass-panel interactive card" style="display:block;">
               <h3>{{ listing.title }}</h3>

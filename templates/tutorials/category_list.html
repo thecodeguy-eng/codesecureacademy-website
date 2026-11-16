@@ -30,7 +30,7 @@
 
 <section>
   <div class="container" style="max-width:960px;">
-    <div class="grid grid-3">
+    <div class="grid grid-center grid-3">
       {% for category in categories %}
         <a href="{{ category.get_absolute_url }}" class="glass-panel interactive card-media">
           {% include "partials/term_chrome.html" with label=category.slug|add:"/" %}
