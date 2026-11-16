@@ -29,7 +29,7 @@
     </div>
     <div class="grid grid-2">
       {% for tutor in cohort.instructors.all %}
-        <div class="glass-panel card">
+        <div class="panel card">
           <h3 style="margin:0 0 0.4rem;">{{ tutor.name }}</h3>
           {% if tutor.bio %}<p style="margin:0;color:var(--text-muted);">{{ tutor.bio }}</p>{% endif %}
         </div>
@@ -68,7 +68,7 @@
 
 <section>
   <div class="container grid grid-2" style="max-width:960px;align-items:start;">
-    <div class="glass-panel card">
+    <div class="panel card">
       {% if track.intro_video_url %}
         <div style="aspect-ratio:16/9;margin-bottom:1rem;border-radius:12px;overflow:hidden;">
           {% if track.is_embeddable_video %}
@@ -84,7 +84,7 @@
       <p>{{ track.description|linebreaks }}</p>
     </div>
 
-    <div class="glass-panel card">
+    <div class="panel card">
       {% if cohort %}
         <h3>Price</h3>
         <p class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}" style="font-size:1.6rem;color:var(--blue-300);font-weight:700;">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></p>
@@ -139,7 +139,7 @@
     </div>
     <div class="grid grid-2">
       {% for point in track.highlight_list %}
-        <div class="glass-panel card" style="display:flex;gap:0.9rem;align-items:center;">
+        <div class="panel card" style="display:flex;gap:0.9rem;align-items:center;">
           {% include "partials/tech_icon.html" with icon=point|tech_icon %}
           <p style="margin:0;">{{ point }}</p>
         </div>
@@ -170,7 +170,7 @@
       <p>Projects from the CSA community — real, shipped work built with the exact stack taught in this track.</p>
     </div>
     <div class="grid grid-3">
-      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+      <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
         {% include "partials/term_chrome.html" with label="futobme.vercel.app" %}
         <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/futo-bme-portal.png' %}" alt="FUTO BME Departmental Portal" loading="lazy"></div>
         <div class="card-body">
@@ -178,7 +178,7 @@
           <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span><span class="badge">REST API</span></div>
         </div>
       </a>
-      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+      <a href="https://crestcaremedicalcenter.vercel.app/" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
         {% include "partials/term_chrome.html" with label="crestcaremedicalcenter.vercel.app" %}
         <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/crestcare.png' %}" alt="CrestCare Medical Centre" loading="lazy"></div>
         <div class="card-body">
@@ -186,7 +186,7 @@
           <div class="project-tags"><span class="badge">Web design</span><span class="badge">HTML/CSS</span></div>
         </div>
       </a>
-      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="glass-panel interactive card-media project-showcase-card">
+      <a href="https://nextmediahq.net" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
         {% include "partials/term_chrome.html" with label="nextmediahq.net" %}
         <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/nextmedia.png' %}" alt="NextMedia news platform" loading="lazy"></div>
         <div class="card-body">
@@ -209,39 +209,39 @@
       <p>Not mockups — these are the actual campaign graphics behind our own Founding Cohort launch, the exact kind of work this track teaches.</p>
     </div>
     <div class="grid grid-3">
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/track-overview.jpg' %}" alt="Join Code Secure Academy — the four tracks, explained" loading="lazy"></div>
         <div class="card-body"><h3>Program overview flyer</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/founding-cohort-flyer.jpg' %}" alt="Founding Cohort 1.0 registration flyer" loading="lazy"></div>
         <div class="card-body"><h3>Registration flyer</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/dream-outcome.jpg' %}" alt="What's your dream outcome in 2 months? social post" loading="lazy"></div>
         <div class="card-body"><h3>Social campaign post</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/in-two-months.jpg' %}" alt="In 2 months, you could... social post" loading="lazy"></div>
         <div class="card-body"><h3>Outcome-focused post</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/how-it-works.jpg' %}" alt="How it works — 3 step explainer" loading="lazy"></div>
         <div class="card-body"><h3>Explainer graphic</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/independence-day.jpg' %}" alt="66 Years of Nigeria — independence day campaign post" loading="lazy"></div>
         <div class="card-body"><h3>Occasion-led campaign post</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/account-signup.jpg' %}" alt="Your account is one click away — signup promo" loading="lazy"></div>
         <div class="card-body"><h3>Product promo graphic</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/missed-email.jpg' %}" alt="Didn't get our email? follow-up post" loading="lazy"></div>
         <div class="card-body"><h3>Follow-up campaign post</h3></div>
       </div>
-      <div class="glass-panel card-media design-showcase-card">
+      <div class="panel card-media design-showcase-card">
         <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/window-closing.jpg' %}" alt="The window is closing — urgency post" loading="lazy"></div>
         <div class="card-body"><h3>Urgency-driven post</h3></div>
       </div>
@@ -253,7 +253,7 @@
 {% if track.slug == "cybersecurity" %}
 <section>
   <div class="container">
-    <div class="glass-panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;">
+    <div class="panel card" style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;">
       <div>
         <span class="eyebrow">Try it before you enroll</span>
         <h2 style="margin-bottom:0.4rem;">Can you spot the bug?</h2>
@@ -267,7 +267,7 @@
 
 <section>
   <div class="container">
-    <div class="glass-panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
+    <div class="panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
       <h2>Ready to start {{ track.name }}?</h2>
       <p class="lead" style="margin:0 auto var(--space-3);">
         {% if cohort and cohort.accepting_enrollment %}This cohort is active right now.{% if cohort.enrollment_deadline %} Enrollment closes {{ cohort.enrollment_deadline|date:"F j, Y" }}, lock your spot in before then.{% else %} Lock your spot in.{% endif %}

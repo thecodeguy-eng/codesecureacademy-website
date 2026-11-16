@@ -93,6 +93,33 @@
   --space-5: 4rem;
   --space-6: 6rem;
 
+  /* Type scale (Frontend Implementation Pack, Phase 1) — named from the
+  sizes h1/h2/h3 already used, not invented. Wired into those three rules
+  below; the hundred-odd smaller ad-hoc sizes scattered through this file
+  (captions, labels, pill text) are a Phase-2-and-later migration, not
+  rewritten wholesale here to avoid a large, low-value, regression-risked
+  sweep for no visible change. New component work should reach for these
+  instead of a new literal size. */
+  --text-display: clamp(2.4rem, 4.5vw + 1rem, 4.2rem);  /* h1 */
+  --text-heading: clamp(1.8rem, 2.5vw + 1rem, 2.6rem);  /* h2 */
+  --text-subheading: 1.25rem;                            /* h3 */
+  --text-body: 1rem;
+  --text-small: 0.9rem;
+  --text-caption: 0.8rem;
+  --text-label: 0.75rem;
+  --text-code: 0.85rem;
+
+  /* Breakpoint scale (documented, not literal CSS variables — plain CSS
+  media-query conditions can't consume custom properties). Three
+  deliberate tiers plus two narrow, component-specific exceptions already
+  in the file: 640px (stack to one column — code editor, poster editor,
+  most two-column sections), 860px (tablet — section-alt reversal,
+  dashboard-adjacent components), 1180px (matches .container's max-width,
+  the large/desktop-wide tier). 560px (small-phone-only refinements, e.g.
+  the urgency banner) and 700px (hero illustration/photo banner) are
+  narrower one-off tweaks layered on top of those three, not a fourth and
+  fifth tier — use 640/860/1180 for anything new. */
+
   --font-sans: "Satoshi", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --font-display: "Satoshi", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -256,9 +283,9 @@ h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; ma
 /* h1/h2 get a slightly gentler tracking than h3/h4 at their much larger
    display sizes, where the base -0.03em reads as too tight. */
 h1, h2 { font-family: var(--font-display); letter-spacing: -0.005em; }
-h1 { font-size: clamp(2.4rem, 4.5vw + 1rem, 4.2rem); }
-h2 { font-size: clamp(1.8rem, 2.5vw + 1rem, 2.6rem); }
-h3 { font-size: 1.25rem; letter-spacing: -0.015em; }
+h1 { font-size: var(--text-display); }
+h2 { font-size: var(--text-heading); }
+h3 { font-size: var(--text-subheading); letter-spacing: -0.015em; }
 p { color: var(--text-secondary); margin: 0 0 var(--space-2); }
 a { color: var(--blue-400); text-decoration: none; }
 
@@ -330,10 +357,21 @@ a { color: var(--blue-400); text-decoration: none; }
    one. Force it explicitly. */
 .track-playground [hidden] { display: none !important; }
 .track-playground-tabs {
+  position: relative;
   display: flex; gap: 0.4rem; padding: 0.6rem 0.6rem 0; background: var(--glass-bg-strong);
   overflow-x: auto; scrollbar-width: none;
 }
 .track-playground-tabs::-webkit-scrollbar { display: none; }
+/* Scroll affordance (Frontend Pack, F3): on narrow screens the four tabs
+   don't all fit and the scrollbar is deliberately hidden above, so without
+   this the cut-off last tab reads as a layout bug instead of "swipe for
+   more." A persistent edge fade, not a scroll-position-tracked one — this
+   stays CSS-only and never touches track-playground.js's tab logic. */
+.track-playground-tabs::after {
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 28px;
+  background: linear-gradient(to right, transparent, var(--glass-bg-strong));
+  pointer-events: none;
+}
 .track-tab {
   flex-shrink: 0; padding: 0.5rem 0.85rem; border-radius: 8px 8px 0 0; border: none; cursor: pointer;
   background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 600;
