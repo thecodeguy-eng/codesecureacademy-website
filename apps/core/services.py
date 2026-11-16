@@ -211,7 +211,9 @@ def _deadline_reminder_recipients():
 BLAST_AUDIENCE_CHOICES = [
     ("both", "Registered users + waitlist (everyone)"),
     ("registered", "Only registered users"),
+    ("registered_unpaid", "Only registered users who haven't paid yet"),
     ("waitlist", "Only waitlist (never registered)"),
+    ("paid", "Only paid/enrolled students"),
     ("staff_admin", "Only staff/admin accounts"),
     ("tutors", "Only tutors/instructors"),
 ]
@@ -225,13 +227,17 @@ def blast_recipients(audience="both"):
     oldest-signup-first; "waitlist" means people who never actually
     registered an account, so any email that IS a registered user's is
     excluded from it. Always excludes anyone who's unsubscribed or whom
-    Brevo has already blocked. Unlike _deadline_reminder_recipients, this
-    does NOT exclude confirmed/paid students for "both"/"registered" — an
-    announcement isn't a "come pay" nag, paying students still want to
-    hear about site updates."""
+    Brevo has already blocked. Plain "both"/"registered" does NOT exclude
+    confirmed/paid students — an ordinary announcement isn't a "come pay"
+    nag, paying students still want to hear about site updates. Use
+    "registered_unpaid" or "paid" specifically when a campaign's content
+    only makes sense for one side of that line (e.g. an enrollment nudge
+    shouldn't go to people who already paid; a cohort-logistics note
+    shouldn't go to people who haven't)."""
     from django.contrib.auth import get_user_model
     from django.db.models import Q
 
+    from apps.cohorts.models import Enrollment
     from apps.core.models import EmailOptOut, WaitlistSignup
     from apps.instructors.models import Instructor
 
@@ -239,6 +245,13 @@ def blast_recipients(audience="both"):
     excluded = {e.lower() for e in EmailOptOut.objects.values_list("email", flat=True)} | _brevo_blocked_emails()
     if audience == "waitlist":
         excluded |= {e.lower() for e in User.objects.exclude(email="").values_list("email", flat=True)}
+    if audience == "registered_unpaid":
+        excluded |= {
+            e.lower()
+            for e in Enrollment.objects.filter(status=Enrollment.Status.CONFIRMED).values_list(
+                "student__email", flat=True
+            )
+        }
 
     seen, ordered = set(), []
 
@@ -256,8 +269,16 @@ def blast_recipients(audience="both"):
         qs = Instructor.objects.filter(is_active=True).exclude(email="").order_by("name")
         for email in qs.values_list("email", flat=True):
             add(email)
+    elif audience == "paid":
+        qs = (
+            Enrollment.objects.filter(status=Enrollment.Status.CONFIRMED)
+            .exclude(student__email="")
+            .order_by("confirmed_at")
+        )
+        for email in qs.values_list("student__email", flat=True):
+            add(email)
     else:
-        if audience in ("both", "registered"):
+        if audience in ("both", "registered", "registered_unpaid"):
             qs = User.objects.filter(is_staff=False, is_superuser=False).exclude(email="").order_by("date_joined")
             for email in qs.values_list("email", flat=True):
                 add(email)
