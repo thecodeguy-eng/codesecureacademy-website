@@ -17,7 +17,9 @@
     var input = root.querySelector("[data-code-input]");
     var output = root.querySelector("[data-code-output]");
     var runBtn = root.querySelector("[data-code-run]");
+    var resetBtn = root.querySelector("[data-code-reset]");
     if (!input || !output) return;
+    var initialCode = input.value; // what the tutorial shipped with, for Reset
 
     function render() {
       output.srcdoc = input.value;
@@ -35,6 +37,11 @@
 
     input.addEventListener("input", debounce(render, 400));
     if (runBtn) runBtn.addEventListener("click", render);
+    if (resetBtn) resetBtn.addEventListener("click", function () {
+      input.value = initialCode;
+      render();
+      input.focus();
+    });
 
     render();
   }

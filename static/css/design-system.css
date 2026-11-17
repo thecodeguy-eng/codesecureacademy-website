@@ -534,7 +534,8 @@ a { color: var(--blue-400); text-decoration: none; }
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem var(--space-3); gap: var(--space-2); }
 .brand { display: flex; align-items: center; gap: 0.6rem; color: var(--text-primary); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.01em; flex-shrink: 0; }
-.brand-mark { height: 38px; width: auto; border-radius: 8px; display: block; }
+.brand-mark { height: 44px; width: auto; max-width: none; display: block; }
+.brand { flex-shrink: 0; }
 /* Two logo assets — one with white/blue strokes for dark backgrounds, one
    recolored dark navy/blue for light backgrounds — swapped by theme so the
    white strokes never disappear against a light page. */
@@ -542,12 +543,14 @@ a { color: var(--blue-400); text-decoration: none; }
 [data-theme="light"] .brand-mark-dark { display: none; }
 [data-theme="light"] .brand-mark-light { display: block; }
 .brand-code { color: var(--blue-400); }
+/* Active-link underline is a decorative accent (lime), never text. */
+:root { --accent-bar: var(--lime-500); }
 
 /* ---------- Theme toggle ---------- */
 
 .theme-toggle {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 38px; height: 38px; border-radius: 50%; padding: 0; flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 50%; padding: 0; flex-shrink: 0;
   background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary);
   cursor: pointer; transition: border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
@@ -568,7 +571,7 @@ a { color: var(--blue-400); text-decoration: none; }
 .nav-search { display: flex; align-items: center; flex-shrink: 0; }
 .search-toggle {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 38px; height: 38px; border-radius: 50%; padding: 0; flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 50%; padding: 0; flex-shrink: 0;
   background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-secondary);
   cursor: pointer; transition: border-color var(--transition-fast), color var(--transition-fast);
 }
@@ -596,9 +599,9 @@ a { color: var(--blue-400); text-decoration: none; }
 .main-nav a:not(.btn):hover { color: var(--text-primary); }
 .main-nav a:not(.btn):hover::after { right: 0; }
 .main-nav a:not(.btn).active { color: var(--text-primary); }
-.main-nav a:not(.btn).active::after { right: 0; background: var(--blue-500); }
+.main-nav a:not(.btn).active::after { right: 0; background: var(--accent-bar); height: 2px; }
 
-.nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; }
+.nav-toggle { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: none; border: none; cursor: pointer; width: 44px; height: 44px; padding: 0; }
 .nav-toggle span { width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: var(--transition-fast); }
 
 /* ---------- Buttons ---------- */
@@ -618,6 +621,18 @@ a { color: var(--blue-400); text-decoration: none; }
   color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 20px -4px var(--glow);
 }
+/* Phase 1 decision: white on #2F7DFF is only 3.82:1, so on the dark theme the
+   primary button is solid blue-500 with dark text (5.30:1). The light theme
+   keeps the existing blue-600/700 fill with white text (5.57:1+). */
+:root:not([data-theme="light"]) .btn-primary {
+  background: var(--blue-500); color: #04060d;
+  box-shadow: 0 6px 20px -6px var(--glow);
+}
+.btn-secondary {
+  background: transparent; color: var(--text-primary);
+  border-color: var(--glass-border); border-width: 1.5px;
+}
+.btn-secondary:hover { border-color: var(--text-primary); background: var(--glass-bg); }
 .btn-primary:hover { transform: translateY(-2px) scale(1.015); filter: brightness(1.08); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 10px 28px -4px var(--glow); }
 
 .btn-ghost {
@@ -1377,6 +1392,7 @@ body.modal-open { overflow: hidden; }
   .dashboard-shell { grid-template-columns: 1fr; }
   .dashboard-sidebar { position: static; flex-direction: row; overflow-x: auto; gap: 0.3rem; }
   .dashboard-sidebar-identity { display: none; }
+  .dashboard-sidebar { flex-wrap: wrap; overflow-x: visible; }
   .dashboard-nav-link { flex-shrink: 0; }
 }
 
@@ -1448,15 +1464,26 @@ body.modal-open { overflow: hidden; }
 
 /* ---------- Footer ---------- */
 
-.site-footer { border-top: 1px solid rgba(255, 255, 255, 0.07); margin-top: var(--space-6); padding: var(--space-4) 0 var(--space-2); }
-.footer-inner { display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between; }
-.footer-links { display: flex; flex-direction: column; gap: 0.6rem; min-width: 140px; }
-.footer-links h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 0.3rem; }
-.footer-links a { color: var(--text-secondary); font-size: 0.9rem; transition: color var(--transition-fast); }
-.footer-links a:hover { color: var(--blue-400); }
-.footer-brand { max-width: 260px; }
+.site-footer { border-top: 1px solid var(--glass-border); background: var(--navy-900); margin-top: var(--space-6); padding: var(--space-5, 3rem) 0 var(--space-2); }
+.footer-inner { display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+.footer-links { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.footer-links h4, .footer-waitlist h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 0 0 0.5rem; }
+.footer-links a { color: var(--text-primary); font-size: 0.92rem; padding: 0.35rem 0; transition: color var(--transition-fast); }
+.footer-links a:hover { color: var(--blue-400); text-decoration: underline; }
+.footer-brand { min-width: 0; }
+.footer-brand .brand-mark { height: 48px; }
+.footer-tagline { font-weight: 700; margin: var(--space-2) 0 0.2rem; }
+.footer-desc { color: var(--text-secondary); max-width: 36ch; font-size: 0.92rem; }
+.footer-waitlist { margin-top: var(--space-3); max-width: 340px; }
+.footer-waitlist-copy { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 0.6rem; }
+.footer-waitlist-form { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.footer-waitlist-form input[type="email"] { flex: 1; min-width: 140px; }
+@media (max-width: 900px) {
+  .footer-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-brand { grid-column: 1 / -1; }
+}
 .footer-social { display: flex; gap: var(--space-2); margin-top: var(--space-2); }
-.social-icon { color: var(--text-secondary); transition: color var(--transition-fast), transform var(--transition-fast); }
+.social-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin: -11px 0 -11px -11px; color: var(--text-secondary); transition: color var(--transition-fast), transform var(--transition-fast); }
 .social-icon:hover { color: var(--blue-400); transform: translateY(-2px); }
 .footer-copy { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: var(--space-3); }
 
@@ -1469,7 +1496,7 @@ body.modal-open { overflow: hidden; }
    genuinely doesn't fit on one line until well into laptop widths. Collapsing
    it to the hamburger earlier, at 1180px, avoids the cramped mid-range where
    links were wrapping their own text mid-word. */
-@media (max-width: 1180px) {
+@media (max-width: 1100px) {
   .main-nav {
     position: absolute; top: 100%; left: 0; right: 0; flex-direction: column;
     background: var(--mobile-nav-bg); backdrop-filter: blur(18px);
@@ -1528,3 +1555,181 @@ body.modal-open { overflow: hidden; }
   .glass-panel { backdrop-filter: none; background: var(--lite-panel-bg); }
   body::before { display: none; }
 }
+
+/* =========================================================
+   Phase 3 homepage (Master Implementation Spec section 4)
+   ========================================================= */
+
+/* Demo tabs: full track names, wrap onto a second row instead of scrolling,
+   so every track stays visible and reachable on narrow screens. */
+.track-playground-tabs { flex-wrap: wrap; overflow: visible; }
+.track-playground-tabs::after { display: none; }
+.track-tab { border-radius: 8px; min-height: 40px; }
+.track-tab.active { box-shadow: inset 0 -2px 0 var(--accent-bar); }
+[data-track-panel]:focus { outline: none; }
+
+/* Hero headline: reveal line by line (never letter by letter), then settle. */
+.home-hero { text-align: left; }
+.home-hero .eyebrow { justify-content: flex-start; }
+.hero-title { font-size: clamp(2.3rem, 5.2vw, 4rem); line-height: 1.08; margin: 0 0 var(--space-3); }
+.hero-line { display: block; overflow: hidden; padding-bottom: 0.08em; }
+.hero-line > span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line > span { animation: heroLineUp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .hero-line-2 > span { animation-delay: 0.12s; }
+  .home-hero .hero-lead { animation: heroFade 0.6s 0.3s both; }
+  .home-hero .hero-cta { animation: heroFade 0.6s 0.5s both; }
+  @keyframes heroLineUp { from { transform: translateY(110%); } to { transform: none; } }
+  @keyframes heroFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+@media (max-width: 860px) {
+  .home-hero { text-align: center; }
+  .home-hero .eyebrow { justify-content: center; }
+}
+
+/* Tracks overview cards */
+.home-track-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+.home-track-card { display: flex; flex-direction: column; gap: 0.5rem; padding: var(--space-3); text-align: left; color: var(--text-primary); }
+.home-track-card .track-icon-wrap { width: 52px; height: 52px; margin: 0 0 0.5rem; border-radius: var(--radius-md, 12px); }
+.home-track-card .track-icon-wrap svg { width: 26px; height: 26px; }
+.home-track-card h3 { margin: 0; }
+.home-track-card p { color: var(--text-secondary); font-size: 0.95rem; margin: 0; }
+.home-track-go { margin-top: auto; padding-top: var(--space-2); font-weight: 700; color: var(--blue-400); font-size: 0.92rem; }
+@media (max-width: 1000px) { .home-track-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .home-track-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.home-band { background: var(--navy-900); border-block: 1px solid var(--glass-border); }
+.home-two-up { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+@media (max-width: 760px) { .home-two-up { grid-template-columns: minmax(0, 1fr); } }
+
+/* How Learning Works journey */
+.journey { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); counter-reset: step; }
+.journey li { counter-increment: step; position: relative; padding-top: 3rem; }
+.journey li::before {
+  content: counter(step); position: absolute; top: 0; left: 0; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--navy-700); border: 1.5px solid var(--glass-border); color: var(--text-primary);
+  font: 700 0.85rem/29px var(--font-mono, monospace); text-align: center;
+}
+.journey li::after { content: ""; position: absolute; top: 15px; left: 42px; right: 6px; height: 2px; background: var(--glass-border); }
+.journey li:last-child::after { display: none; }
+.journey li:last-child::before { background: var(--lime-500); border-color: var(--lime-500); color: var(--on-lime); }
+.journey h3 { font-size: 1.05rem; margin: 0 0 0.3rem; }
+.journey p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+@media (max-width: 900px) {
+  .journey { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .journey li { padding: 0 0 var(--space-3) 3rem; }
+  .journey li::after { top: 36px; left: 15px; width: 2px; height: auto; bottom: 4px; right: auto; }
+}
+
+.why-split { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+.why-split .lead { text-align: left; }
+.scholarship-note { border-style: dashed; }
+.scholarship-note p { color: var(--text-secondary); margin-bottom: 0; }
+@media (max-width: 860px) { .why-split { grid-template-columns: minmax(0, 1fr); } }
+.track-tab { color: var(--text-secondary); }
+.track-tab:hover, .track-tab.active { color: var(--text-primary); }
+.hero-title { font-size: clamp(2.2rem, 4.4vw, 3.6rem); }
+
+/* =========================================================
+   Phase 4 tracks (Master Implementation Spec section 5)
+   ========================================================= */
+.tracks-hero, .track-detail-hero { text-align: left; padding-bottom: var(--space-3); }
+.tracks-hero .eyebrow { justify-content: flex-start; }
+.tracks-hero .container, .track-detail-hero .container { margin-left: auto; margin-right: auto; }
+.tracks-hero p.lead, .track-detail-hero p.lead { margin-left: 0; }
+
+.tracks-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+@media (max-width: 760px) { .tracks-overview { grid-template-columns: minmax(0, 1fr); } }
+.tracks-overview-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); }
+.tracks-overview-head { display: flex; align-items: center; gap: var(--space-2); }
+.tracks-overview-head .track-icon-wrap { width: 52px; height: 52px; margin: 0; flex-shrink: 0; }
+.tracks-overview-head .track-icon-wrap svg { width: 26px; height: 26px; }
+.tracks-overview-head h2 { margin: 0; font-size: 1.35rem; }
+.tracks-overview-head h2 a { color: var(--text-primary); }
+.tracks-overview-blurb { color: var(--text-secondary); margin: 0; }
+.tracks-overview-points { margin: 0; padding-left: 1.1rem; color: var(--text-secondary); font-size: 0.95rem; }
+.tracks-overview-points li { margin-bottom: 0.25rem; }
+.tracks-overview-facts { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: 0; padding-top: var(--space-2); border-top: 1px solid var(--glass-border); }
+.tracks-overview-facts dt, .track-facts dt { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+.tracks-overview-facts dd, .track-facts dd { margin: 0.15rem 0 0; font-weight: 700; }
+.tracks-overview-cta { margin-top: auto; align-self: flex-start; }
+
+.crumbs { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: var(--space-2); }
+.crumbs a { color: var(--text-secondary); text-decoration: underline; }
+.track-detail-hero .track-icon-wrap { margin: 0 0 var(--space-2); width: 64px; height: 64px; }
+.track-detail-hero h1 { margin-bottom: var(--space-2); }
+
+.track-detail-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: var(--space-4); align-items: start; }
+@media (max-width: 900px) { .track-detail-grid { grid-template-columns: minmax(0, 1fr); } .track-facts { order: -1; position: static !important; } }
+.track-detail-block { margin-bottom: var(--space-4); }
+.track-detail-block h2 { font-size: 1.4rem; margin-bottom: var(--space-1); }
+.track-explore-list { margin: 0; padding-left: 1.2rem; }
+.track-explore-list li { margin-bottom: 0.4rem; }
+.track-facts { position: sticky; top: 88px; padding: var(--space-3); }
+.track-facts-title { font-size: 1.1rem; margin: 0 0 var(--space-2); }
+.track-facts dl { margin: 0 0 var(--space-3); display: grid; gap: var(--space-2); }
+.track-facts-note { display: block; margin-top: 0.3rem; font-size: 0.85rem; color: var(--text-secondary); font-weight: 400; }
+.track-facts-note-block { font-size: 0.9rem; color: var(--text-secondary); }
+
+/* =========================================================
+   Phase 5 tutorials and interactive learning
+   ========================================================= */
+.bug-hunt-feature {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap;
+  padding: var(--space-3); margin-bottom: var(--space-3); color: var(--text-primary);
+}
+.bug-hunt-feature h2 { font-size: 1.4rem; margin: 0 0 0.3rem; }
+.bug-hunt-feature p { margin: 0; color: var(--text-secondary); max-width: 56ch; }
+.bug-hunt-nudge { margin-top: var(--space-3); color: var(--text-secondary); }
+.code-editor-buttons { display: inline-flex; gap: 0.5rem; }
+.code-editor-toolbar .btn-sm { min-height: 36px; }
+
+/* =========================================================
+   Phase 6 institutional pages
+   ========================================================= */
+.about-hero { text-align: left; }
+.about-hero .eyebrow { justify-content: flex-start; }
+.about-hero .container { margin-left: auto; margin-right: auto; }
+.about-hero p.lead { margin-left: 0; margin-right: 0; }
+.about-hero .hero-actions { justify-content: flex-start; }
+.about-narrow { max-width: 720px; }
+.about-quote { margin: 0; font-size: clamp(1.4rem, 3vw, 2.1rem); font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; border-left: 3px solid var(--accent-bar); padding-left: var(--space-3); }
+.about-vmp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); }
+.about-vmp p { color: var(--text-secondary); margin: 0; }
+@media (max-width: 860px) { .about-vmp { grid-template-columns: minmax(0, 1fr); } }
+.about-timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.about-timeline li { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: var(--space-2); align-items: baseline; }
+.about-timeline p { margin: 0; }
+.about-year { font-weight: 700; font-size: 1.2rem; color: var(--blue-400); }
+.about-eco { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-2); }
+.about-eco h3 { margin: 0 0 0.3rem; }
+.about-eco p { color: var(--text-secondary); font-size: 0.92rem; margin: 0 0 var(--space-1); }
+.about-eco a { font-weight: 700; font-size: 0.92rem; }
+@media (max-width: 1100px) { .about-eco { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .about-eco { grid-template-columns: minmax(0, 1fr); } }
+
+.contact-channels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); max-width: 900px; }
+.contact-card { display: block; text-align: center; color: var(--text-primary); }
+.contact-card h2 { font-size: 1.2rem; margin: 0 0 0.3rem; color: var(--blue-400); }
+.contact-card p { margin: 0; color: var(--text-secondary); overflow-wrap: anywhere; }
+@media (max-width: 700px) { .contact-channels { grid-template-columns: minmax(0, 1fr); } }
+
+.faq-details { margin-bottom: var(--space-1); padding: 0; }
+.faq-details summary { cursor: pointer; padding: var(--space-2) var(--space-3); font-weight: 700; min-height: 48px; display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); list-style: none; }
+.faq-details summary::-webkit-details-marker { display: none; }
+.faq-details summary::after { content: "+"; font-family: var(--font-mono, monospace); color: var(--text-secondary); flex-shrink: 0; }
+.faq-details[open] summary::after { content: "\2212"; }
+.faq-details .faq-answer { padding: 0 var(--space-3) var(--space-2); margin: 0; color: var(--text-secondary); }
+
+/* =========================================================
+   Phase 7 learner dashboard
+   ========================================================= */
+.dashboard-empty-hero { text-align: left; margin-top: var(--space-3); }
+.dashboard-empty-hero h2 { margin-bottom: 0.4rem; }
+.dashboard-empty-hero p { color: var(--text-secondary); }
+.dash-announcement { margin-top: 0.85rem; padding: var(--space-2); border-left: 3px solid var(--accent-bar); background: var(--glass-bg); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.dash-announcement p { margin: 0.25rem 0 0; color: var(--text-secondary); }
+.dash-row-extras { margin-top: 0.65rem; display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: baseline; font-size: 0.88rem; }
+/* Phase 7: the generic ".dashboard-sidebar-identity span" rule was greying out
+   the avatar initial (muted text on blue). Restore white on the blue fill. */
+.dashboard-sidebar-identity .dashboard-avatar { color: #fff; font-size: 0.95rem; }

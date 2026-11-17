@@ -56,7 +56,7 @@
       return { ok: false, title: "Cracked in a few hours.", body: "One character type isn't enough. Mix in uppercase, numbers, and symbols." };
     }
     if (trimmed.length >= 12 && variety >= 3) {
-      return { ok: true, title: "This would take centuries to crack.", body: "Long, mixed, and unpredictable — exactly what a real password should look like." };
+      return { ok: true, title: "This would take centuries to crack.", body: "Long, mixed, and unpredictable, which is what a strong password should look like." };
     }
     return { ok: true, title: "Decent, but not bulletproof.", body: "This would hold up for a while. Longer and more varied is always better." };
   }
@@ -145,6 +145,15 @@
     var timer = null;
     var typingToken = 0;
 
+    // Accessible tab wiring: unique ids, tab <-> panel association.
+    var uid = "tp" + Math.floor(Math.random() * 1e6);
+    var panel = root.querySelector("[data-track-panel]");
+    if (panel) panel.id = uid + "-panel";
+    tabs.forEach(function (t) {
+      t.id = uid + "-tab-" + t.getAttribute("data-track-tab");
+      if (panel) t.setAttribute("aria-controls", panel.id);
+    });
+
     function render() {
       var track = TRACKS[current];
       if (track) output.srcdoc = track.run(input.value);
@@ -204,6 +213,8 @@
         var active = t.getAttribute("data-track-tab") === id;
         t.classList.toggle("active", active);
         t.setAttribute("aria-selected", active ? "true" : "false");
+        t.tabIndex = active ? 0 : -1;
+        if (active && panel) panel.setAttribute("aria-labelledby", t.id);
       });
 
       codePanes.forEach(function (el) { el.hidden = isDesign; });
@@ -227,9 +238,22 @@
       selectTrack(order[(idx + 1) % order.length], false);
     }
 
-    tabs.forEach(function (tab) {
+    tabs.forEach(function (tab, i) {
       tab.addEventListener("click", function () {
         selectTrack(tab.getAttribute("data-track-tab"), true);
+      });
+      // Arrow / Home / End move between tabs (WAI-ARIA tabs pattern).
+      tab.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+        else if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === "Home") next = tabs[0];
+        else if (e.key === "End") next = tabs[tabs.length - 1];
+        if (next) {
+          e.preventDefault();
+          selectTrack(next.getAttribute("data-track-tab"), true);
+          next.focus();
+        }
       });
     });
 
@@ -239,6 +263,9 @@
 
     root.addEventListener("mouseenter", function () { paused = true; });
     root.addEventListener("mouseleave", function () { paused = false; });
+    // Keyboard users: focus anywhere inside the demo pauses auto-switching too.
+    root.addEventListener("focusin", function () { paused = true; });
+    root.addEventListener("focusout", function () { paused = false; });
     root.addEventListener("pointerdown", function (e) {
       // Touching the poster editor should stop rotation too, same as
       // typing/Run does for the code tabs — any real interaction counts.

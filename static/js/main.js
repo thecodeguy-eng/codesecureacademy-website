@@ -25,9 +25,13 @@
   if (themeToggle) {
     var themeLabel = themeToggle.querySelector(".theme-toggle-label");
     var syncThemeLabel = function () {
-      if (!themeLabel) return;
       var isLight = document.documentElement.getAttribute("data-theme") === "light";
-      themeLabel.textContent = isLight ? "Switch to dark mode" : "Switch to light mode";
+      var text = isLight ? "Switch to dark mode" : "Switch to light mode";
+      // The visible label is hidden on desktop (icon-only), so the button
+      // needs its own accessible name there.
+      themeToggle.setAttribute("aria-label", text);
+      themeToggle.setAttribute("title", text);
+      if (themeLabel) themeLabel.textContent = text;
     };
     syncThemeLabel();
 
@@ -190,6 +194,7 @@
       var applyState = function () {
         nav.classList.toggle("open", open);
         toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
         document.body.classList.toggle("nav-scroll-lock", open);
       };
 
@@ -215,6 +220,14 @@
       });
     });
   }
+
+  // Escape closes the open mobile menu and returns focus to its button.
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && toggle && nav && nav.classList.contains("open")) {
+      toggle.click();
+      toggle.focus();
+    }
+  });
 
   // --- Nav search: collapses to an icon button, expands into an input on
   // click so it never fights the nav links for horizontal space.
