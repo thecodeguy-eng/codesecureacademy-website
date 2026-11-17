@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 {% load tutorial_extras %}
-{% block title %}Free Coding Tutorials · HTML, Python, Linux & More{% endblock %}
-{% block meta_description %}Free, interactive coding tutorials. Edit real code in your browser and see results instantly. No sign-up needed.{% endblock %}
+{% block title %}Free Tutorials · Learn by trying · Code Secure Academy{% endblock %}
+{% block meta_description %}Free tutorials that explain concepts through examples and practice. Edit code in your browser and see the result. No sign-up needed.{% endblock %}
 {% block content %}
 
 <section class="hero">
   <div class="hero-spotlight"></div>
   <div class="container" style="max-width:720px;">
-    <span class="eyebrow">100% free, no sign-up needed</span>
-    <h1>Learn to code, free</h1>
-    <p class="lead">Pick a path, read tutorials, edit real code in your browser, and see results instantly. When you're ready to go deeper, our tutors' full video courses pick up where these leave off.</p>
+    <span class="eyebrow">Free, no sign-up needed</span>
+    <h1>Learn by trying.</h1>
+    <p class="lead">Explore free tutorials designed to help you understand concepts through examples and practice. Work through the material at your own pace and use the available interactive tools where provided.</p>
   </div>
 </section>
 
@@ -24,6 +24,14 @@
 
 <section style="padding-bottom:0;">
   <div class="container" style="max-width:960px;">
+    <a href="{% url 'bug_hunt' %}" class="panel interactive bug-hunt-feature">
+      <div>
+        <span class="eyebrow">Interactive practice</span>
+        <h2>Find the bug. Understand the code.</h2>
+        <p>Inspect a small code example, pick the line with the security mistake, then read why it is a problem and how to fix it.</p>
+      </div>
+      <span class="btn btn-secondary">Try Bug Hunt</span>
+    </a>
     {% tutorial_cta_banner %}
   </div>
 </section>

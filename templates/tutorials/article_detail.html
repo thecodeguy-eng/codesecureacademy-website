@@ -32,16 +32,7 @@
 
     {% tutorial_cta_banner category %}
 
-    {% if related_courses %}
-      <div class="glass-panel card" style="margin-top:2rem;text-align:center;">
-        <span class="eyebrow">Go further</span>
-        <h3>Want structured, in-depth {{ subject.name }} training?</h3>
-        <p>These free articles cover the basics. Our tutors' paid video courses go much deeper.</p>
-        {% for course in related_courses %}
-          <a href="{{ course.get_absolute_url }}" class="btn btn-primary" style="margin:0.25rem;">{{ course.title }}, ₦{{ course.price_naira|naira }}</a>
-        {% endfor %}
-      </div>
-    {% endif %}
+    <p class="bug-hunt-nudge">Want more practice reading code? Try <a href="{% url 'bug_hunt' %}">Bug Hunt: find the bug, understand the code</a>.</p>
   </div>
 </section>
 

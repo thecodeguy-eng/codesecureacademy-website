@@ -1,22 +1,15 @@
 {% comment %}
-Quiet, non-blocking reminder shown on every free-tutorial page. Not a
-popup/overlay — just an inline card in the normal page flow, pointing at
-whichever action fits: enroll (open cohort), join waitlist (full/closed/no
-cohort yet), or explore all tracks (no track matches this category).
+Quiet, non-blocking pointer shown on free-tutorial pages. Inline card in the
+normal page flow, never a popup. Phase 5: no urgency badges, deadlines or
+outcome claims; it only points to the matching track page or all tracks.
 {% endcomment %}
 <div class="glass-panel card cta-banner">
-  {% if track and cohort and cohort.accepting_enrollment %}
-    <span class="eyebrow">Ready to go further?</span>
-    <p>These free tutorials are a preview, our <strong>{{ track.name }}</strong> cohort covers it in depth, with a real project and a cohort alongside you.
-    {% if cohort.enrollment_deadline %}<span class="badge badge-urgent">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>{% else %}<span class="badge badge-open">Enrolling now</span>{% endif %}</p>
-    <a href="{{ track.get_absolute_url }}" class="btn btn-primary btn-sm">Enroll in {{ track.name }}</a>
-  {% elif track %}
-    <span class="eyebrow">Ready to go further?</span>
-    <p>These free tutorials are a preview, we're not admitting students for our <strong>{{ track.name }}</strong> cohort right now, but you can join the waitlist and we'll email you the moment it opens.</p>
-    <a href="{{ track.get_absolute_url }}" class="btn btn-primary btn-sm">Join the {{ track.name }} waitlist</a>
+  <span class="eyebrow">Ready to go further?</span>
+  {% if track %}
+    <p>These free tutorials are a preview of the practical work in the <strong>{{ track.name }}</strong> track.</p>
+    <a href="{{ track.get_absolute_url }}" class="btn btn-secondary btn-sm">Explore the {{ track.name }} track</a>
   {% else %}
-    <span class="eyebrow">Ready to go further?</span>
-    <p>These free tutorials are a preview of what a Code Secure Academy cohort covers, project work and all.</p>
-    <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary btn-sm">Explore our tracks</a>
+    <p>These free tutorials are a preview of the practical learning in our tracks.</p>
+    <a href="{% url 'cohorts:track_list' %}" class="btn btn-secondary btn-sm">Explore our tracks</a>
   {% endif %}
 </div>

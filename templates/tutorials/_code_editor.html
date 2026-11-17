@@ -15,7 +15,10 @@ server-side execution.
     <div class="code-editor" data-code-editor>
       <div class="code-editor-toolbar">
         <span>Try it yourself</span>
-        <button type="button" class="btn btn-primary btn-sm" data-code-run>Run ▶</button>
+        <span class="code-editor-buttons">
+          <button type="button" class="btn btn-secondary btn-sm" data-code-reset>Reset</button>
+          <button type="button" class="btn btn-primary btn-sm" data-code-run>Run ▶</button>
+        </span>
       </div>
       <div class="code-editor-panes">
         <textarea class="code-editor-input" data-code-input spellcheck="false">{{ article.example_code }}</textarea>

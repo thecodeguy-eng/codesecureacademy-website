@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Spot the Bug · Code Secure Academy{% endblock %}
-{% block meta_description %}8 real code snippets, each hiding one real security mistake. Click the vulnerable line. Built by Code Secure Academy's Cybersecurity track.{% endblock %}
-{% block og_title %}Spot the Bug · Code Secure Academy{% endblock %}
-{% block og_description %}Can you spot the security bug in 8 real code snippets? Play it, then see if you're ready for the Cybersecurity track.{% endblock %}
+{% block title %}Bug Hunt · Find the bug. Understand the code. · Code Secure Academy{% endblock %}
+{% block meta_description %}Inspect small code examples, identify the security mistake in each and understand how to fix it. A free interactive exercise from Code Secure Academy.{% endblock %}
+{% block og_title %}Bug Hunt · Code Secure Academy{% endblock %}
+{% block og_description %}Inspect a small code example, find the security mistake and understand the fix.{% endblock %}
 {% block extra_js %}<script src="{% static 'js/bug-hunt.js' %}" defer></script>{% endblock %}
 {% block content %}
 
 <section class="hero" style="padding-bottom:0;">
   <div class="hero-spotlight"></div>
   <div class="container" style="max-width:700px;">
-    <span class="eyebrow">A Code Secure Academy mini-game</span>
-    <h1>Spot the <span class="text-gradient">bug</span>.</h1>
-    <p class="lead">8 real code snippets. Each one hides one real security mistake. Click the line you think is the problem.</p>
+    <span class="eyebrow">Interactive exercise</span>
+    <h1>Find the bug. <span class="text-gradient">Understand the code.</span></h1>
+    <p class="lead">Inspect a small code example, pick the line you think has the security mistake, then read why it matters and how to fix it.</p>
   </div>
 </section>
 
