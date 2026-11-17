@@ -8,12 +8,13 @@ track (see cohorts/track_playground.html). Pass `extra_class` for sizing
 Frontend).
 {% endcomment %}
 <div class="track-playground {{ extra_class }}" data-track-playground {% if initial_tab %}data-initial-tab="{{ initial_tab }}"{% endif %}>
-  <div class="track-playground-tabs" role="tablist">
+  <div class="track-playground-tabs" role="tablist" aria-label="Try a track">
     <button type="button" class="track-tab" data-track-tab="graphic_design" role="tab">Graphic Design</button>
-    <button type="button" class="track-tab" data-track-tab="frontend" role="tab">Frontend</button>
-    <button type="button" class="track-tab" data-track-tab="backend" role="tab">Backend</button>
+    <button type="button" class="track-tab" data-track-tab="frontend" role="tab">Frontend Development</button>
+    <button type="button" class="track-tab" data-track-tab="backend" role="tab">Backend Development</button>
     <button type="button" class="track-tab" data-track-tab="cybersecurity" role="tab">Cybersecurity</button>
   </div>
+  <div data-track-panel role="tabpanel" tabindex="-1">
   <p class="track-playground-instruction" data-track-instruction></p>
 
   <div class="code-editor-panes" data-track-code-panes>
@@ -66,5 +67,6 @@ Frontend).
     </div>
   </div>
 
+  </div>
   <p class="track-playground-footer" data-track-footer></p>
 </div>
