@@ -1,0 +1,4 @@
+{% comment %}
+Approved one-sentence description per track (Master Implementation Spec 4.4).
+Expects `track` in context. Falls back to the admin-edited tagline.
+{% endcomment %}{% if track.slug == "graphic_design" %}Explore visual communication and the creative process behind clear, effective designs.{% elif track.slug == "frontend" %}Learn how the parts of a website or web application that people see and interact with are designed and built.{% elif track.slug == "backend" %}Explore the systems, application logic and data handling that power digital products behind the scenes.{% elif track.slug == "cybersecurity" %}Build an understanding of digital security, common risks and the practices used to protect systems and information.{% else %}{{ track.tagline|default:track.description|truncatewords:24 }}{% endif %}

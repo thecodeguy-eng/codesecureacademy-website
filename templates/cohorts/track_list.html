@@ -1,50 +1,46 @@
 {% extends "base.html" %}
 {% load static currency_tags %}
-{% block title %}All Tracks · Frontend, Backend, Cybersecurity & Design{% endblock %}
-{% block meta_description %}Browse all 4 Code Secure Academy tracks: Frontend Development, Backend Development, Cybersecurity, and Graphic Design. ₦5,000 per 8-week cohort.{% endblock %}
+{% block title %}Learning Tracks · Graphic Design, Frontend, Backend and Cybersecurity{% endblock %}
+{% block meta_description %}Explore the four Code Secure Academy learning tracks: Graphic Design, Frontend Development, Backend Development and Cybersecurity. Each is an eight week programme.{% endblock %}
 {% block content %}
-<section class="hero">
-  <div class="hero-spotlight"></div>
-  <div class="container">
-    {% include "partials/urgency_banner.html" %}
-    <span class="eyebrow">All tracks</span>
-    <h1>Choose your <span class="text-gradient">track</span></h1>
-    <p class="lead">Four tracks, each with its own price and enrollment status.</p>
+<section class="hero tracks-hero">
+  <div class="container" style="max-width:760px;">
+    <span class="eyebrow">Learning tracks</span>
+    <h1>Choose a direction. Start building your skills.</h1>
+    <p class="lead">Explore our technology and creative learning paths. Each track introduces a different area of practice, so you can compare what is covered and decide where you would like to begin.</p>
   </div>
 </section>
 <section>
-  <div class="container grid track-grid">
+  <div class="container tracks-overview">
     {% for track in tracks %}
-      <a href="{{ track.get_absolute_url }}" class="glass-panel interactive card-media" style="display:block;">
-        {% include "partials/term_chrome.html" with label=track.slug|add:".track" %}
-        {% if track.display_cover_image %}
-          <img class="card-cover-track" src="{{ track.display_cover_image }}" alt="{{ track.name }} track" loading="lazy">
+      <article class="panel tracks-overview-card">
+        <header class="tracks-overview-head">
+          {% include "partials/track_icon.html" %}
+          <h2><a href="{{ track.get_absolute_url }}">{{ track.name }}</a></h2>
+        </header>
+        <p class="tracks-overview-blurb">{% include "partials/track_blurb.html" %}</p>
+        {% if track.highlight_list %}
+          <ul class="tracks-overview-points">
+            {% for point in track.highlight_list|slice:":3" %}<li>{{ point }}</li>{% endfor %}
+          </ul>
         {% endif %}
-        <div class="card-body">
-          <h3>{{ track.name }}</h3>
-          <p>{{ track.tagline|default:track.description|truncatewords:24 }}</p>
+        <dl class="tracks-overview-facts">
+          <div><dt>Duration</dt><dd>8 weeks</dd></div>
           {% with cohort=track.next_cohort %}
             {% if cohort %}
-              <p><strong class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></strong></p>
-              <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 0.4rem;">Starts {{ cohort.start_date|date:"M j, Y" }} · {{ cohort.duration_weeks }} weeks</p>
-              {% if cohort.accepting_enrollment %}
-                {% if cohort.enrollment_deadline %}
-                  <span class="badge badge-urgent">Closes {{ cohort.enrollment_deadline|date:"M j" }}</span>
-                {% else %}
-                  <span class="badge badge-open">Enrolling now</span>
-                {% endif %}
-              {% else %}
-                <span class="badge badge-full">Not active, join the waitlist</span>
-              {% endif %}
+              <div><dt>Fee</dt><dd class="mono" data-naira="{{ cohort.price_naira|stringformat:'d' }}">₦{{ cohort.price_naira|naira }} <span class="price-fx"></span></dd></div>
+              <div><dt>Enrolment</dt><dd>{% if cohort.accepting_enrollment %}<span class="badge badge-open">Open</span>{% else %}<span class="badge badge-full">Not open</span>{% endif %}</dd></div>
             {% else %}
-              <span class="badge">No cohort scheduled yet</span>
+              <div><dt>Enrolment</dt><dd><span class="badge">Not open</span></dd></div>
             {% endif %}
           {% endwith %}
-        </div>
-      </a>
+        </dl>
+        <a href="{{ track.get_absolute_url }}" class="btn btn-secondary tracks-overview-cta">View {{ track.name }}<span class="sr-only"> track details</span></a>
+      </article>
     {% empty %}
       <p>Tracks are being finalized. Check back shortly.</p>
     {% endfor %}
   </div>
+  <p style="text-align:center;margin-top:var(--space-4);">Want to try before you choose? <a href="{% url 'tutorials:category_list' %}">Explore the free tutorials</a>.</p>
 </section>
 {% endblock %}
