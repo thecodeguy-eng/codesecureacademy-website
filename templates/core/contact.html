@@ -1,40 +1,42 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Contact Code Secure Academy{% endblock %}
-{% block meta_description %}Questions about a track, payment, or the marketplace? Reach Code Secure Academy by email or WhatsApp.{% endblock %}
+{% block meta_description %}Have a question about a learning track, the learning experience or Code Secure Academy? Get in touch by email, WhatsApp or Instagram.{% endblock %}
 {% block content %}
+{% comment %}
+Phase 6: no contact form exists in the app (the page is three verified
+channels), so none is invented here. Partnership enquiries use this page too.
+{% endcomment %}
 <section class="hero" style="padding-bottom:1rem;">
-  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
-  <div class="hero-spotlight"></div>
-  <div class="container" style="max-width:640px;">
+  <div class="container" style="max-width:680px;">
     <span class="eyebrow">Get in touch</span>
-    <h1>Talk to <span class="text-gradient">us</span></h1>
-    <p class="lead">Questions about a track, a payment, or the marketplace? Reach out however's easiest.</p>
+    <h1>Let's talk.</h1>
+    <p class="lead">Have a question about a learning track, the learning experience or Code Secure Academy? Get in touch and our team will direct your enquiry to the appropriate place.</p>
   </div>
 </section>
 <section style="padding-top:0;">
-  <div class="container grid grid-3" style="max-width:900px;">
-    <a href="mailto:info@codesecureacademy.com" class="glass-panel interactive card" style="display:block;text-align:center;">
-      <h3>Email</h3>
+  <div class="container contact-channels">
+    <a href="mailto:info@codesecureacademy.com" class="panel interactive card contact-card">
+      <h2>Email</h2>
       <p>info@codesecureacademy.com</p>
     </a>
-    <a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener" class="glass-panel interactive card" style="display:block;text-align:center;">
-      <h3>WhatsApp</h3>
+    <a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener" class="panel interactive card contact-card">
+      <h2>WhatsApp<span class="sr-only"> (opens in a new tab)</span></h2>
       <p>Join our channel</p>
     </a>
-    <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" class="glass-panel interactive card" style="display:block;text-align:center;">
-      <h3>Instagram</h3>
+    <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" class="panel interactive card contact-card">
+      <h2>Instagram<span class="sr-only"> (opens in a new tab)</span></h2>
       <p>Follow for updates</p>
     </a>
   </div>
 </section>
 
 <section>
-  <div class="container" style="max-width:640px;text-align:center;">
+  <div class="container" style="max-width:680px;text-align:center;">
     <h2>Before you reach out</h2>
-    <p>Most questions about payment, cohort dates, or the WhatsApp group are already
-    answered on our <a href="{% url 'faq' %}">FAQ page</a>. If yours isn't there, any of
-    the three channels above works.</p>
+    <p>Many questions are already answered on our <a href="{% url 'faq' %}">FAQ page</a>.</p>
+    <h2 style="margin-top:var(--space-4);">Partnerships and sponsorships</h2>
+    <p>Organisations, institutions, sponsors and scholarship supporters are welcome to write to us by email. Please say who you are and how you would like to work together.</p>
   </div>
 </section>
 {% endblock %}

@@ -1,55 +1,73 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}About Code Secure Academy · Our Story & Founders{% endblock %}
-{% block meta_description %}Code Secure Academy runs cohort-based, hands-on training in Frontend, Backend, Cybersecurity, and Graphic Design. Meet the team and why we built it this way.{% endblock %}
+{% block title %}About Code Secure Academy · Our purpose, story and team{% endblock %}
+{% block meta_description %}Code Secure Academy is a Nigerian technology learning and innovation ecosystem for beginners and people with experience who want to improve. Learn about our purpose, story and team.{% endblock %}
+{% block og_title %}About Code Secure Academy{% endblock %}
+{% block og_description %}A Nigerian technology learning and innovation ecosystem. Learn. Build. Grow.{% endblock %}
 {% block content %}
 
-<section class="hero">
-  <img class="hero-illustration" src="{% static 'img/network-pattern.svg' %}" alt="">
-  <div class="hero-spotlight"></div>
-  <div class="container" style="max-width:720px;">
+{% comment %}
+Phase 6 About page, Master Implementation Spec section 7. Order: what CSA is,
+the problem, philosophy, vision/mission/purpose, founding story, team,
+ecosystem direction, projects, partnerships.
+Founding story: informal community in 2024; formal development, public launch
+and company development in 2026. No precise date, count or milestone invented.
+Hidden until verified: press, testimonials, curriculum claims, design flyers.
+{% endcomment %}
+
+<section class="hero about-hero">
+  <div class="container" style="max-width:760px;">
     <span class="eyebrow">About us</span>
-    <h1>Training people to actually build things</h1>
-    <p class="lead">
-      Code Secure Academy runs cohort-based, hands-on training in Frontend Development,
-      Backend Development, Cybersecurity, and Graphic Design, built around one goal:
-      you finish with something real you actually built.
-    </p>
-    <p class="lead">
-      We started this because too much online education ends the same way: a finished
-      playlist, a certificate nobody asks for, and no actual project to show for it. A
-      cohort changes that, fixed dates, a group of people on the same timeline, and a
-      track that ends with something you built yourself.
-    </p>
+    <h1>A Nigerian technology learning and innovation ecosystem.</h1>
+    <p class="lead">Code Secure Academy is a Nigerian technology learning and innovation ecosystem for beginners and people with existing experience who want to improve.</p>
+    <p>Code Secure Academy is an academy brand of Code Secure Enterprise Limited.</p>
     <div class="hero-actions">
-      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
+      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore Learning Tracks</a>
+      <a href="#partners" class="btn btn-secondary">Partner with us</a>
     </div>
   </div>
 </section>
 
 <section>
-  <div class="container manifesto">
-    <span class="eyebrow" style="display:block;text-align:center;">Our mission</span>
-    <p data-scroll-reveal>Turn beginners into developers who ship real projects, think about security by default, and never stop learning once the cohort ends.</p>
+  <div class="container about-narrow">
+    <span class="eyebrow">The problem we address</span>
+    <h2>Between learning and knowing what to do next</h2>
+    <p>The central problem is the gap between consuming learning material and knowing how to apply a skill, practise it, improve and decide what to do next. Code Secure Academy brings guided learning, practical work and a continuing community together to help close that gap.</p>
+  </div>
+</section>
+
+<section class="home-band">
+  <div class="container about-narrow">
+    <span class="eyebrow">Our philosophy</span>
+    <blockquote class="about-quote">Learning should not be limited by financial barriers, and growth should not end at graduation.</blockquote>
   </div>
 </section>
 
 <section>
   <div class="container">
-    <div class="photo-banner">
-      <img src="{% static 'img/photos/about-banner.jpg' %}" alt="" loading="lazy">
+    <div class="about-vmp">
+      <div class="panel card"><span class="eyebrow">Vision</span><p>To become a globally recognised technology learning and innovation ecosystem that makes quality technology education accessible and helps people participate meaningfully in the digital economy.</p></div>
+      <div class="panel card"><span class="eyebrow">Mission</span><p>To provide affordable, practical and accessible technology education, while building pathways to experience, resources, community, career development and continued growth.</p></div>
+      <div class="panel card"><span class="eyebrow">Purpose</span><p>To reduce the barriers that keep people from entering and progressing in technology, especially financial barriers and the gap between learning a skill and knowing what to do next.</p></div>
     </div>
   </div>
 </section>
 
-<section class="container">
-  {% include "partials/press_mentions.html" %}
+<section class="home-band">
+  <div class="container about-narrow">
+    <span class="eyebrow">Our story</span>
+    <h2>How Code Secure Academy began</h2>
+    <ol class="about-timeline">
+      <li><span class="about-year mono">2024</span><p>Code Secure Academy began informally, as a community group.</p></li>
+      <li><span class="about-year mono">2026</span><p>The current academy was formally developed and publicly launched, and its legal and company structure was put in place.</p></li>
+    </ol>
+  </div>
 </section>
 
 <section>
   <div class="container">
     <div class="section-head">
-      <span class="eyebrow">Our Team</span>
+      <span class="eyebrow">Our team</span>
       <h2>The people behind it</h2>
     </div>
     <div class="grid grid-2" style="max-width:860px;margin:0 auto;align-items:start;">
@@ -83,47 +101,32 @@
       </div>
     </div>
   </div>
+  </div>
+</section>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Code Secure Academy",
-    "alternateName": "CSA",
-    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
-    "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
-    "description": "Practical, cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design.",
-    "sameAs": [
-      "{{ INSTAGRAM_URL }}",
-      "{{ FACEBOOK_URL }}",
-      "{{ WHATSAPP_CHANNEL_URL }}",
-      "https://www.watchdogng.com/2026/10/code-secure-tech-academy-opens-first-cohort-for-young-learners/"
-    ],
-    "founder": [
-      {
-        "@type": "Person",
-        "name": "Ugochukwu Victory Emmanuel",
-        "jobTitle": "Founder and Academy Director",
-        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/founder.jpg' %}"
-      },
-      {
-        "@type": "Person",
-        "name": "Ibeawuchi C.N.",
-        "jobTitle": "Co-Founder and Chief Technology Officer",
-        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/co-founder.png' %}"
-      }
-    ]
-  }
-  </script>
+<section class="home-band" id="ecosystem">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Where we are heading</span>
+      <h2>A growing ecosystem</h2>
+      <p>The long-term direction has five areas. We add each one only when there is real content and a working experience behind it.</p>
+    </div>
+    <div class="about-eco">
+      <div class="panel card"><h3>Learn</h3><p>Tracks, structured programmes and free tutorials.</p><a href="{% url 'cohorts:track_list' %}">Explore tracks</a></div>
+      <div class="panel card"><h3>Community</h3><p>Today, our WhatsApp community.</p><a href="{{ WHATSAPP_CHANNEL_URL }}" target="_blank" rel="noopener">Join the channel</a></div>
+      <div class="panel card"><h3>Resources</h3><p>Today, our free tutorials.</p><a href="{% url 'tutorials:category_list' %}">Browse free tutorials</a></div>
+      <div class="panel card"><h3>Build</h3><p>Practical projects, showcases and challenges.</p><span class="badge">Future direction</span></div>
+      <div class="panel card"><h3>Opportunities</h3><p>Jobs, internships, scholarships, hackathons and competitions.</p><span class="badge">Future direction</span></div>
+    </div>
+  </div>
 </section>
 
 <section id="projects">
   <div class="container">
     <div class="section-head">
-      <span class="eyebrow">Real web development</span>
-      <h2>This could be you</h2>
-      <p>Projects from the CSA community — real, shipped work built with the exact stack taught in our Frontend
-      and Backend tracks. These six are our own CTO's; the kind of thing you'd walk away building too.</p>
+      <span class="eyebrow">Academy examples</span>
+      <h2>Examples of what the stack can build</h2>
+      <p>Websites and platforms built with the stack taught in the Frontend and Backend tracks. These are academy examples, not student outcomes.</p>
     </div>
     <div class="grid grid-3">
       <a href="https://futobme.vercel.app" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
@@ -144,16 +147,6 @@
           <p>A diagnostics clinic's site, built to earn patient trust before they ever book a scan, real
           client, real brief.</p>
           <div class="project-tags"><span class="badge">Web design</span><span class="badge">HTML/CSS</span></div>
-        </div>
-      </a>
-      <a href="https://ibeawuchicn.vercel.app/work/ahiolu-online-marketplace-service-booking-platform/" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
-        {% include "partials/term_chrome.html" with label="ahiolu · marketplace" %}
-        <div class="project-showcase-media"><img src="{% static 'img/photos/cto-projects/ahiolu.png' %}" alt="Ahiolu marketplace platform" loading="lazy"></div>
-        <div class="card-body">
-          <h3>A two-sided marketplace</h3>
-          <p>Shop for goods or book local service providers in one platform, with its own admin dashboard
-          behind it.</p>
-          <div class="project-tags"><span class="badge">Django</span><span class="badge">PostgreSQL</span><span class="badge">Paystack</span></div>
         </div>
       </a>
       <a href="https://github.com/AlphaGL/Nabes-bme-election-site" target="_blank" rel="noopener" class="panel interactive card-media project-showcase-card">
@@ -190,119 +183,45 @@
   </div>
 </section>
 
-<section id="design-work">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Real graphic design</span>
-      <h2>Design work from the CSA team</h2>
-      <p>Not mockups — these are the actual campaign graphics behind our own Founding Cohort launch: brand
-      identity, layout, and campaign-ready visuals, the exact kind of work the Graphic Design track teaches.</p>
-    </div>
-    <div class="grid grid-3">
-      <div class="panel card-media design-showcase-card">
-        <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/track-overview.jpg' %}" alt="Join Code Secure Academy — the four tracks, explained" loading="lazy"></div>
-        <div class="card-body"><h3>Program overview flyer</h3></div>
-      </div>
-      <div class="panel card-media design-showcase-card">
-        <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/founding-cohort-flyer.jpg' %}" alt="Founding Cohort 1.0 registration flyer" loading="lazy"></div>
-        <div class="card-body"><h3>Registration flyer</h3></div>
-      </div>
-      <div class="panel card-media design-showcase-card">
-        <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/dream-outcome.jpg' %}" alt="What's your dream outcome in 2 months? social post" loading="lazy"></div>
-        <div class="card-body"><h3>Social campaign post</h3></div>
-      </div>
-      <div class="panel card-media design-showcase-card">
-        <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/in-two-months.jpg' %}" alt="In 2 months, you could... social post" loading="lazy"></div>
-        <div class="card-body"><h3>Outcome-focused post</h3></div>
-      </div>
-      <div class="panel card-media design-showcase-card">
-        <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/how-it-works.jpg' %}" alt="How it works — 3 step explainer" loading="lazy"></div>
-        <div class="card-body"><h3>Explainer graphic</h3></div>
-      </div>
-      <div class="panel card-media design-showcase-card">
-        <div class="design-showcase-media"><img src="{% static 'img/photos/graphic-design-work/independence-day.jpg' %}" alt="66 Years of Nigeria — independence day campaign post" loading="lazy"></div>
-        <div class="card-body"><h3>Occasion-led campaign post</h3></div>
-      </div>
-    </div>
+<section id="partners">
+  <div class="container about-narrow" style="text-align:center;">
+    <span class="eyebrow" style="justify-content:center;">Partnerships and sponsorships</span>
+    <h2>Work with us</h2>
+    <p>Code Secure Academy is open to sponsorships and partnerships. We welcome organisations, institutions, sponsors, scholarship supporters and collaborators who want to work with us on learner access, scholarships, practical learning, events, resources and opportunities.</p>
+    <a href="{% url 'contact' %}" class="btn btn-primary">Get in touch</a>
   </div>
 </section>
 
-<section>
-  <div class="container section-alt">
-    <div class="alt-text">
-      <span class="eyebrow">How we teach</span>
-      <h2>A real curriculum, not a content dump</h2>
-      <p>Every track runs as an 8-week cohort with a fixed start and end date, worked
-      through alongside the same group of people from week one to graduation. Expect to
-      put in roughly 6-10 hours a week, split between live sessions with your cohort and
-      self-paced lessons on your dashboard, with a new project most weeks and one bigger,
-      portfolio-ready project added right before you graduate.</p>
-      <ul class="alt-checklist">
-        <li><span class="tick">✓</span><span><strong>8 weeks, fixed dates.</strong> A real start and end, so the course can't quietly stall out halfway through.</span></li>
-        <li><span class="tick">✓</span><span><strong>Live + self-paced.</strong> Live sessions with your cohort, plus lessons on your dashboard you work through at your own pace between them.</span></li>
-        <li><span class="tick">✓</span><span><strong>Weekly projects, plus a final one.</strong> You build something most weeks, then finish with one larger, portfolio-ready project that pulls it all together.</span></li>
-      </ul>
-    </div>
-    <div class="alt-visual">
-      <div class="panel card">
-        <h4 style="margin:0 0 var(--space-2);text-align:center;color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.04em;">Cohort at a glance</h4>
-        <div class="grid grid-2" style="gap:var(--space-2);">
-          <div class="stat"><span class="num mono" style="font-size:1.6rem;">8</span><span class="label">Weeks</span></div>
-          <div class="stat"><span class="num mono" style="font-size:1.6rem;">6&ndash;10</span><span class="label">Hours a week</span></div>
-          <div class="stat"><span class="num mono" style="font-size:1.1rem;">Live +<br>self-paced</span><span class="label">Format</span></div>
-          <div class="stat"><span class="num mono" style="font-size:1.6rem;">8+1</span><span class="label">Projects, weekly + final</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">What we believe</span>
-      <h2>A few things we won't compromise on</h2>
-    </div>
-    <div class="grid grid-3">
-      <div class="panel card">
-        <h3>Practical over theoretical</h3>
-        <p>Every track is built around a real project, not lecture slides you'll forget by the following week.</p>
-      </div>
-      <div class="panel card">
-        <h3>Security-minded by default</h3>
-        <p>Even outside the Cybersecurity track, we teach people to ask what could go wrong, not just what should go right.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-{% if reviews %}
-<section>
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Proof</span>
-      <h2>What students are saying</h2>
-    </div>
-    {% include "partials/testimonial_carousel.html" %}
-  </div>
-</section>
-{% endif %}
-
-<section>
-  <div class="container" style="max-width:640px;text-align:center;">
-    <span class="eyebrow">Get in touch</span>
-    <p>Questions about a track, a partnership, or anything else: <a href="mailto:info@codesecureacademy.com">info@codesecureacademy.com</a>, or visit our <a href="{% url 'contact' %}">Contact page</a>.</p>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="panel contrast-panel card" style="text-align:center;padding:var(--space-5) var(--space-3);">
-      <h2>See it for yourself</h2>
-      <p class="lead" style="margin:0 auto var(--space-3);">Browse the four tracks and find the one that fits.</p>
-      <a href="{% url 'cohorts:track_list' %}" class="btn btn-primary">Explore tracks</a>
-    </div>
-  </div>
-</section>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Code Secure Academy",
+    "alternateName": "CSA",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
+    "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+    "description": "Practical, cohort-based tech training in Frontend Development, Backend Development, Cybersecurity, and Graphic Design.",
+    "sameAs": [
+      "{{ INSTAGRAM_URL }}",
+      "{{ FACEBOOK_URL }}",
+      "{{ WHATSAPP_CHANNEL_URL }}",
+      "https://www.watchdogng.com/2026/10/code-secure-tech-academy-opens-first-cohort-for-young-learners/"
+    ],
+    "founder": [
+      {
+        "@type": "Person",
+        "name": "Ugochukwu Victory Emmanuel",
+        "jobTitle": "Founder and Academy Director",
+        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/founder.jpg' %}"
+      },
+      {
+        "@type": "Person",
+        "name": "Ibeawuchi C.N.",
+        "jobTitle": "Co-Founder and Chief Technology Officer",
+        "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/team/co-founder.png' %}"
+      }
+    ]
+  }
+  </script>
 
 {% endblock %}
