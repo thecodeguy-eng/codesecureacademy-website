@@ -5,12 +5,15 @@
 <meta charset="utf-8">
 <script>
 (function () {
+  var theme = "dark";
   try {
     var stored = localStorage.getItem("csa_theme");
-    document.documentElement.setAttribute("data-theme", stored === "light" ? "light" : "dark");
+    if (stored === "light" || stored === "dark") theme = stored;
+    else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light";
   } catch (e) {
-    document.documentElement.setAttribute("data-theme", "dark");
+    try { if (window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light"; } catch (e2) {}
   }
+  document.documentElement.setAttribute("data-theme", theme);
 })();
 
 // Circular-reveal for page-to-page navigation — see the matching comment
@@ -61,13 +64,12 @@ window.addEventListener("pagereveal", function (event) {
 <header class="site-header">
   <div class="container header-inner">
     <a href="{% url 'home' %}" class="brand">
-      <img src="{% static 'img/logo-icon-dark.png' %}" alt="" class="brand-mark brand-mark-dark">
-      <img src="{% static 'img/logo-icon-light.png' %}" alt="" class="brand-mark brand-mark-light">
-      <span class="brand-word"><span class="brand-code">Code</span> Secure Academy</span>
+      <img src="{% static 'img/logo.png' %}" alt="Code Secure Academy" width="830" height="262" class="brand-mark brand-mark-dark">
+      <img src="{% static 'img/logo-light.png' %}" alt="Code Secure Academy" width="830" height="262" class="brand-mark brand-mark-light">
     </a>
 
     <nav class="main-nav" id="main-nav">
-      <button class="theme-toggle" id="theme-toggle" type="button">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
         <span class="theme-toggle-label">Switch to dark mode</span>

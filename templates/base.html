@@ -6,16 +6,18 @@
 <meta name="google-site-verification" content="s3Rpx8L2RupXslzWmshxn5NahWdX0zIrve2JQHDYFYg" />
 <script>
 // Runs synchronously before first paint so there's no flash of the wrong
-// theme. Default is dark unless the visitor has explicitly switched to
-// light before — this never follows OS preference automatically, so the
-// brand's primary look doesn't change on its own.
+// theme. A saved explicit choice wins; otherwise follow the visitor's
+// system preference (Phase 2, Master Spec 2.4); dark if neither is known.
 (function () {
+  var theme = "dark";
   try {
     var stored = localStorage.getItem("csa_theme");
-    document.documentElement.setAttribute("data-theme", stored === "light" ? "light" : "dark");
+    if (stored === "light" || stored === "dark") theme = stored;
+    else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light";
   } catch (e) {
-    document.documentElement.setAttribute("data-theme", "dark");
+    try { if (window.matchMedia("(prefers-color-scheme: light)").matches) theme = "light"; } catch (e2) {}
   }
+  document.documentElement.setAttribute("data-theme", theme);
 })();
 
 // Circular-reveal for page-to-page navigation, echoing the same effect the
@@ -89,9 +91,8 @@ window.addEventListener("pagereveal", function (event) {
 <header class="site-header">
   <div class="container header-inner">
     <a href="{% url 'home' %}" class="brand">
-      <img src="{% static 'img/logo-icon-dark.png' %}" alt="" class="brand-mark brand-mark-dark">
-      <img src="{% static 'img/logo-icon-light.png' %}" alt="" class="brand-mark brand-mark-light">
-      <span class="brand-word"><span class="brand-code">Code</span> Secure Academy</span>
+      <img src="{% static 'img/logo.png' %}" alt="Code Secure Academy" width="830" height="262" class="brand-mark brand-mark-dark">
+      <img src="{% static 'img/logo-light.png' %}" alt="Code Secure Academy" width="830" height="262" class="brand-mark brand-mark-light">
     </a>
 
     
@@ -104,30 +105,29 @@ window.addEventListener("pagereveal", function (event) {
           <input type="search" name="q" id="nav-search-input" placeholder="Search..." aria-label="Search Code Secure Academy" value="{{ query }}">
         </form>
       </div>
-      <a href="{% url 'home' %}" class="{% if request.path|starts_with:'/home/' %}active{% endif %}" {% if request.path|starts_with:'/home/' %}aria-current="page"{% endif %}>Home</a>
+      <a href="{% url 'home' %}" class="{% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
       <a href="{% url 'cohorts:track_list' %}" class="{% if request.path|starts_with:'/tracks/' %}active{% endif %}" {% if request.path|starts_with:'/tracks/' %}aria-current="page"{% endif %}>Tracks</a>
       <a href="{% url 'tutorials:category_list' %}" class="{% if request.path|starts_with:'/tutorials/' %}active{% endif %}" {% if request.path|starts_with:'/tutorials/' %}aria-current="page"{% endif %}>Free Tutorials</a>
-      <!-- <a href="{% url 'courses:course_list' %}">Courses</a> -->
-      <!-- <a href="{% url 'marketplace:listing_list' %}">Marketplace</a> -->
-      <a href="{% url 'faq' %}" class="{% if request.path|starts_with:'/faq/' %}active{% endif %}" {% if request.path|starts_with:'/faq/' %}aria-current="page"{% endif %}>FAQ</a>
+      {% comment %}Deferred per Master Spec 3.2: Courses, Marketplace. Phase 6 adds How Learning Works, Events and Media / Press once their routes exist.{% endcomment %}
       <a href="{% url 'about' %}" class="{% if request.path|starts_with:'/about/' %}active{% endif %}" {% if request.path|starts_with:'/about/' %}aria-current="page"{% endif %}>About</a>
+      <a href="{% url 'contact' %}" class="{% if request.path|starts_with:'/contact/' %}active{% endif %}" {% if request.path|starts_with:'/contact/' %}aria-current="page"{% endif %}>Contact</a>
       {% if user.is_authenticated %}
         <a href="{% url 'dashboard' %}" class="{% if request.path|starts_with:'/dashboard/' %}active{% endif %}" {% if request.path|starts_with:'/dashboard/' %}aria-current="page"{% endif %}>Dashboard</a>
         <a href="{% url 'lessons:my_learning' %}" class="{% if request.path|starts_with:'/learn/' %}active{% endif %}" {% if request.path|starts_with:'/learn/' %}aria-current="page"{% endif %}>My Learning</a>
         {% if user.is_staff %}<a href="{% url 'analytics:insights' %}" class="{% if request.path|starts_with:'/insights/' %}active{% endif %}" {% if request.path|starts_with:'/insights/' %}aria-current="page"{% endif %}>Insights</a>{% endif %}
         <a href="{% url 'account_logout' %}">Log out</a>
       {% else %}
-        <a href="{% url 'account_login' %}">Log in</a>
-        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Get started</a>
+        <a href="{% url 'account_login' %}" class="btn btn-secondary btn-sm">Sign In</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Get Started</a>
       {% endif %}
-      <button class="theme-toggle" id="theme-toggle" type="button">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode">
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
         <span class="theme-toggle-label">Switch to dark mode</span>
       </button>
     </nav>
 
-    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Open menu" aria-controls="main-nav" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -148,8 +148,12 @@ window.addEventListener("pagereveal", function (event) {
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <span class="brand-word"><span class="brand-code">Code</span> Secure Academy</span>
-      <p>Learn. Build. Grow.</p>
+      <a href="{% url 'home' %}" class="brand" aria-label="Code Secure Academy home">
+        <img src="{% static 'img/logo.png' %}" alt="Code Secure Academy" width="830" height="262" class="brand-mark brand-mark-dark">
+        <img src="{% static 'img/logo-light.png' %}" alt="Code Secure Academy" width="830" height="262" class="brand-mark brand-mark-light">
+      </a>
+      <p class="footer-tagline">Learn. Build. Grow.</p>
+      <p class="footer-desc">Structured technology and creative learning, with guidance and practical work.</p>
       <div class="footer-social">
         <a href="{{ INSTAGRAM_URL }}" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
           <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2.2.27 3 .58a6 6 0 0 1 2.2 1.4 6 6 0 0 1 1.4 2.2c.3.8.5 1.8.6 3 .1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 2.2-.6 3a6 6 0 0 1-1.4 2.2 6 6 0 0 1-2.2 1.4c-.8.3-1.8.5-3 .6-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-2.2-.3-3-.6a6 6 0 0 1-2.2-1.4 6 6 0 0 1-1.4-2.2c-.3-.8-.5-1.8-.6-3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-2.2.6-3a6 6 0 0 1 1.4-2.2A6 6 0 0 1 6.5 .5c.8-.3 1.8-.5 3-.6C10.8.2 11.2.2 12 .2zm0 1.8c-3.1 0-3.5 0-4.7.07-1 .05-1.6.22-2 .37a3.8 3.8 0 0 0-1.4.9 3.8 3.8 0 0 0-.9 1.4c-.15.4-.32 1-.37 2C2.5 8.5 2.5 8.9 2.5 12s0 3.5.07 4.7c.05 1 .22 1.6.37 2a3.8 3.8 0 0 0 .9 1.4 3.8 3.8 0 0 0 1.4.9c.4.15 1 .32 2 .37 1.2.07 1.6.07 4.7.07s3.5 0 4.7-.07c1-.05 1.6-.22 2-.37a3.8 3.8 0 0 0 1.4-.9 3.8 3.8 0 0 0 .9-1.4c.15-.4.32-1 .37-2 .07-1.2.07-1.6.07-4.7s0-3.5-.07-4.7c-.05-1-.22-1.6-.37-2a3.8 3.8 0 0 0-.9-1.4 3.8 3.8 0 0 0-1.4-.9c-.4-.15-1-.32-2-.37C15.5 2 15.1 2 12 2zm0 4.9a5.1 5.1 0 1 1 0 10.2 5.1 5.1 0 0 1 0-10.2zm0 1.8a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6zm5.3-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
@@ -164,33 +168,34 @@ window.addEventListener("pagereveal", function (event) {
           <svg viewBox="0 0 32 32" width="22" height="22"><path fill="currentColor" d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.5.7 4.8 2 6.8L3 29l7-2.2c1.9 1 4 1.6 6 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.7c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.2 1.3 1.3-4-.3-.4a10.2 10.2 0 0 1-1.6-5.4C5.5 9.8 10.2 5.3 16 5.3s10.5 4.5 10.5 10.2S21.8 25.7 16 25.7zm5.8-7.6c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.3 5.2 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.2-.6-.4z"/></svg>
         </a>
       </div>
+      <div class="footer-waitlist">
+        <h4>Stay in the loop</h4>
+        <p class="footer-waitlist-copy">Get an email when a new track or cohort opens, nothing else.</p>
+        <form method="post" action="{% url 'join_general_waitlist' %}" class="footer-waitlist-form">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+          <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+        </form>
+      </div>
     </div>
 
     <div class="footer-links">
       <h4>Explore</h4>
       <a href="{% url 'cohorts:track_list' %}">Tracks</a>
       <a href="{% url 'tutorials:category_list' %}">Free Tutorials</a>
-      <a href="{% url 'bug_hunt' %}">Spot the Bug (game)</a>
-      <a href="{% url 'faq' %}">FAQ</a>
-      <a href="{% url 'reviews:testimonials' %}">Testimonials</a>
-      <a href="{% url 'reviews:submit_general_review' %}">Leave a review</a>
+      <a href="{% url 'bug_hunt' %}">Bug Hunt</a>
     </div>
 
     <div class="footer-links">
-      <h4>Company</h4>
+      <h4>Academy</h4>
       <a href="{% url 'about' %}">About</a>
-      <a href="{% url 'contact' %}">Contact</a>
     </div>
 
-    <div class="footer-links footer-waitlist">
-      <h4>Stay in the loop</h4>
-      <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:0.6rem;">Get an email when a new track or cohort opens, nothing else.</p>
-      <form method="post" action="{% url 'join_general_waitlist' %}" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
-        <input type="email" name="email" placeholder="you@example.com" required style="flex:1;min-width:140px;">
-        <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
-      </form>
+    <div class="footer-links">
+      <h4>Support</h4>
+      <a href="{% url 'contact' %}">Contact</a>
+      <a href="{% url 'faq' %}">FAQ</a>
     </div>
 
     <div class="footer-links">
